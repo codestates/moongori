@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import queryString from "query-string";
-import kakaoImg from "../images/kakao_login_medium_narrow.png";
+import googleImg from "../images/btn_google_signin_light_normal_web.png";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
 export default function Main() {
-  const handleKakaoLoginBtn = async () => {
-    await window.location.assign("http://localhost:80/user/kakao");
+  const handlegoogleLoginBtn = async () => {
+    await window.location.assign("http://localhost:80/user/google");
   };
   useEffect(() => {
     const query = queryString.parse(window.location.search);
@@ -21,16 +21,15 @@ export default function Main() {
     <>
       <div
         onClick={() => {
-          handleKakaoLoginBtn();
+          handlegoogleLoginBtn();
         }}
       >
-        <img src={kakaoImg} />
+        <img src={googleImg} />
       </div>
-	  
+
       {/* <img
         src={`http://k.kakaocdn.net/dn/ec5JId/btqBDYf4uEv/4n4rER4879ROYlsfVit82K/img_640x640.jpg`}
       /> */}
-      
     </>
   );
 }
