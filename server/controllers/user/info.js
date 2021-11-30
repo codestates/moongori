@@ -2,14 +2,13 @@ const { user } = require("../../models");
 const { verify } = require("jsonwebtoken");
 
 module.exports = async (req, res) => {
-  console.log("req.cookies;;;", req.cookies);
-  const token = req.cookies.accesstoken;
-  if (!token) {
+  const cookie = req.cookies.accesstoken;
+  if (!cookie) {
     return res.status(403).json({ message: "fail" });
   } else {
-    const verified = verify(token, process.env.ACCESS_SECRET);
+    const verified = verify(cookie, process.env.ACCESS_SECRET);
     if (!verified) {
-      return res.status(403).json({ message: "invalid token" });
+      return res.status(403).json({ message: "invalid cookie" });
     } else {
       const userInfo = await user.findOne({
         where: {

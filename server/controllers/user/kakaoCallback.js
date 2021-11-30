@@ -41,8 +41,7 @@ module.exports = async (req, res) => {
       email: findUser.email,
       nickname: findUser.nickname,
       userArea: findUser.userArea,
-      img: findUser.imagePath,
-      loginType: true,
+      img: findUser.img,
     };
 
     const token = await sign(payload, process.env.ACCESS_SECRET, {
