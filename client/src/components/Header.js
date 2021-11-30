@@ -7,27 +7,38 @@ import { useState } from "react";
 import logoImg from "./../images/Logo.png";
 
 const StHeadBoxDiv = styled.div`
+  background: white;
   display: flex;
-  margin: 0 15% 0 15%;
+  flex-direction: column;
+  align-items: center;
+  position: sticky;
+  top: 0px;
+  .wrap {
+    display: flex;
+    width: 70%;
+  }
   img {
-    height: 60px;
-    width: 50px;
-    margin: 3px 0 0 3px;
+    height: 40px;
+    width: 40px;
+    margin-top: 8px;
+    margin-bottom: 5px;
   }
   .logoName {
-    margin: 15px 10px 0 10px;
+    margin: 10px 10px 0 10px;
     text-align: center;
     color: black;
     text-decoration: none;
-    font-size: 1.5em;
+    font-size: 1.6em;
     font-family: Fredoka One;
   }
   @media all and (max-width: 768px) {
-    position: relative;
     height: 100%;
     width: auto;
     z-index: 1;
-    justify-content: space-between;
+    .wrap {
+      position: relative;
+      justify-content: space-between;
+    }
     .nav {
       display: none;
     }
@@ -52,8 +63,7 @@ const StHeadBoxDiv = styled.div`
           color: black;
           text-decoration: none;
           padding: 20px 10px 0 10px;
-          font-size: 1.1em;
-          font-weight: bold;
+          font-size: 1em;
           cursor: pointer;
         }
       }
@@ -115,72 +125,74 @@ export default function Header() {
 
   return (
     <StHeadBoxDiv>
-      <Link to={"/"}>
-        <img src={logoImg} alt={"logo"} />
-      </Link>
-      <Link to={"/"} className={"logoName"}>
-        <div>moongori</div>
-      </Link>
-      <div className={"nav"}>
-        <div className={"navMenu"}>
-          <Link to="/trade=all">중고거래</Link>
-          <Link to="/news=0">동네소식</Link>
+      <div className="wrap">
+        <Link to={"/"}>
+          <img src={logoImg} alt={"logo"} />
+        </Link>
+        <Link to={"/"} className={"logoName"}>
+          <div>moongori</div>
+        </Link>
+        <div className={"nav"}>
+          <div className={"navMenu"}>
+            <Link to="/trade=all">중고거래</Link>
+            <Link to="/news=0">동네소식</Link>
+          </div>
+          <div className={"navMenu"}>
+            {login ? <Link to={"/mypage"}>마이페이지</Link> : <div>로그인</div>}
+            {login ? <div>로그아웃</div> : <div>회원가입</div>}
+          </div>
         </div>
-        <div className={"navMenu"}>
-          {login ? <Link to={"/mypage"}>마이페이지</Link> : <div>로그인</div>}
-          {login ? <div>로그아웃</div> : <div>회원가입</div>}
-        </div>
-      </div>
-      <div className={"sidebar"}>
-        {menu ? (
-          <FontAwesomeIcon
-            className="icon"
-            icon={faTimes}
-            size={"2x"}
-            onClick={showMenubar}
-          />
-        ) : (
-          <FontAwesomeIcon
-            className="icon"
-            icon={faBars}
-            size={"2x"}
-            onClick={showMenubar}
-          />
-        )}
-        {menu ? (
-          <StMenuBarDiv>
-            <Link to="/trade=all" onClick={showMenubar}>
-              중고거래
-              <i class="fas fa-arrow-right"></i>
-            </Link>
-            <Link to="/news=0" onClick={showMenubar}>
-              동네소식
-              <i class="fas fa-arrow-right"></i>
-            </Link>
-            {login ? (
-              <Link to={"/mypage"} onClick={showMenubar}>
-                마이페이지
+        <div className={"sidebar"}>
+          {menu ? (
+            <FontAwesomeIcon
+              className="icon"
+              icon={faTimes}
+              size={"2x"}
+              onClick={showMenubar}
+            />
+          ) : (
+            <FontAwesomeIcon
+              className="icon"
+              icon={faBars}
+              size={"2x"}
+              onClick={showMenubar}
+            />
+          )}
+          {menu ? (
+            <StMenuBarDiv>
+              <Link to="/trade=all" onClick={showMenubar}>
+                중고거래
                 <i class="fas fa-arrow-right"></i>
               </Link>
-            ) : (
-              <li onClick={showMenubar}>
-                로그인
+              <Link to="/news=0" onClick={showMenubar}>
+                동네소식
                 <i class="fas fa-arrow-right"></i>
-              </li>
-            )}
-            {login ? (
-              <li className={"lastli"} onClick={showMenubar}>
-                로그아웃
-                <i class="fas fa-arrow-right"></i>
-              </li>
-            ) : (
-              <li className={"lastli"} onClick={showMenubar}>
-                회원가입
-                <i class="fas fa-arrow-right"></i>
-              </li>
-            )}
-          </StMenuBarDiv>
-        ) : null}
+              </Link>
+              {login ? (
+                <Link to={"/mypage"} onClick={showMenubar}>
+                  마이페이지
+                  <i class="fas fa-arrow-right"></i>
+                </Link>
+              ) : (
+                <li onClick={showMenubar}>
+                  로그인
+                  <i class="fas fa-arrow-right"></i>
+                </li>
+              )}
+              {login ? (
+                <li className={"lastli"} onClick={showMenubar}>
+                  로그아웃
+                  <i class="fas fa-arrow-right"></i>
+                </li>
+              ) : (
+                <li className={"lastli"} onClick={showMenubar}>
+                  회원가입
+                  <i class="fas fa-arrow-right"></i>
+                </li>
+              )}
+            </StMenuBarDiv>
+          ) : null}
+        </div>
       </div>
     </StHeadBoxDiv>
   );
