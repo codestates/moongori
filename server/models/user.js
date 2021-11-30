@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     password: DataTypes.STRING,
     salt: DataTypes.STRING,
+    authState: { defaultValue: 0, type: DataTypes.INTEGER },
     img: { defaultValue: null, type: DataTypes.STRING },
     reliability: { defaultValue: 0, type: DataTypes.INTEGER }
   }, {
