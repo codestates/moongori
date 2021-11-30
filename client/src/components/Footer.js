@@ -8,17 +8,18 @@ const FooterBox = styled.div`
   color: #ffffff;
   position: absolute;
   bottom: 0px;
-  border: 1px solid;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 15%;
+  height: 200px;
+  a {
+    text-decoration-line: none;
+    color: #9c9c9c;
+  }
 
   // phone
-  @media all and (max-width: 767px) {
-    border: 1px solid;
-    margin: 0 5% 0 5%;
-    width: 90%;
+  @media all and (max-width: 768px) {
+    width: 100%;
   }
   .LogoName {
     margin-top: 3px;
@@ -62,7 +63,7 @@ const FooterBox = styled.div`
     margin-bottom: 2px;
   }
   .About-content {
-    font-size: 7px;
+    font-size: 5px;
     font-weight: normal;
   }
   .Contact-title {
@@ -72,11 +73,12 @@ const FooterBox = styled.div`
     margin-bottom: 2px;
   }
   .Contact-content {
-    font-size: 7px;
+    font-size: 5px;
     font-weight: normal;
+    display: flex;
+    flex-direction: column;
   }
   .Copyright {
-    margin-bottom: 10px;
     width: 100%;
     height: 15%;
     font-size: 5px;
@@ -95,11 +97,10 @@ const FooterBox = styled.div`
     transform: translate(-50%, -50%);
   }
   // web
-  @media all and (min-width: 768px) {
+  @media all and (min-width: 769px) {
     bottom: 0px;
-    height: 20%;
-    margin: 0 15% 0 15%;
-    width: 70%;
+    height: 200px;
+    width: 100%;
   }
   .footer-master {
     width: 100%;
@@ -150,6 +151,8 @@ const FooterBox = styled.div`
   }
   .About-content {
     margin-top: 10px;
+    display: flex;
+    flex-direction: row;
   }
   .Contact-us {
     width: 50%;
@@ -158,19 +161,54 @@ const FooterBox = styled.div`
     justify-content: center;
   }
   .Contact-wrap {
-    text-align: start;
     margin-top: 20px;
     width: 60%;
     font-size: 9px;
     font-weight: bold;
     margin-bottom: 2px;
     display: flex;
+    align-items: start;
+    text-align: start;
     justify-content: flex-start;
     flex-direction: column;
-    text-align: start;
   }
+
   .Contact-content {
-    margin-top: 10px;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: row;
+  }
+  .name {
+    margin-right: 5px;
+    font-szie: 11px;
+  }
+  .About-title {
+    font-size: 13px;
+  }
+  .Contact-comment {
+    font-size: 13px;
+  }
+  @media all and (max-width: 557px) {
+    .Contact-content {
+      display: flex;
+      flex-direction: column;
+    }
+    .About-content {
+      display: flex;
+      flex-direction: column;
+    }
+    .About-title {
+      font-size: 11px;
+    }
+    .Contact-comment {
+      font-size: 11px;
+    }
+    .name {
+      font-size: 5px;
+    }
+    .copyright-content {
+      font-size: 4px;
+    }
   }
 `;
 
@@ -190,8 +228,22 @@ export default function Footer() {
               <div className={"About-wrap"}>
                 <div className={"About-title"}>About us</div>
                 <div className={"About-content"}>
-                  <div>Moongori Wiki</div>
-                  <div>Repository</div>
+                  <p className={"name"}>
+                    <a
+                      href="https://github.com/codestates/moongori/wiki"
+                      target="_blank"
+                    >
+                      Moongori Wiki
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href="https://github.com/codestates/moongori"
+                      target="_blank"
+                    >
+                      Repository
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -199,14 +251,35 @@ export default function Footer() {
               <div className={"Contact-wrap"}>
                 <div className={"Contact-comment"}>Contact us</div>
                 <div className={"Contact-content"}>
-                  사범기 김정훈 이성민 이승준
+                  <p className={"name"}>
+                    <a href="https://github.com/Lawen-s" target="_blank">
+                      사범기
+                    </a>
+                  </p>
+                  <p className={"name"}>
+                    <a href="https://github.com/rmfhsep" target="_blank">
+                      김정훈
+                    </a>
+                  </p>
+                  <p className={"name"}>
+                    <a href="https://github.com/lsm6627" target="_blank">
+                      이성민
+                    </a>
+                  </p>
+                  <p className={"name"}>
+                    <a href="https://github.com/lsj135779" target="_blank">
+                      이승준
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className={"Copyright"}>
-          <div>Copyright The Moon project Team</div>
+          <div className={"copyright-content"}>
+            Copyright The Moon project Team
+          </div>
         </div>
       </div>
     </FooterBox>
