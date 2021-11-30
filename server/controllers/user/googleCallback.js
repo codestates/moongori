@@ -32,7 +32,6 @@ module.exports = async (req, res) => {
         img: userInfo.data.picture,
         password: userInfo.data.id,
         salt: userInfo.data.id,
-        loginType: true,
       },
     });
 

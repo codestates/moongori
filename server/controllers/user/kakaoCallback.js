@@ -32,7 +32,6 @@ module.exports = async (req, res) => {
           : userInfo.data.kakao_account.profile.profile_image_url,
         password: userInfo.data.id,
         salt: userInfo.data.id,
-        loginType: true,
       },
     });
 
