@@ -1,5 +1,6 @@
 const { user } = require("../../models");
 const CryptoJS = require("crypto-js");
+const sendEmail = require("./sendEmail")
 
 module.exports = async (req, res) => {
 
@@ -19,7 +20,8 @@ module.exports = async (req, res) => {
         password: encryptedPW,
         salt,
     }).then((data) => {
-        res.send("ok")
+        sendEmail(email);
+        res.send("ok");
     }).catch((err) => {
         console.log(err)
     })

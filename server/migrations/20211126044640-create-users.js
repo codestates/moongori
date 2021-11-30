@@ -27,6 +27,9 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
+      authState: {
+        type: Sequelize.INTEGER
+      },
       reliability: {
         allowNull: true,
         type: Sequelize.INTEGER
