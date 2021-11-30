@@ -11,7 +11,8 @@ router.patch("/user", userCtrl.modifyUser);
 router.patch("/user/password", userCtrl.password);
 router.post("/user/nickname", userCtrl.nickname);
 router.post("/user/email", userCtrl.email);
-
+router.post("/email", userCtrl.sendEmail);
+router.get("/cert/:email", userCtrl.cert);
 
 // router.post("/user/test", userCtrl.test);
 
