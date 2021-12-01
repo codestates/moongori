@@ -6,7 +6,7 @@ import logoWhite from "./../images/흰색 로고.png";
 const FooterBox = styled.div`
   background-color: #777777;
   color: #ffffff;
-  position: absolute;
+  position: relative;
   bottom: 0px;
   display: flex;
   flex-direction: column;
