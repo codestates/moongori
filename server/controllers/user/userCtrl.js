@@ -7,6 +7,9 @@ module.exports = {
   password: require("./modifyPassword"),
   nickname: require("./checkNickname"),
   email: require("./checkEmail"),
+  sendEmail: require("./sendEmail"),
+  cert: require("./certification"),
 
+  img: require("./img"),
   test: require("./test"),
-}
+};

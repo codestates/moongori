@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logoImg from "./../images/Logo.png";
+import Login from "./Login";
+import Signup from "./Signup";
 
 const StHeadBoxDiv = styled.div`
   background: white;
@@ -13,6 +15,7 @@ const StHeadBoxDiv = styled.div`
   align-items: center;
   position: sticky;
   top: 0px;
+  z-index: 3;
   .wrap {
     display: flex;
     width: 70%;
@@ -31,10 +34,13 @@ const StHeadBoxDiv = styled.div`
     font-size: 1.6em;
     font-family: Fredoka One;
   }
+  .modal {
+    position: fixed;
+    overflow: hidden;
+  }
   @media all and (max-width: 768px) {
     height: 100%;
     width: auto;
-    z-index: 1;
     .wrap {
       position: relative;
       justify-content: space-between;
@@ -76,13 +82,13 @@ const StHeadBoxDiv = styled.div`
 
 // 햄버거 메뉴 모달
 const StMenuBarDiv = styled.ul`
-  z-index: 2;
+  z-index: 4;
   background: #f2f2f2;
   list-style: none;
   border: 1px solid;
   width: 30%;
   position: absolute;
-  top: 75%;
+  top: 72%;
   left: 69.8%;
   text-align: right;
   -webkit-padding-start: 0px;
@@ -117,83 +123,114 @@ const StMenuBarDiv = styled.ul`
 
 export default function Header() {
   const [menu, isMenu] = useState(false);
-  const [login, isLogin] = useState(true);
+  const [loginModal, isLoginModal] = useState(false);
+  const [signUpModal, isSingUpModal] = useState(false);
+  // 로그인했는지의 state이므로 App에서 받아와야함 (일단 확인용)
+  const [login, isLogin] = useState(false);
 
   const showMenubar = () => {
     isMenu(!menu);
   };
 
+  const showLoginModal = () => {
+    isLoginModal(!loginModal);
+    isMenu(false);
+    isSingUpModal(false);
+  };
+
+  const showSignUpModal = () => {
+    isSingUpModal(!signUpModal);
+    isMenu(false);
+    isLoginModal(false);
+  };
+
   return (
-    <StHeadBoxDiv>
-      <div className="wrap">
-        <Link to={"/"}>
-          <img src={logoImg} alt={"logo"} />
-        </Link>
-        <Link to={"/"} className={"logoName"}>
-          <div>moongori</div>
-        </Link>
-        <div className={"nav"}>
-          <div className={"navMenu"}>
-            <Link to="/trade=all">중고거래</Link>
-            <Link to="/news=0">동네소식</Link>
-          </div>
-          <div className={"navMenu"}>
-            {login ? <Link to={"/mypage"}>마이페이지</Link> : <div>로그인</div>}
-            {login ? <div>로그아웃</div> : <div>회원가입</div>}
-          </div>
-        </div>
-        <div className={"sidebar"}>
-          {menu ? (
-            <FontAwesomeIcon
-              className="icon"
-              icon={faTimes}
-              size={"2x"}
-              onClick={showMenubar}
-            />
-          ) : (
-            <FontAwesomeIcon
-              className="icon"
-              icon={faBars}
-              size={"2x"}
-              onClick={showMenubar}
-            />
-          )}
-          {menu ? (
-            <StMenuBarDiv>
-              <Link to="/trade=all" onClick={showMenubar}>
-                중고거래
-                <i class="fas fa-arrow-right"></i>
-              </Link>
-              <Link to="/news=0" onClick={showMenubar}>
-                동네소식
-                <i class="fas fa-arrow-right"></i>
-              </Link>
+    <>
+      <StHeadBoxDiv>
+        <div className="wrap">
+          <Link to={"/"}>
+            <img src={logoImg} alt={"logo"} />
+          </Link>
+          <Link to={"/"} className={"logoName"}>
+            <div>moongori</div>
+          </Link>
+          <div className={"nav"}>
+            <div className={"navMenu"}>
+              <Link to="/trade=all">중고거래</Link>
+              <Link to="/news=0">동네소식</Link>
+            </div>
+            <div className={"navMenu"}>
               {login ? (
-                <Link to={"/mypage"} onClick={showMenubar}>
-                  마이페이지
+                <Link to={"/mypage"}>마이페이지</Link>
+              ) : (
+                <div onClick={showLoginModal}>로그인</div>
+              )}
+              {login ? (
+                <div>로그아웃</div>
+              ) : (
+                <div onClick={showSignUpModal}>회원가입</div>
+              )}
+            </div>
+          </div>
+          <div className={"sidebar"}>
+            {menu ? (
+              <FontAwesomeIcon
+                className="icon"
+                icon={faTimes}
+                size={"2x"}
+                onClick={showMenubar}
+              />
+            ) : (
+              <FontAwesomeIcon
+                className="icon"
+                icon={faBars}
+                size={"2x"}
+                onClick={showMenubar}
+              />
+            )}
+            {menu ? (
+              <StMenuBarDiv>
+                <Link to="/trade=all" onClick={showMenubar}>
+                  중고거래
                   <i class="fas fa-arrow-right"></i>
                 </Link>
-              ) : (
-                <li onClick={showMenubar}>
-                  로그인
+                <Link to="/news=0" onClick={showMenubar}>
+                  동네소식
                   <i class="fas fa-arrow-right"></i>
-                </li>
-              )}
-              {login ? (
-                <li className={"lastli"} onClick={showMenubar}>
-                  로그아웃
-                  <i class="fas fa-arrow-right"></i>
-                </li>
-              ) : (
-                <li className={"lastli"} onClick={showMenubar}>
-                  회원가입
-                  <i class="fas fa-arrow-right"></i>
-                </li>
-              )}
-            </StMenuBarDiv>
-          ) : null}
+                </Link>
+                {login ? (
+                  <Link to={"/mypage"} onClick={showMenubar}>
+                    마이페이지
+                    <i class="fas fa-arrow-right"></i>
+                  </Link>
+                ) : (
+                  <li onClick={showLoginModal}>
+                    로그인
+                    <i class="fas fa-arrow-right"></i>
+                  </li>
+                )}
+                {login ? (
+                  <li className={"lastli"} onClick={showMenubar}>
+                    로그아웃
+                    <i class="fas fa-arrow-right"></i>
+                  </li>
+                ) : (
+                  <li className={"lastli"} onClick={showSignUpModal}>
+                    회원가입
+                    <i class="fas fa-arrow-right"></i>
+                  </li>
+                )}
+              </StMenuBarDiv>
+            ) : null}
+          </div>
         </div>
-      </div>
-    </StHeadBoxDiv>
+      </StHeadBoxDiv>
+      {loginModal ? (
+        <Login isLoginModal={isLoginModal} showSignUpModal={showSignUpModal} />
+      ) : null}
+      {signUpModal ? (
+        <Signup isSingUpModal={isSingUpModal} showLoginModal={showLoginModal} />
+      ) : null}
+    </>
   );
 }

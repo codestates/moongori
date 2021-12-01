@@ -11,8 +11,21 @@ module.exports = async (req, res) => {
   if (!userInfo) {
     return res.status(403).json({ message: "no exist user" });
   }
-  const { id, email, nickname, address, salt, img, reliability, password } =
-    userInfo.dataValues;
+  const {
+    id,
+    email,
+    nickname,
+    address,
+    salt,
+    img,
+    reliability,
+    password,
+    authState,
+  } = userInfo.dataValues;
+  //이메일 인증 여부 확인(안된경우 이메일 인증 요청 문구 전달);
+  if (authState === 0) {
+    return res.status(403).json({ message: "check your certificate email " });
+  }
 
   //패스워드 체크
   const encrypted = CryptoJS.PBKDF2(req.body.password, salt, {
@@ -29,6 +42,7 @@ module.exports = async (req, res) => {
       address,
       nickname,
       reliability,
+      authState,
     };
     const token = sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1d" });
     return res

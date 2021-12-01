@@ -265,7 +265,7 @@ export default function Main() {
 
   function onScroll() {
     setPosition(window.scrollY);
-    console.log(window.scrollY);
+    // console.log(window.scrollY);
   }
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
