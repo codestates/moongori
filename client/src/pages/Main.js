@@ -88,7 +88,7 @@ const StBodyDiv = styled.div`
       .example-contents {
         position: absolute;
         z-index: 2;
-        top: 7%;
+        top: 5%;
         left: 30%;
         display: flex;
         align-items: center;
@@ -135,8 +135,8 @@ const StBodyDiv = styled.div`
       }
       .example {
         .example-contents {
-          top: 4%;
-          left: 19%;
+          /* top: 4%;
+          left: 19%; */
           flex-direction: row;
           justify-content: center;
         }
@@ -205,7 +205,7 @@ export default function Main() {
 
   function onScroll() {
     setPosition(window.scrollY);
-    console.log(window.scrollY);
+    // console.log(window.scrollY);
   }
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
