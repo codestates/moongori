@@ -10,5 +10,6 @@ module.exports = {
   sendEmail: require("./sendEmail"),
   cert: require("./certification"),
 
+  img: require("./img"),
   test: require("./test"),
-}
+};
