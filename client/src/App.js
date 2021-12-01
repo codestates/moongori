@@ -8,6 +8,7 @@ import Main from "./pages/Main";
 import TradeList from "./pages/TradeList";
 import NewsList from "./pages/NewsList";
 import Mypage from "./pages/Mypage";
+import axios from "axios";
 
 const Wrap = styled.div`
   height: 100%;
@@ -16,6 +17,16 @@ const Wrap = styled.div`
 `;
 
 function App() {
+  const [userinfo, setUserinfo] = useState("");
+  const isAuthenticated = () => {
+    axios.get("http://localhost:4000/user/info").then((res) => {
+      console.log(res.data);
+    });
+  };
+  useEffect(() => {
+    isAuthenticated();
+  }, []);
+
   return (
     <BrowserRouter>
       <Wrap>
