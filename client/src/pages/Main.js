@@ -219,26 +219,25 @@ export default function Main() {
     };
   }, []);
 
-  // const handlekakaoLoginBtn = async () => {
-  //   await window.location.assign("http://localhost:80/user/kakao");
-  // };
-  // const handlegoogleLoginBtn = async () => {
-  //   await window.location.assign("http://localhost:80/user/google");
-  // };
+  const handlekakaoLoginBtn = async () => {
+    await window.location.assign("http://localhost:80/user/kakao");
+  };
+  const handlegoogleLoginBtn = async () => {
+    await window.location.assign("http://localhost:80/user/google");
+  };
 
-  // useEffect(() => {
-  //   const query = queryString.parse(window.location.search);
-  //   if (query.access_token) {
-  //     axios.get("http://localhost:80/user/info").then((res) => {
-  //       console.log(res.data.data);
-  //     });
-  //   }
-  // }, [window.location]);
+  useEffect(() => {
+    const query = queryString.parse(window.location.search);
+    if (query.access_token) {
+      axios.get("http://localhost:80/user/info").then((res) => {
+        console.log(res.data.data);
+      });
+    }
+  }, [window.location]);
 
   return (
     <StBodyDiv>
-      <div className={"main"}>
-        {/* <div
+      {/* <div
         onClick={() => {
           handlekakaoLoginBtn();
         }}
@@ -246,7 +245,7 @@ export default function Main() {
         <img src={kakaoImg} />
       </div> */}
 
-        {/* <div
+      {/* <div
         onClick={() => {
           handlegoogleLoginBtn();
         }}
@@ -254,13 +253,14 @@ export default function Main() {
         <img src={googleImg} />
       </div> */}
 
-        {/* <img
-        src={`http://`}
+      {/* <img
+        src={`콘솔에 img 값`}
       /> */}
 
-        {/* <img
-        src={`http://k.kakaocdn.net/dn/ec5JId/btqBDYf4uEv/4n4rER4879ROYlsfVit82K/img_640x640.jpg`}
+      {/* <img
+        src={`콘솔에 img 값`}
       /> */}
+      <div className={"main"}>
         <div className={"banner"} onDragStart={changeImg}>
           {select ? (
             <img src={mainImg1} alt={"소개글1-1 이미지"} />
