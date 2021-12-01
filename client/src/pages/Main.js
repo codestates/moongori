@@ -13,7 +13,6 @@ import trade from "./../images/trade.png";
 
 const StBodyDiv = styled.div`
   width: 100%;
-  padding-bottom: 200px;
   .main {
     height: 570px;
     width: 100%;
@@ -27,6 +26,9 @@ const StBodyDiv = styled.div`
       padding: 40px 0 0 0;
       .banner-intro {
         height: 180px;
+        @media all and (max-width: 768px) {
+          margin-bottom: 20px;
+        }
       }
       .logo-title {
         text-align: center;
@@ -43,6 +45,7 @@ const StBodyDiv = styled.div`
       justify-content: space-between;
       width: 30px;
       padding: 10px 0 40px 0;
+
       svg {
         color: #c4c4c4;
       }
@@ -55,17 +58,26 @@ const StBodyDiv = styled.div`
     }
     .main-intro {
       margin-top: 20px;
+      @media all and (min-width: 769px) {
+      }
     }
     .main-intro-title {
+      width: 100%;
       text-align: center;
       font-weight: bold;
-      font-size: 25px;
+      font-size: 30px;
       margin-bottom: 20px;
     }
     .main-intro-contents {
-      font-size: 14px;
+      font-size: 15px;
       text-align: center;
       margin-top: 5px;
+      @media all and (min-width: 769px) {
+        font-size: 20px;
+      }
+    }
+    .main-intro-wrap {
+      margin-bottom: 10px;
     }
     .main-intro-subtitle {
       text-align: center;
@@ -82,47 +94,72 @@ const StBodyDiv = styled.div`
       width: 100%;
       height: 100%;
       background-color: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
       .example-contents {
+        width: 80%;
+        flex-direction: column;
+        justify-content: center;
         position: absolute;
         z-index: 2;
-        top: 5%;
-        left: 30%;
         display: flex;
         align-items: center;
-        flex-direction: column;
-        margin: 40px 0 40px 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     }
   }
   .button {
     margin-top: 10px;
-    width: 100px;
-    height: 32px;
+    width: 180px;
+    height: 40px;
     background: #ffffff;
     border-radius: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    text-decoration: none;
+    @media all and (max-width: 768px) {
+      width: 120px;
+      height: 40px;
+    }
   }
   .button-name {
     font-weight: bold;
-    font-size: 11px;
+    font-size: 15px;
     color: #474747;
+    @media all and (max-width: 768px) {
+      font-size: 13px;
+    }
   }
   .question-contents {
-    margin-top: 40px;
+    width: 80%;
     display: flex;
-    flex-direction: column;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    @media all and (max-width: 768px) {
+      flex-direction: column;
+    }
+    .question-wrap {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      @media all and (max-width: 768px) {
+        width: 90%;
+      }
+    }
+  }
+  .question-img {
+    width: 50%;
+    margin-bottom: 20px;
+    display: flex;
     justify-content: center;
     align-items: center;
   }
-  .question-img {
-    margin-bottom: 20px;
-  }
+  //web
   @media all and (min-width: 769px) {
     .main {
       height: 500px;
@@ -134,24 +171,47 @@ const StBodyDiv = styled.div`
         flex-direction: row-reverse;
       }
       .example {
+        position: relative;
         .example-contents {
-          /* top: 4%;
-          left: 19%; */
+          width: 80%;
+          height: 80%;
+          position: absolute;
+          display: flex;
           flex-direction: row;
           justify-content: center;
+          align-items: center;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          .main-intro {
+            width: 50%;
+          }
+          .example-img-wrap {
+            width: 50%;
+            height: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .example-img {
+              width: 80%;
+            }
+          }
         }
         .second {
           flex-direction: row-reverse;
         }
       }
       .main-intro-title {
-        padding-left: 20px;
-        padding-right: 20px;
+        font-size: 50px;
       }
     }
     .welcome {
-      margin-left: 22px;
+      margin-left: 5px;
       color: gray;
+      @media all and (max-width: 768px) {
+        margin-left: 15px;
+        color: gray;
+      }
     }
   }
 `;
@@ -161,11 +221,10 @@ const StBackgroundTextDiv = styled.div`
     display: none;
   }
   @media all and (min-width: 769px) {
-    position: relative;
+    position: absolute;
     z-index: 1;
     font-size: 10em;
     opacity: 0.1;
-    margin-top: -250px;
     margin-left: ${(props) => (props.second ? "1000px" : null)};
   }
 `;
@@ -175,6 +234,7 @@ const StQuestionDiv = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   background: ${(props) => {
     return props.color || "#aae8c5";
@@ -227,9 +287,9 @@ export default function Main() {
             <div className={"banner-intro"}>
               <div className={"welcome"}>Welcome</div>
               <div className={"main-intro-title"}>
-                사람과 사람을 이어주는 우리동네 플래폼
+                {`사람과 사람을 이어주는\n우리동네 플래폼`}
               </div>
-              <div className={"logo-title"}>문 고 리</div>
+              <div className={"logo-title"}>문고리</div>
               <div className={"main-intro-subcontents"}>
                 지금 바로 문고리를 잡아보세요.
               </div>
@@ -239,13 +299,17 @@ export default function Main() {
               <div className={"main-intro-title"}>
                 우리들의 문고리를 소개합니다.
               </div>
-              <div className={"main-intro-subtitle"}>가격제시 거래</div>
-              <div className={"main-intro-subcontents"}>
-                기존의 피로했던 중고거래 방식을 벗어난 거래
+              <div className={"main-intro-wrap"}>
+                <div className={"main-intro-subtitle"}>가격제시 거래</div>
+                <div className={"main-intro-subcontents"}>
+                  기존의 피로했던 중고거래 방식을 벗어난 거래
+                </div>
               </div>
-              <div className={"main-intro-subtitle"}>동네소식</div>
-              <div className={"main-intro-subcontents"}>
-                우리동네의 다양한 소식을 공유
+              <div className={"main-intro-wrap"}>
+                <div className={"main-intro-subtitle"}>동네소식</div>
+                <div className={"main-intro-subcontents"}>
+                  우리동네의 다양한 소식을 공유
+                </div>
               </div>
             </div>
           )}
@@ -279,10 +343,17 @@ export default function Main() {
             Suggestion
           </StBackgroundTextDiv>
           <div className={"example-contents"}>
-            <img src={exampleImg1} alt={"움짤예시1 이미지"} />
+            <div className={"example-img-wrap"}>
+              {" "}
+              <img
+                src={exampleImg1}
+                alt={"움짤예시1 이미지"}
+                className={"example-img"}
+              />
+            </div>
             <div className={"main-intro"}>
               <div className={"main-intro-title"}>
-                판매자가 구매자를 선택하세요
+                {`판매자가\n구매자를 선택하세요`}
               </div>
               <div
                 className={"main-intro-contents"}
@@ -294,15 +365,19 @@ export default function Main() {
       <div className={"main"}>
         <StQuestionDiv>
           <div className={"question-contents"}>
-            <div className={"main-intro-title"}>
-              {`가격 제시 시스템이\n궁금하신가요?`}
+            <div className={"question-wrap"}>
+              {" "}
+              <div className={"main-intro-title"}>
+                {`가격 제시 시스템이\n궁금하신가요?`}
+              </div>
+              <Link to={"/trade=all"} className="button">
+                <p className={"button-name"}>둘러보기</p>
+              </Link>
             </div>
-            <Link to={"/trade=all"} className="button">
-              <p className={"button-name"}>둘러보기</p>
-            </Link>
-          </div>
-          <div className={"question-img"}>
-            <img src={trade} alt={"이미지"} />
+
+            <div className={"question-img"}>
+              <img src={trade} alt={"이미지"} />
+            </div>
           </div>
         </StQuestionDiv>
       </div>
@@ -315,10 +390,18 @@ export default function Main() {
             Community
           </StBackgroundTextDiv>
           <div className={"example-contents second"}>
-            <img src={exampleImg2} alt={"움짤예시1 이미지"} />
+            <div className={"example-img-wrap"}>
+              {" "}
+              <img
+                src={exampleImg2}
+                alt={"움짤예시1 이미지"}
+                className={"example-img"}
+              />
+            </div>
+
             <div className={"main-intro"}>
               <div className={"main-intro-title"}>
-                이웃들과 동네소식을 나눠봐요
+                {`이웃들과\n동네소식을 나눠봐요`}
               </div>
               <div
                 className={"main-intro-contents"}
@@ -330,15 +413,18 @@ export default function Main() {
       <div className={"main"}>
         <StQuestionDiv color="#AAE8E1">
           <div className={"question-contents"}>
-            <div className={"main-intro-title"}>
-              {`우리 동네에서 이웃들과\n무엇을 공유할까요?`}
+            <div className={"question-wrap"}>
+              <div className={"main-intro-title"}>
+                {`우리 동네에서 이웃들과\n무엇을 공유할까요?`}
+              </div>
+              <Link to={"/news=0"} className="button">
+                <p className={"button-name"}>둘러보기</p>
+              </Link>
             </div>
-            <Link to={"/news=0"} className="button">
-              <p className={"button-name"}>둘러보기</p>
-            </Link>
-          </div>
-          <div className={"question-img"}>
-            <img src={dongne} alt={"동네 소식 이미지"} />
+
+            <div className={"question-img"}>
+              <img src={dongne} alt={"동네 소식 이미지"} />
+            </div>
           </div>
         </StQuestionDiv>
       </div>
