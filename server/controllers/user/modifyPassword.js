@@ -3,6 +3,7 @@ const { verify } = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
 
 module.exports = async (req, res) => {
+  console.log(req.body);
   const cookie = req.cookies.accesstoken;
   const verified = verify(cookie, process.env.ACCESS_SECRET);
   if (!verified) {
@@ -26,10 +27,13 @@ module.exports = async (req, res) => {
         iterations: 1000,
       });
       const newEncryptedPW = newEncrypted.toString(CryptoJS.enc.Base64);
-      await user.update({ password: newEncryptedPW, salt: newSalt }, { where: { id: verified.id } });
+      await user.update(
+        { password: newEncryptedPW, salt: newSalt },
+        { where: { id: verified.id } }
+      );
       return res.status(200).json({ message: "ok" });
     } else {
       return res.status(403).json({ message: "password fail to modify" });
     }
   }
-}
+};
