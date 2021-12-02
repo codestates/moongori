@@ -125,7 +125,7 @@ export default function PasswordModal({ modalClose }) {
       });
     } else {
       axios
-        .patch("http://localhost:4000/user/password", {
+        .patch("http://localhost:80/user/password", {
           currentPassword: password.currentPassword,
           modifyPassword: password.modifyPassword,
         })

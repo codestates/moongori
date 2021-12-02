@@ -121,12 +121,10 @@ const StMenuBarDiv = styled.ul`
   }
 `;
 
-export default function Header() {
+export default function Header({ login, handleLoginSuccess }) {
   const [menu, isMenu] = useState(false);
   const [loginModal, isLoginModal] = useState(false);
   const [signUpModal, isSingUpModal] = useState(false);
-  // 로그인했는지의 state이므로 App에서 받아와야함 (일단 확인용)
-  const [login, isLogin] = useState(false);
 
   const showMenubar = () => {
     isMenu(!menu);
@@ -226,7 +224,11 @@ export default function Header() {
         </div>
       </StHeadBoxDiv>
       {loginModal ? (
-        <Login isLoginModal={isLoginModal} showSignUpModal={showSignUpModal} />
+        <Login
+          handleLoginSuccess={handleLoginSuccess}
+          isLoginModal={isLoginModal}
+          showSignUpModal={showSignUpModal}
+        />
       ) : null}
       {signUpModal ? (
         <Signup isSingUpModal={isSingUpModal} showLoginModal={showLoginModal} />
