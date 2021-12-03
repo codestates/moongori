@@ -100,8 +100,6 @@ const ModalContainer = styled.div`
 export default function PasswordModal({ modalClose }) {
   const navigate = useNavigate();
   const onCloseModal = (e) => {
-    console.log("e.target: ", e.target);
-    console.log("e.tarcurrentTargetget: ", e.currentTarget);
     if (e.target === e.currentTarget) {
       modalClose();
     }

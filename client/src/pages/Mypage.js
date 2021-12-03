@@ -9,14 +9,27 @@ import mypage from "../images/mypage.png";
 import profile from "../images/vegetable.jpeg";
 import lock from "../images/locked.png";
 import cancel from "../images/cancel.png";
+import editImg from "../images/edit.png";
+import complete from "../images/complete.png";
+import Swal from "sweetalert2";
+import DaumPostcode from "react-daum-postcode";
+import ModalContainer from "../components/PasswordModal";
 
-const MypageHead = styled.div`
+const ModalBackground = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+`;
+const StMypageHead = styled.div`
   width: 100%;
   padding-bottom: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   .mypage-master {
     height: 800px;
     width: 100%;
@@ -26,7 +39,7 @@ const MypageHead = styled.div`
     align-items: center;
   }
   .mypage-box {
-    width: 60%;
+    width: 40%;
     height: 60%;
     background-color: #aae8c5;
     border-radius: 15px;
@@ -34,9 +47,10 @@ const MypageHead = styled.div`
       width: 90%;
       height: 50%;
     }
+
     .mypage-wrap {
       width: 100%;
-      height: 90%;
+      height: 80%;
       display: flex;
       justify-content: center;
       @media all and (max-width: 768px) {
@@ -48,20 +62,37 @@ const MypageHead = styled.div`
         justify-content: center;
         align-items: center;
         .profile-img {
-          width: 50%;
-          height: 50%;
+          width: 60%;
+          height: 45%;
           border-radius: 70%;
           overflow: hidden;
         }
       }
       .mypage-userinfo-box {
-        width: 50%;
+        width: 60%;
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
+        .edit-wrap {
+          margin-right: 42px;
+          width: 100%;
+          height: 10%;
+          display: flex;
+          align-items: center;
+          justify-content: end;
+          .edit-img {
+            width: 20px;
+            height: 20px;
+          }
+          @media all and (max-width: 768px) {
+            margin-right: 82px;
+            margin-top: 5px;
+          }
+        }
         .mypage-userinfo-wrap {
-          height: 100%;
+          height: 80%;
           width: 100%;
           @media all and (max-width: 768px) {
             height: 90%;
@@ -101,12 +132,54 @@ const MypageHead = styled.div`
               align-items: start;
             }
             .input-area {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: white;
               height: 30%;
               width: 80%;
               border-radius: 5px;
               border: 1px gray;
               @media all and (max-width: 768px) {
                 height: 50%;
+              }
+              .userinfo-contents {
+                font-size: 12px;
+                @media all and (max-width: 768px) {
+                  font-size: 9px;
+                }
+              }
+            }
+            .edit {
+              width: 50%;
+              border-top-right-radius: 0;
+              border-bottom-right-radius: 0;
+              text-align: center;
+              @media all and (max-width: 768px) {
+                font-size: 9px;
+              }
+            }
+            .dupicate-wrap {
+              width: 30%;
+              height: 32%;
+              @media all and (max-width: 768px) {
+                height: 55%;
+              }
+              .dupicate-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px gray;
+                background: #d9f9e7;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+                width: 100%;
+                height: 100%;
+                .dupicate-check {
+                  font-weight: bold;
+                  font-size: 10px;
+                  cursor: pointer;
+                }
               }
             }
           }
@@ -166,7 +239,7 @@ const MypageHead = styled.div`
     flex-direction: column;
     align-items: center;
     .category-wrap {
-      width: 80%;
+      width: 62%;
       height: 20%;
       display: flex;
       justify-content: center;
@@ -210,7 +283,7 @@ const MypageHead = styled.div`
             justify-content: center;
             align-items: center;
             .category-button {
-              font-size: 10px;
+              font-size: 9px;
               width: 80%;
               height: 60%;
               background: #aae8c5;
@@ -237,88 +310,285 @@ const MypageHead = styled.div`
   }
 `;
 
-export default function Mypage() {
+export default function Mypage({ login, userinfo }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
+  const [modalOpen3, setModalOpen3] = useState(false);
+
+  const [edit, setEdit] = useState(true);
+  const [editInfo, setEditInfo] = useState({
+    img: "",
+    nickname: "",
+    address: "",
+  });
+  const [duplicate, setDuplicate] = useState({
+    nickname: false,
+  });
+  const [openPost, isOpenPost] = useState(false);
+  const handleInputValue = (key) => (e) => {
+    setEditInfo({ ...editInfo, [key]: e.target.value });
+  };
 
   // const [userInfo, setUserInfo] = useState({
   //   nickname: nickname,
   //   email: email,
   //   address: address,
   // });
+  console.log(editInfo);
+  const onCloseModal = (e) => {
+    if (e.target === e.currentTarget) {
+      modalClose();
+    }
+  };
   const modalClose = () => {
     setModalOpen(!modalOpen);
   };
   const modalClose2 = () => {
     setModalOpen2(!modalOpen2);
   };
-  const signupTest = () => {
+  const modalClose3 = () => {
+    isOpenPost(!openPost);
+  };
+  const editHandler = () => {
+    setEdit(!edit);
+  };
+  // useEffect(() => {
+  //   if (!userinfo.address) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "원활한 서비스 이용을 위해 동네 인증을 해주세요",
+  //       text: "",
+  //       footer: "",
+  //     });
+  //   }
+  // }, []);
+  const checkDuplicate = () => {
     axios
-      .post("http://localhost:4000/user/signup", {
-        email: "1234@1234.com",
-        nickname: "김코딩",
-        address: "부산시 수영구 광안해변로 386",
-        password: "1234",
+      .post(`${process.env.REACT_APP_API_URL}/user/nickname`, {
+        nickname: editInfo.nickname,
       })
       .then((res) => {
-        console.log(res);
-      });
-  };
-  const signinTest = () => {
-    axios
-      .post("http://localhost:4000/user/signin", {
-        email: "1234@1234.com",
-        password: "1234",
+        setDuplicate(true);
+        Swal.fire({
+          icon: "success",
+          title: "사용 가능한 닉네임입니다",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       })
-      .then((res) => {
-        console.log(res);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "중복된 닉네임입니다",
+          text: "",
+          footer: "",
+        });
       });
   };
+  const submitEditInfo = () => {
+    if (duplicate === true) {
+      axios
+        .patch(`${process.env.REACT_APP_API_URL}/user`, {
+          nickname: editInfo.nickname,
+          address: editInfo.address,
+        })
+        .then((res) => {
+          setEditInfo(res.data);
+        });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "닉네임 중복 확인을 해주세요",
+        text: "",
+        footer: "",
+      });
+    }
+  };
+
+  const onCompletePost = (data) => {
+    let fullAddr = data.address;
+    let extraAddr = "";
+
+    if (data.addressType === "R") {
+      if (data.buildingName !== "") {
+        extraAddr +=
+          extraAddr !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      if (data.sigungu !== "") {
+        extraAddr += `, ${data.sigungu}`;
+      }
+      if (data.bname !== "") {
+        extraAddr += `, ${data.bname}`;
+      }
+      fullAddr += extraAddr !== "" ? ` ${extraAddr}` : "";
+    }
+    setEditInfo({ ...editInfo, ["address"]: fullAddr });
+    isOpenPost(false);
+  };
+  const postCodeStyle = {
+    display: "block",
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    width: "400px",
+    height: "500px",
+    transform: "translate(-50%, -50%)",
+    padding: "7px",
+  };
+
+  const postThemeStyle = {
+    bgColor: "#D6FFEA",
+    outlineColor: "#222222",
+  };
+
   return (
-    <MypageHead>
+    <StMypageHead>
       <div className={"mypage-master"}>
         <div className={"mypage-box"}>
-          <div className={"mypage-wrap"}>
-            <div className={"mypage-profile-box"}>
-              <img src={profile} className={"profile-img"}></img>
-            </div>
-            <div className={"mypage-userinfo-box"}>
-              <div className={"mypage-userinfo-wrap"}>
-                <div className={"mypage-input-box"}>
-                  <div
-                    className={"input-title"}
-                    onClick={() => {
-                      signinTest();
-                    }}
-                  >
-                    닉네임
-                  </div>
-                  <div className={"input-tick"}>
-                    <input type="text" className={"input-area"}></input>
-                  </div>
-                </div>
-                <div className={"mypage-input-box"}>
-                  <div
-                    className={"input-title"}
-                    onClick={() => {
-                      signupTest();
-                    }}
-                  >
-                    이메일
-                  </div>
-                  <div className={"input-tick"}>
-                    <input type="text" className={"input-area"}></input>
+          {edit ? (
+            //기존 상태
+            <div className={"mypage-wrap"}>
+              <div className={"mypage-profile-box"}>
+                <img src={profile} className={"profile-img"}></img>
+              </div>
+              <div className={"mypage-userinfo-box"}>
+                <div className={"edit-wrap"}>
+                  <div className={"edit-box"}>
+                    <img
+                      src={editImg}
+                      className={"edit-img"}
+                      onClick={() => {
+                        editHandler();
+                      }}
+                    ></img>
                   </div>
                 </div>
-                <div className={"mypage-input-box"}>
-                  <div className={"input-title"}>동네</div>
-                  <div className={"input-tick"}>
-                    <input type="text" className={"input-area"}></input>
+                <div className={"mypage-userinfo-wrap"}>
+                  <div className={"mypage-input-box"}>
+                    <div className={"input-title"}>닉네임</div>
+                    <div className={"input-tick"}>
+                      {/* <input
+                    type="text"
+                    className={"input-area"}
+                      defaultValue={userinfo.email}
+                  ></input> */}
+                      <div className={"input-area"}>
+                        <div className={"userinfo-contents"}>
+                          {userinfo.nickname}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={"mypage-input-box"}>
+                    <div className={"input-title"}>이메일</div>
+                    <div className={"input-tick"}>
+                      {/* <input
+                    type="text"
+                    className={"input-area"}
+                    defaultValue={userinfo.email}
+                  ></input> */}
+                      <div className={"input-area"}>
+                        <div className={"userinfo-contents"}>
+                          {userinfo.email}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={"mypage-input-box"}>
+                    <div className={"input-title"}>동네</div>
+                    <div className={"input-tick"}>
+                      {/* <input
+                    type="text"
+                    className={"input-area"}
+                    defaultValue={userinfo.address}
+                  ></input> */}
+                      <div className={"input-area"}>
+                        <div className={"userinfo-contents"}>
+                          {userinfo.address}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            //편집 상태
+            <div className={"mypage-wrap"}>
+              <div className={"mypage-profile-box"}>
+                <img src={profile} className={"profile-img"}></img>
+              </div>
+              <div className={"mypage-userinfo-box"}>
+                <div className={"edit-wrap"}>
+                  <div className={"edit-box"}>
+                    <img
+                      src={complete}
+                      className={"edit-img"}
+                      onClick={() => {
+                        editHandler();
+                        submitEditInfo();
+                      }}
+                    ></img>
+                  </div>
+                </div>
+                <div className={"mypage-userinfo-wrap"}>
+                  <div className={"mypage-input-box"}>
+                    <div className={"input-title"}>닉네임</div>
+                    <div className={"input-tick"}>
+                      <input
+                        type="text"
+                        className={"input-area edit"}
+                        defaultValue={userinfo.nickname}
+                        onChange={handleInputValue("nickname")}
+                      ></input>
+                      <div className={"dupicate-wrap"}>
+                        <div className={"dupicate-button"}>
+                          <div
+                            className={"dupicate-check"}
+                            onClick={() => checkDuplicate()}
+                          >
+                            중복 확인
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={"mypage-input-box"}>
+                    <div className={"input-title"}>이메일</div>
+                    <div className={"input-tick"}>
+                      <div className={"input-area"}>
+                        <div className={"userinfo-contents"}>
+                          {userinfo.email}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={"mypage-input-box"}>
+                    <div className={"input-title"}>동네</div>
+                    <div className={"input-tick"}>
+                      <input
+                        className={"input-area"}
+                        value={userinfo.address}
+                        onFocus={() => isOpenPost(true)}
+                        onChange={handleInputValue("address")}
+                      ></input>
+                      {openPost && (
+                        <ModalBackground onClick={() => modalClose3()}>
+                          <DaumPostcode
+                            style={postCodeStyle}
+                            theme={postThemeStyle}
+                            autoClose
+                            onComplete={onCompletePost}
+                          />
+                        </ModalBackground>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className={"button-wrap"}>
             <div className={"button-box-empty"}></div>
             <div className={"button-box"}>
@@ -377,6 +647,6 @@ export default function Mypage() {
           </div>
         </div>
       </div>
-    </MypageHead>
+    </StMypageHead>
   );
 }

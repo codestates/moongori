@@ -8,6 +8,9 @@ import Main from "./pages/Main";
 import TradeList from "./pages/TradeList";
 import NewsList from "./pages/NewsList";
 import Mypage from "./pages/Mypage";
+import NotFound from "./pages/NotFound";
+import PrivateRoute from "./components/PrivateRoute";
+
 import axios from "axios";
 import Swal from "sweetalert2";
 axios.defaults.withCredentials = true;
@@ -31,7 +34,7 @@ export default function App() {
       })
       .catch((err) => console.log(err));
   };
-
+  console.log(userinfo);
   const handleLoginSuccess = () => {
     isAuthenticated();
   };
@@ -68,7 +71,10 @@ export default function App() {
 
           <Route path="/news=:category" element={<NewsList />} />
 
-          <Route path="/mypage" element={<Mypage />} />
+          <Route
+            path="/mypage"
+            element={<PrivateRoute login={login} userinfo={userinfo} />}
+          />
 
           {/* <Route path="/trade-normal/read=:id" element={<TradeNormalPost />} />
 
@@ -84,7 +90,7 @@ export default function App() {
           <Route path="/news/write" element={<NewsPostWrite />} />
 
           <Route path="/chat" element={<Chat />} /> */}
-          {/* < Route element={NotFound}/> */}
+          <Route element={<NotFound />} />
         </Routes>
         <Footer />
       </Wrap>
