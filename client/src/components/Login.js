@@ -129,7 +129,11 @@ export const StRequestButton = styled.button`
   }
 `;
 
-export default function Login({ isLoginModal, showSignUpModal }) {
+export default function Login({
+  isLoginModal,
+  showSignUpModal,
+  handleLoginSuccess,
+}) {
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
@@ -142,7 +146,6 @@ export default function Login({ isLoginModal, showSignUpModal }) {
   // 이메일과 비밀번호를 입력했는지 확인
   // 2개를 모두 입력했으면 서버에 로그인 요청하기
   const handleLogin = () => {
-    console.log(loginInfo);
     // 이메일 or 비밀번호를 입력하지 않은 경우
     if (loginInfo.email === "" || loginInfo.password === "") {
       Swal.fire({
@@ -151,14 +154,17 @@ export default function Login({ isLoginModal, showSignUpModal }) {
       });
     } else {
       axios
-        .post(`${process.env.SERVER}/user/signin`, {
+        .post(`${process.env.REACT_APP_API_URL}/user/signin`, {
           email: loginInfo.email,
           password: loginInfo.password,
         })
         .then((res) => {
           // 로그인 성공
           isLoginModal(false);
-          navigate("/main");
+          handleLoginSuccess();
+
+          navigate("/");
+
         })
         .catch(() => {
           Swal.fire({
@@ -168,6 +174,15 @@ export default function Login({ isLoginModal, showSignUpModal }) {
           });
         });
     }
+  };
+
+  const handlekakaoLoginBtn = async () => {
+    await window.location.assign("http://localhost:80/user/kakao");
+    handleLoginSuccess();
+  };
+  const handlegoogleLoginBtn = async () => {
+    await window.location.assign("http://localhost:80/user/google");
+    handleLoginSuccess();
   };
 
   return (
@@ -211,11 +226,14 @@ export default function Login({ isLoginModal, showSignUpModal }) {
           <StRequestButton background={"#AAE8C5"} onClick={handleLogin}>
             로그인
           </StRequestButton>
-          <StRequestButton outside background={"#FFFFFF"}>
+          <StRequestButton
+            background={"#FFFFFF"}
+            onClick={handlegoogleLoginBtn}
+          >
             <img src={google} alt={"구글이미지"} />
             구글 로그인
           </StRequestButton>
-          <StRequestButton outside background={"#FFE200"}>
+          <StRequestButton background={"#FFE200"} onClick={handlekakaoLoginBtn}>
             <img src={kakao} alt={"카카오이미지"} />
             카카오톡 로그인
           </StRequestButton>

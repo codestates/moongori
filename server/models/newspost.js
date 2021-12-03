@@ -23,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     latitude: DataTypes.DOUBLE,
     longitude: DataTypes.DOUBLE,
     user_Id: DataTypes.INTEGER,
-    comment_cnt: DataTypes.INTEGER,
-    view: DataTypes.INTEGER
+    comment_cnt: { defaultValue: 0, type: DataTypes.INTEGER },
+    view: { defaultValue: 0, type: DataTypes.INTEGER }
   }, {
     sequelize,
     modelName: 'newsPost',

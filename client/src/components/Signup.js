@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
@@ -57,15 +57,12 @@ const StAddressModalDiv = styled.div`
   font-size: 0.9em;
 `;
 
-//! 해야할 부분
-// 이메일 인증하기
-// 주소API로 입력
-
 export default function Signup({ isSingUpModal, showLoginModal }) {
   const [signUpInfo, setSignUpInfo] = useState({
     email: "",
     nickname: "",
     address: "",
+    useAddress: "",
     password: "",
     passwordCheck: "",
   });
@@ -79,36 +76,50 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
     passwordCheck: false, // 패스워드 일치
   });
   const [openPost, isOpenPost] = useState(false);
-
+  const navigate = useNavigate();
   const handleInputValue = (key, e) => {
     setSignUpInfo({ ...signUpInfo, [key]: e.target.value });
     // 이메일 검사
     if (key === "email") {
       // 유효성 검사 통과하면 서버에 중복확인 하기
       if (isEmail(e.target.value)) {
-        axios
-          .post(`${process.env.SERVER}/user/email`, { email: e.target.value })
-          .then(() => {
-            // 이메일 사용가능
-            setCheckInfo({ ...checkInfo, email: true, duplicatedEmail: true });
-          })
-          .catch(() => {
-            // 중복된 이메일
-            setCheckInfo({ ...checkInfo, email: true, duplicatedEmail: false });
-          });
+
+        setCheckInfo({ ...checkInfo, email: true, duplicatedEmail: false });
+
+//         axios
+//           .post(`${process.env.REACT_APP_API_URL}/user/email`, {
+//             email: e.target.value,
+//           })
+//           .then(() => {
+//             // 이메일 사용가능
+//             setCheckInfo({ ...checkInfo, email: true, duplicatedEmail: true });
+//           })
+//           .catch(() => {
+//             // 중복된 이메일
+//             setCheckInfo({ ...checkInfo, email: true, duplicatedEmail: false });
+//           });
+
       } else {
         // 유효성 검사 실패
-        setCheckInfo({ ...checkInfo, email: false });
+        setCheckInfo({ ...checkInfo, email: false, duplicatedEmail: false });
       }
     }
     // 닉네임 검사
     if (key === "nickname") {
       // 닉네임 유효성 검사
       if (isNickname(e.target.value)) {
-        setCheckInfo({ ...checkInfo, nickname: true });
+        setCheckInfo({
+          ...checkInfo,
+          nickname: true,
+          duplicatedNickname: false,
+        });
       } else {
         // 유효성 검사 실패
-        setCheckInfo({ ...checkInfo, nickname: false });
+        setCheckInfo({
+          ...checkInfo,
+          nickname: false,
+          duplicatedNickname: false,
+        });
       }
     }
     // 비밀번호 검사
@@ -144,12 +155,47 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
     }
   };
 
+  // 이메일 중복검사 함수
+  const checkEmail = () => {
+    // 유효성 검사를 통과한 이메일인지 확인
+    if (checkInfo.email) {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/user/email`, {
+          email: signUpInfo.email,
+        })
+        .then(() => {
+          // 이메일 사용 가능
+          setCheckInfo({
+            ...checkInfo,
+            duplicatedEmail: true,
+          });
+          Swal.fire({
+            icon: "success",
+            title: "사용 가능한 이메일입니다.",
+          });
+        })
+        .catch(() => {
+          // 중복된 이메일
+          Swal.fire({
+            icon: "error",
+            title: "중복된 이메일입니다.",
+          });
+        });
+    } else {
+      // 유효성검사를 통과 못한 이메일
+      Swal.fire({
+        icon: "error",
+        title: "사용할 수 없는 이메일입니다.",
+      });
+    }
+  };
+
   // 닉네임 중복검사 함수
   const checkNickname = () => {
     // 유효성 검사를 통과한 닉네임인지 확인
     if (checkInfo.nickname) {
       axios
-        .post(`${process.env.SERVER}/user/nickname`, {
+        .post(`${process.env.REACT_APP_API_URL}/user/nickname`, {
           nickname: signUpInfo.nickname,
         })
         .then(() => {
@@ -188,7 +234,7 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
 
   // 닉네임 유효성 검사 함수
   const isNickname = (value) => {
-    let regExp = /^[가-힣]{2,8}|[a-zA-Z]{2,8}\s[a-zA-Z]{2,8}$/;
+    let regExp = /^[가-힣]{3,8}$/;
     return regExp.test(value);
   };
 
@@ -210,24 +256,51 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
       checkInfo.passwordCheck
     ) {
       axios
-        .post(`${process.env.SERVER}/user/signup`, {
+        .post(`${process.env.REACT_APP_API_URL}/user/signup`, {
           email: signUpInfo.email,
           nickname: signUpInfo.nickname,
           address: signUpInfo.address,
+          useAddress: signUpInfo.useAddress,
           password: signUpInfo.password,
         })
         .then((res) => {
+          isSingUpModal(false);
+          navigate("/");
           Swal.fire({
             icon: "success",
             title: "회원가입이 완료되었습니다.",
-            timer: 1500,
+            text: "이메일 인증을 완료해주세요.",
           });
-          showLoginModal();
         });
+    } else if (!checkInfo.email || signUpInfo.email === "") {
+      Swal.fire({
+        icon: "error",
+        title: "이메일을 형식에 맞게 입력해주세요.",
+      });
+    } else if (!checkInfo.nickname || signUpInfo.nickname === "") {
+      Swal.fire({
+        icon: "error",
+        title: "닉네임을 형식에 맞게 임력해주세요.",
+      });
+    } else if (!checkInfo.address || signUpInfo.address === "") {
+      Swal.fire({
+        icon: "error",
+        title: "주소를 입력해주세요.",
+      });
+    } else if (!checkInfo.password || signUpInfo.password === "") {
+      Swal.fire({
+        icon: "error",
+        title: "비밀번호를 형식에 맞게 입력해주세요.",
+      });
+    } else if (!checkInfo.passwordCheck || signUpInfo.passwordCheck === "") {
+      Swal.fire({
+        icon: "error",
+        title: "비밀번호 확인을 해주세요.",
+      });
     } else {
       Swal.fire({
         icon: "error",
-        title: "회원정보를 모두 입력해주세요.",
+        title: "입력한 회원가입 정보를 확인해주세요.",
       });
     }
   };
@@ -238,18 +311,12 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
 
     if (data.addressType === "R") {
       if (data.buildingName !== "") {
-        extraAddr +=
-          extraAddr !== "" ? `, ${data.buildingName}` : data.buildingName;
+        extraAddr += data.buildingName;
       }
-      if (data.sigungu !== "") {
-        extraAddr += `, ${data.sigungu}`;
-      }
-      if (data.bname !== "") {
-        extraAddr += `, ${data.bname}`;
-      }
-      fullAddr += extraAddr !== "" ? ` ${extraAddr}` : "";
+      fullAddr += extraAddr;
     }
-    setSignUpInfo({ ...signUpInfo, ["address"]: fullAddr });
+    console.log(data.bname);
+    setSignUpInfo({ ...signUpInfo, useAddress: data.bname, address: fullAddr });
     setCheckInfo({ ...checkInfo, address: true });
     isOpenPost(false);
   };
@@ -310,27 +377,21 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
                   type={"email"}
                   onChange={(e) => handleInputValue("email", e)}
                 ></input>
-                <button>이메일인증</button>
+                <button onClick={checkEmail}>중복 확인</button>
               </div>
             </StWriteReUse>
-            {signUpInfo.email !== "" ? (
-              checkInfo.email ? null : (
+            {checkInfo.duplicatedEmail ? (
+              <StAddressModalDiv color={"blue"}>
+                사용 가능한 이메일입니다.
+              </StAddressModalDiv>
+            ) : signUpInfo.email !== "" ? (
+              checkInfo.email ? (
+                <StAddressModalDiv>중복확인을 해주세요.</StAddressModalDiv>
+              ) : (
                 <StAddressModalDiv>
                   사용할 수 없는 이메일입니다.
                 </StAddressModalDiv>
               )
-            ) : null}
-            {signUpInfo.email !== "" ? (
-              checkInfo.email && !checkInfo.duplicatedEmail ? (
-                <StAddressModalDiv>중복된 이메일입니다.</StAddressModalDiv>
-              ) : null
-            ) : null}
-            {signUpInfo.email !== "" ? (
-              checkInfo.duplicatedEmail ? (
-                <StAddressModalDiv color={"blue"}>
-                  사용 가능한 이메일입니다.
-                </StAddressModalDiv>
-              ) : null
             ) : null}
             <StWriteReUse>
               <div>닉네임</div>
@@ -339,7 +400,7 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
                   type={"text"}
                   onChange={(e) => handleInputValue("nickname", e)}
                 ></input>
-                <button onClick={checkNickname}>중복확인</button>
+                <button onClick={checkNickname}>중복 확인</button>
               </div>
             </StWriteReUse>
             {checkInfo.duplicatedNickname ? (
@@ -351,7 +412,7 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
                 <StAddressModalDiv>중복확인을 해주세요.</StAddressModalDiv>
               ) : (
                 <StAddressModalDiv>
-                  한글,영문 대소문자 2~8자리만 사용 가능합니다.
+                  한글 3~8자리만 사용 가능합니다.
                 </StAddressModalDiv>
               )
             ) : null}
