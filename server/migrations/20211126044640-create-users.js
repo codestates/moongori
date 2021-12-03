@@ -17,6 +17,15 @@ module.exports = {
       address: {
         type: Sequelize.STRING
       },
+      town: {
+        type: Sequelize.STRING
+      },
+      latitude: {
+        type: Sequelize.DOUBLE
+      },
+      longitude: {
+        type: Sequelize.DOUBLE
+      },
       password: {
         type: Sequelize.STRING
       },

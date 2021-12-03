@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userCtrl = require("./user/userCtrl");
+const newsPostCtrl = require("./newsPost/newsPostCtrl");
 
 //user
 router.get("/user/info", userCtrl.info);
@@ -22,6 +23,15 @@ router.get("/cert/:email", userCtrl.cert);
 //router.post("/uplod", userCtrl.img);
 // router.post("/user/test", userCtrl.test);
 
+//newsPost
+router.get("/news/list", newsPostCtrl.list);
+router.get("/news/list/:category", newsPostCtrl.category);
+router.get("/news/post/:id", newsPostCtrl.read);
+router.post("/news/post", newsPostCtrl.write);
+router.delete("/news/post/:id", newsPostCtrl.withdrawal);
+router.patch("/news/post/:id", newsPostCtrl.modification);
+router.post("/news/comment", newsPostCtrl.writeComment);
+router.patch("/news/comment/:id", newsPostCtrl.modifyComment);
 //tradePost
 
 module.exports = router;

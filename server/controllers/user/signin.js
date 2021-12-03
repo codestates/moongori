@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
       reliability,
       authState,
     };
-    const token = sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1d" });
+    const token = sign(payload, process.env.ACCESS_SECRET, { expiresIn: "3d" });
     return res
       .status(200)
       .cookie("accesstoken", token, {
