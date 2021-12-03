@@ -213,10 +213,13 @@ const MypageHead = styled.div`
               font-size: 10px;
               width: 80%;
               height: 60%;
-              background: #aae8c5;
+              /* background: #d1d1d1; */
               border-radius: 15px;
               border: 1px gray;
               cursor: pointer;
+              &:focus {
+                background: #aae8c5;
+              }
               @media all and (max-width: 768px) {
                 height: 70%;
                 width: 90%;
