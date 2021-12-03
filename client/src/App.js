@@ -9,6 +9,7 @@ import TradeList from "./pages/TradeList";
 import NewsList from "./pages/NewsList";
 import Mypage from "./pages/Mypage";
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 const Wrap = styled.div`
   height: 100%;
@@ -16,13 +17,32 @@ const Wrap = styled.div`
   width: 100%;
 `;
 
-function App() {
-  const [userinfo, setUserinfo] = useState("");
+export default function App() {
+  const [userinfo, setUserinfo] = useState(null);
+  const [login, isLogin] = useState(false);
+
   const isAuthenticated = () => {
-    axios.get("http://localhost:4000/user/info").then((res) => {
-      console.log(res.data);
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/user/info`)
+      .then((res) => {
+        setUserinfo(res.data.data);
+        isLogin(true);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleLoginSuccess = () => {
+    isAuthenticated();
+  };
+
+  const handleLogout = () => {
+    axios.post(`${process.env.REACT_APP_API_URL}/user/signout`).then(() => {
+      window.location.href = "/";
+      isLogin(false);
+      setUserinfo(null);
     });
   };
+
   useEffect(() => {
     isAuthenticated();
   }, []);
@@ -30,13 +50,20 @@ function App() {
   return (
     <BrowserRouter>
       <Wrap>
-        <Header />
+        <Header
+          login={login}
+          handleLoginSuccess={handleLoginSuccess}
+          handleLogout={handleLogout}
+        />
         <Routes>
           <Route path="/" element={<Main />} />
 
           <Route path="/trade=:category" element={<TradeList />} />
 
-          <Route path="/news=:category" element={<NewsList />} />
+          <Route
+            path="/news=:category"
+            element={<NewsList userinfo={userinfo} login={login} />}
+          />
 
           <Route path="/mypage" element={<Mypage />} />
 
@@ -54,11 +81,10 @@ function App() {
           <Route path="/news/write" element={<NewsPostWrite />} />
 
           <Route path="/chat" element={<Chat />} /> */}
+          {/* < Route element={NotFound}/> */}
         </Routes>
         <Footer />
       </Wrap>
     </BrowserRouter>
   );
 }
-
-export default App;
