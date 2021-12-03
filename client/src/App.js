@@ -8,7 +8,13 @@ import Main from "./pages/Main";
 import TradeList from "./pages/TradeList";
 import NewsList from "./pages/NewsList";
 import Mypage from "./pages/Mypage";
+import NotFound from "./pages/NotFound";
+import PrivateRoute from "./components/PrivateRoute";
+
 import axios from "axios";
+
+import Swal from "sweetalert2";
+
 axios.defaults.withCredentials = true;
 
 const Wrap = styled.div`
@@ -37,9 +43,12 @@ export default function App() {
 
   const handleLogout = () => {
     axios.post(`${process.env.REACT_APP_API_URL}/user/signout`).then(() => {
+
       window.location.href = "/";
       isLogin(false);
       setUserinfo(null);
+
+
     });
   };
 
@@ -65,7 +74,10 @@ export default function App() {
             element={<NewsList userinfo={userinfo} login={login} />}
           />
 
-          <Route path="/mypage" element={<Mypage />} />
+          <Route
+            path="/mypage"
+            element={<PrivateRoute login={login} userinfo={userinfo} />}
+          />
 
           {/* <Route path="/trade-normal/read=:id" element={<TradeNormalPost />} />
 
@@ -81,7 +93,10 @@ export default function App() {
           <Route path="/news/write" element={<NewsPostWrite />} />
 
           <Route path="/chat" element={<Chat />} /> */}
-          {/* < Route element={NotFound}/> */}
+
+
+          <Route element={<NotFound />} />
+
         </Routes>
         <Footer />
       </Wrap>

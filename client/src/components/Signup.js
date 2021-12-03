@@ -83,7 +83,22 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
     if (key === "email") {
       // 유효성 검사 통과하면 서버에 중복확인 하기
       if (isEmail(e.target.value)) {
+
         setCheckInfo({ ...checkInfo, email: true, duplicatedEmail: false });
+
+//         axios
+//           .post(`${process.env.REACT_APP_API_URL}/user/email`, {
+//             email: e.target.value,
+//           })
+//           .then(() => {
+//             // 이메일 사용가능
+//             setCheckInfo({ ...checkInfo, email: true, duplicatedEmail: true });
+//           })
+//           .catch(() => {
+//             // 중복된 이메일
+//             setCheckInfo({ ...checkInfo, email: true, duplicatedEmail: false });
+//           });
+
       } else {
         // 유효성 검사 실패
         setCheckInfo({ ...checkInfo, email: false, duplicatedEmail: false });

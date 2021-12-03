@@ -100,8 +100,6 @@ const ModalContainer = styled.div`
 export default function PasswordModal({ modalClose }) {
   const navigate = useNavigate();
   const onCloseModal = (e) => {
-    console.log("e.target: ", e.target);
-    console.log("e.tarcurrentTargetget: ", e.currentTarget);
     if (e.target === e.currentTarget) {
       modalClose();
     }
@@ -125,7 +123,7 @@ export default function PasswordModal({ modalClose }) {
       });
     } else {
       axios
-        .patch("http://localhost:4000/user/password", {
+        .patch("http://localhost:80/user/password", {
           currentPassword: password.currentPassword,
           modifyPassword: password.modifyPassword,
         })

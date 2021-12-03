@@ -124,7 +124,7 @@ export default function WithdrawalModal({ modalClose2 }) {
       });
     } else {
       axios
-        .delete("http://localhost:4000/user")
+        .delete("http://localhost:80/user")
         .then((res) => {
           Swal.fire({
             icon: "success",
