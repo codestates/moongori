@@ -47,16 +47,20 @@ module.exports = async (req, res) => {
       expiresIn: "1d",
     });
 
-    res.cookie("accesstoken", token, {
-      maxAge: 24 * 6 * 60 * 10000,
-      sameSite: "None",
-      httpOnly: true,
-      secure: true,
-    });
+    res
+      .status(201)
+      .cookie("accesstoken", token, {
+        maxAge: 24 * 6 * 60 * 10000,
+        sameSite: "None",
+        httpOnly: true,
+        secure: true,
+      })
+      .redirect(`${process.env.ORIGIN}/mypage`);
 
     // const realQuery = encodeURIComponent(token);
     // res.redirect(`${process.env.ORIGIN}/?access_token=${realQuery}`);
     res.redirect(`${process.env.ORIGIN}/mypage`);
+
   } catch (error) {
     console.error(error);
     return res.status(501).json({ message: "서버에러 입니다." });
