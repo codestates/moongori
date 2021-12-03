@@ -11,8 +11,6 @@ import exampleImg2 from "./../images/example2.png";
 import dongne from "./../images/dongne.png";
 import trade from "./../images/trade.png";
 import queryString from "query-string";
-import kakaoImg from "../images/kakao_login_medium_narrow.png";
-import googleImg from "../images/btn_google_signin_light_normal_web.png";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
@@ -251,6 +249,7 @@ const StQuestionDiv = styled.div`
 
 export default function Main() {
   const [select, isSelect] = useState(true);
+  const [position, setPosition] = useState(0);
 
   const changeImg = () => {
     isSelect(!select);
@@ -265,12 +264,10 @@ export default function Main() {
     return () => clearTimeout(switchIndex);
   }, [select]);
 
-  const [position, setPosition] = useState(0);
-
   function onScroll() {
     setPosition(window.scrollY);
-    // console.log(window.scrollY);
   }
+
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
     return () => {
@@ -278,43 +275,8 @@ export default function Main() {
     };
   }, []);
 
-  const handlekakaoLoginBtn = async () => {
-    await window.location.assign("http://localhost:80/user/kakao");
-  };
-  const handlegoogleLoginBtn = async () => {
-    await window.location.assign("http://localhost:80/user/google");
-  };
-
-  useEffect(() => {
-    const query = queryString.parse(window.location.search);
-    if (query.access_token) {
-      axios.get("http://localhost:80/user/info").then((res) => {
-        console.log(res.data.data);
-      });
-    }
-  }, [window.location]);
-
   return (
     <StBodyDiv>
-      <div
-        onClick={() => {
-          handlekakaoLoginBtn();
-        }}
-      >
-        <img src={kakaoImg} />
-      </div>
-
-      <div
-        onClick={() => {
-          handlegoogleLoginBtn();
-        }}
-      >
-        <img src={googleImg} />
-      </div>
-
-      <img src={`콘솔에 img 값`} />
-
-      <img src={`콘솔에 img 값`} />
       <div className={"main"}>
         <div className={"banner"} onDragStart={changeImg}>
           {select ? (

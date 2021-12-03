@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import logoImg from "./../images/Logo.png";
 import Login from "./Login";
 import Signup from "./Signup";
@@ -121,13 +121,21 @@ const StMenuBarDiv = styled.ul`
   }
 `;
 
-export default function Header({ login, handleLoginSuccess }) {
+
+export default function Header({ login, handleLoginSuccess, handleLogout }) {
+
+
   const [menu, isMenu] = useState(false);
   const [loginModal, isLoginModal] = useState(false);
   const [signUpModal, isSingUpModal] = useState(false);
 
   const showMenubar = () => {
     isMenu(!menu);
+  };
+
+  const logOut = () => {
+    isMenu(false);
+    handleLogout();
   };
 
   const showLoginModal = () => {
@@ -164,7 +172,7 @@ export default function Header({ login, handleLoginSuccess }) {
                 <div onClick={showLoginModal}>로그인</div>
               )}
               {login ? (
-                <div>로그아웃</div>
+                <div onClick={() => handleLogout()}>로그아웃</div>
               ) : (
                 <div onClick={showSignUpModal}>회원가입</div>
               )}
@@ -208,7 +216,7 @@ export default function Header({ login, handleLoginSuccess }) {
                   </li>
                 )}
                 {login ? (
-                  <li className={"lastli"} onClick={showMenubar}>
+                  <li className={"lastli"} onClick={logOut}>
                     로그아웃
                     <i class="fas fa-arrow-right"></i>
                   </li>

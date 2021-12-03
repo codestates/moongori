@@ -162,7 +162,9 @@ export default function Login({
           // 로그인 성공
           isLoginModal(false);
           handleLoginSuccess();
-          navigate("/main");
+
+          navigate("/");
+
         })
         .catch(() => {
           Swal.fire({
@@ -172,6 +174,15 @@ export default function Login({
           });
         });
     }
+  };
+
+  const handlekakaoLoginBtn = async () => {
+    await window.location.assign("http://localhost:80/user/kakao");
+    handleLoginSuccess();
+  };
+  const handlegoogleLoginBtn = async () => {
+    await window.location.assign("http://localhost:80/user/google");
+    handleLoginSuccess();
   };
 
   return (
@@ -215,11 +226,14 @@ export default function Login({
           <StRequestButton background={"#AAE8C5"} onClick={handleLogin}>
             로그인
           </StRequestButton>
-          <StRequestButton outside background={"#FFFFFF"}>
+          <StRequestButton
+            background={"#FFFFFF"}
+            onClick={handlegoogleLoginBtn}
+          >
             <img src={google} alt={"구글이미지"} />
             구글 로그인
           </StRequestButton>
-          <StRequestButton outside background={"#FFE200"}>
+          <StRequestButton background={"#FFE200"} onClick={handlekakaoLoginBtn}>
             <img src={kakao} alt={"카카오이미지"} />
             카카오톡 로그인
           </StRequestButton>

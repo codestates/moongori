@@ -12,7 +12,9 @@ import NotFound from "./pages/NotFound";
 import PrivateRoute from "./components/PrivateRoute";
 
 import axios from "axios";
+
 import Swal from "sweetalert2";
+
 axios.defaults.withCredentials = true;
 
 const Wrap = styled.div`
@@ -34,21 +36,19 @@ export default function App() {
       })
       .catch((err) => console.log(err));
   };
-  console.log(userinfo);
+
   const handleLoginSuccess = () => {
     isAuthenticated();
   };
 
   const handleLogout = () => {
     axios.post(`${process.env.REACT_APP_API_URL}/user/signout`).then(() => {
-      setUserinfo(null);
-      isLogin(false);
-      Swal.fire({
-        icon: "success",
-        title: "로그아웃 되었습니다.",
-        timer: 1500,
-      });
+
       window.location.href = "/";
+      isLogin(false);
+      setUserinfo(null);
+
+
     });
   };
 
@@ -69,7 +69,10 @@ export default function App() {
 
           <Route path="/trade=:category" element={<TradeList />} />
 
-          <Route path="/news=:category" element={<NewsList />} />
+          <Route
+            path="/news=:category"
+            element={<NewsList userinfo={userinfo} login={login} />}
+          />
 
           <Route
             path="/mypage"
@@ -90,7 +93,10 @@ export default function App() {
           <Route path="/news/write" element={<NewsPostWrite />} />
 
           <Route path="/chat" element={<Chat />} /> */}
+
+
           <Route element={<NotFound />} />
+
         </Routes>
         <Footer />
       </Wrap>
