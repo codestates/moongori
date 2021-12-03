@@ -64,13 +64,16 @@ const StBodyDiv = styled.div`
     .main-intro {
       margin-top: 20px;
       @media all and (min-width: 769px) {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
     }
     .main-intro-title {
-      width: 100%;
       text-align: center;
       font-weight: bold;
-      font-size: 30px;
+      font-size: 25px;
       margin-bottom: 20px;
     }
     .main-intro-contents {
@@ -100,7 +103,7 @@ const StBodyDiv = styled.div`
       height: 100%;
       background-color: #f5f5f5;
       .example-contents {
-        width: 80%;
+        width: 60%;
         flex-direction: column;
         justify-content: center;
         position: absolute;
@@ -138,16 +141,16 @@ const StBodyDiv = styled.div`
     }
   }
   .question-contents {
-    width: 80%;
+    width: 70%;
     display: flex;
     margin-top: 20px;
     justify-content: center;
     align-items: center;
     @media all and (max-width: 768px) {
       flex-direction: column;
+      width: 80%;
     }
     .question-wrap {
-      width: 50%;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -158,18 +161,17 @@ const StBodyDiv = styled.div`
     }
   }
   .question-img {
-    width: 50%;
     margin-bottom: 20px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
   }
   //web
   @media all and (min-width: 769px) {
     .main {
       height: 500px;
       img {
-        width: 410px;
+        width: 420px;
         height: 380px;
       }
       .banner {
@@ -178,7 +180,7 @@ const StBodyDiv = styled.div`
       .example {
         position: relative;
         .example-contents {
-          width: 80%;
+          width: 70%;
           height: 80%;
           position: absolute;
           display: flex;
@@ -188,26 +190,23 @@ const StBodyDiv = styled.div`
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          .main-intro {
-            width: 50%;
-          }
           .example-img-wrap {
-            width: 50%;
-            height: 80%;
+            height: 60%;
             display: flex;
             justify-content: center;
             align-items: center;
-            .example-img {
-              width: 80%;
-            }
           }
         }
         .second {
           flex-direction: row-reverse;
         }
       }
+      .main-intro {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
       .main-intro-title {
-        font-size: 50px;
+        font-size: 35px;
       }
     }
     .welcome {
@@ -297,29 +296,25 @@ export default function Main() {
 
   return (
     <StBodyDiv>
-      {/* <div
+      <div
         onClick={() => {
           handlekakaoLoginBtn();
         }}
       >
         <img src={kakaoImg} />
-      </div> */}
+      </div>
 
-      {/* <div
+      <div
         onClick={() => {
           handlegoogleLoginBtn();
         }}
       >
         <img src={googleImg} />
-      </div> */}
+      </div>
 
-      {/* <img
-        src={`콘솔에 img 값`}
-      /> */}
+      <img src={`콘솔에 img 값`} />
 
-      {/* <img
-        src={`콘솔에 img 값`}
-      /> */}
+      <img src={`콘솔에 img 값`} />
       <div className={"main"}>
         <div className={"banner"} onDragStart={changeImg}>
           {select ? (
@@ -389,11 +384,7 @@ export default function Main() {
           <div className={"example-contents"}>
             <div className={"example-img-wrap"}>
               {" "}
-              <img
-                src={exampleImg1}
-                alt={"움짤예시1 이미지"}
-                className={"example-img"}
-              />
+              <img src={exampleImg1} alt={"움짤예시1 이미지"} />
             </div>
             <div className={"main-intro"}>
               <div className={"main-intro-title"}>
@@ -436,11 +427,7 @@ export default function Main() {
           <div className={"example-contents second"}>
             <div className={"example-img-wrap"}>
               {" "}
-              <img
-                src={exampleImg2}
-                alt={"움짤예시1 이미지"}
-                className={"example-img"}
-              />
+              <img src={exampleImg2} alt={"움짤예시1 이미지"} />
             </div>
 
             <div className={"main-intro"}>

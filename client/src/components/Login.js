@@ -129,7 +129,11 @@ export const StRequestButton = styled.button`
   }
 `;
 
-export default function Login({ isLoginModal, showSignUpModal }) {
+export default function Login({
+  isLoginModal,
+  showSignUpModal,
+  handleLoginSuccess,
+}) {
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
@@ -142,7 +146,6 @@ export default function Login({ isLoginModal, showSignUpModal }) {
   // 이메일과 비밀번호를 입력했는지 확인
   // 2개를 모두 입력했으면 서버에 로그인 요청하기
   const handleLogin = () => {
-    console.log(loginInfo);
     // 이메일 or 비밀번호를 입력하지 않은 경우
     if (loginInfo.email === "" || loginInfo.password === "") {
       Swal.fire({
@@ -151,13 +154,14 @@ export default function Login({ isLoginModal, showSignUpModal }) {
       });
     } else {
       axios
-        .post(`${process.env.SERVER}/user/signin`, {
+        .post(`${process.env.REACT_APP_API_URL}/user/signin`, {
           email: loginInfo.email,
           password: loginInfo.password,
         })
         .then((res) => {
           // 로그인 성공
           isLoginModal(false);
+          handleLoginSuccess();
           navigate("/main");
         })
         .catch(() => {

@@ -87,7 +87,9 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
       // 유효성 검사 통과하면 서버에 중복확인 하기
       if (isEmail(e.target.value)) {
         axios
-          .post(`${process.env.SERVER}/user/email`, { email: e.target.value })
+          .post(`${process.env.REACT_APP_API_URL}/user/email`, {
+            email: e.target.value,
+          })
           .then(() => {
             // 이메일 사용가능
             setCheckInfo({ ...checkInfo, email: true, duplicatedEmail: true });
@@ -149,7 +151,7 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
     // 유효성 검사를 통과한 닉네임인지 확인
     if (checkInfo.nickname) {
       axios
-        .post(`${process.env.SERVER}/user/nickname`, {
+        .post(`${process.env.REACT_APP_API_URL}/user/nickname`, {
           nickname: signUpInfo.nickname,
         })
         .then(() => {
@@ -210,7 +212,7 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
       checkInfo.passwordCheck
     ) {
       axios
-        .post(`${process.env.SERVER}/user/signup`, {
+        .post(`${process.env.REACT_APP_API_URL}/user/signup`, {
           email: signUpInfo.email,
           nickname: signUpInfo.nickname,
           address: signUpInfo.address,
