@@ -1,19 +1,16 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import styled, { css } from "styled-components";
+import { useState } from "react";
+
+import styled from "styled-components";
 import PasswordModal from "../components/PasswordModal";
 import WithdrawalModal from "../components/WithdrawalModal";
 import axios from "axios";
-import mypage from "../images/mypage.png";
-import profile from "../images/vegetable.jpeg";
 import lock from "../images/locked.png";
 import cancel from "../images/cancel.png";
 import editImg from "../images/edit.png";
 import complete from "../images/complete.png";
 import Swal from "sweetalert2";
 import DaumPostcode from "react-daum-postcode";
-import ModalContainer from "../components/PasswordModal";
 
 const ModalBackground = styled.div`
   width: 100%;
@@ -282,7 +279,7 @@ const StMypageHead = styled.div`
             display: flex;
             justify-content: center;
             align-items: center;
-            .category-button {
+            /* .category-button {
               font-size: 9px;
               width: 80%;
               height: 60%;
@@ -295,11 +292,12 @@ const StMypageHead = styled.div`
                 width: 90%;
                 font-size: 6px;
               }
-            }
+            } */
           }
         }
       }
     }
+
     .content-wrap {
       width: 100%;
       height: 60%;
@@ -309,17 +307,33 @@ const StMypageHead = styled.div`
     }
   }
 `;
+const StCategoryButton = styled.button.attrs((props) => ({
+  type: "button",
+}))`
+  background: ${(props) => (props.select ? "#92E3A9" : "#EFEFEF")};
+  font-size: 9px;
+  width: 80%;
+  height: 60%;
+  border-radius: 15px;
+  border: 1px gray;
+  cursor: pointer;
+  @media all and (max-width: 768px) {
+    height: 70%;
+    width: 90%;
+    font-size: 6px;
+  }
+`;
 
 export default function Mypage({ login, userinfo }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
-  const [modalOpen3, setModalOpen3] = useState(false);
-
+  const [category, setCategory] = useState({ number: null });
   const [edit, setEdit] = useState(true);
   const [editInfo, setEditInfo] = useState({
-    img: "",
-    nickname: "",
-    address: "",
+    img: userinfo.img,
+    nickname: userinfo.nickname,
+    address: userinfo.address,
+    town: userinfo.town,
   });
   const [duplicate, setDuplicate] = useState({
     nickname: false,
@@ -329,11 +343,6 @@ export default function Mypage({ login, userinfo }) {
     setEditInfo({ ...editInfo, [key]: e.target.value });
   };
 
-  // const [userInfo, setUserInfo] = useState({
-  //   nickname: nickname,
-  //   email: email,
-  //   address: address,
-  // });
   console.log(editInfo);
   const onCloseModal = (e) => {
     if (e.target === e.currentTarget) {
@@ -369,6 +378,7 @@ export default function Mypage({ login, userinfo }) {
       })
       .then((res) => {
         setDuplicate(true);
+
         Swal.fire({
           icon: "success",
           title: "사용 가능한 닉네임입니다",
@@ -385,6 +395,7 @@ export default function Mypage({ login, userinfo }) {
         });
       });
   };
+  //수정 요청
   const submitEditInfo = () => {
     if (duplicate === true) {
       axios
@@ -393,7 +404,7 @@ export default function Mypage({ login, userinfo }) {
           address: editInfo.address,
         })
         .then((res) => {
-          setEditInfo(res.data);
+          setEdit(true);
         });
     } else {
       Swal.fire({
@@ -431,7 +442,7 @@ export default function Mypage({ login, userinfo }) {
     top: "50%",
     left: "50%",
     width: "400px",
-    height: "500px",
+    height: "400px",
     transform: "translate(-50%, -50%)",
     padding: "7px",
   };
@@ -439,6 +450,11 @@ export default function Mypage({ login, userinfo }) {
   const postThemeStyle = {
     bgColor: "#D6FFEA",
     outlineColor: "#222222",
+  };
+
+  // 카테고리 변경하는 함수
+  const changeCategory = (e) => {
+    setCategory({ ...category, number: Number(e.target.value) });
   };
 
   return (
@@ -449,7 +465,7 @@ export default function Mypage({ login, userinfo }) {
             //기존 상태
             <div className={"mypage-wrap"}>
               <div className={"mypage-profile-box"}>
-                <img src={profile} className={"profile-img"}></img>
+                <img src={editInfo.img} className={"profile-img"}></img>
               </div>
               <div className={"mypage-userinfo-box"}>
                 <div className={"edit-wrap"}>
@@ -474,7 +490,7 @@ export default function Mypage({ login, userinfo }) {
                   ></input> */}
                       <div className={"input-area"}>
                         <div className={"userinfo-contents"}>
-                          {userinfo.nickname}
+                          {editInfo.nickname}
                         </div>
                       </div>
                     </div>
@@ -504,7 +520,7 @@ export default function Mypage({ login, userinfo }) {
                   ></input> */}
                       <div className={"input-area"}>
                         <div className={"userinfo-contents"}>
-                          {userinfo.address}
+                          {editInfo.address}
                         </div>
                       </div>
                     </div>
@@ -516,7 +532,7 @@ export default function Mypage({ login, userinfo }) {
             //편집 상태
             <div className={"mypage-wrap"}>
               <div className={"mypage-profile-box"}>
-                <img src={profile} className={"profile-img"}></img>
+                <img src={editInfo.img} className={"profile-img"}></img>
               </div>
               <div className={"mypage-userinfo-box"}>
                 <div className={"edit-wrap"}>
@@ -538,7 +554,7 @@ export default function Mypage({ login, userinfo }) {
                       <input
                         type="text"
                         className={"input-area edit"}
-                        defaultValue={userinfo.nickname}
+                        defaultValue={editInfo.nickname}
                         onChange={handleInputValue("nickname")}
                       ></input>
                       <div className={"dupicate-wrap"}>
@@ -568,9 +584,8 @@ export default function Mypage({ login, userinfo }) {
                     <div className={"input-tick"}>
                       <input
                         className={"input-area"}
-                        value={userinfo.address}
+                        value={editInfo.address}
                         onFocus={() => isOpenPost(true)}
-                        onChange={handleInputValue("address")}
                       ></input>
                       {openPost && (
                         <ModalBackground onClick={() => modalClose3()}>
@@ -619,24 +634,60 @@ export default function Mypage({ login, userinfo }) {
               <div className={"category-align"}>
                 <div className={"category-half"}>
                   <div className={"category-tick"}>
-                    <button className={"category-button"}>내 게시글</button>
+                    <StCategoryButton
+                      value={1}
+                      onClick={(e) => changeCategory(e)}
+                      select={category.number === 1 ? true : false}
+                    >
+                      내 게시글
+                    </StCategoryButton>
                   </div>
                   <div className={"category-tick"}>
-                    <button className={"category-button"}>내 동네소식</button>
+                    <StCategoryButton
+                      value={2}
+                      onClick={(e) => changeCategory(e)}
+                      select={category.number === 2 ? true : false}
+                    >
+                      내 동네소식
+                    </StCategoryButton>
                   </div>
                   <div className={"category-tick"}>
-                    <button className={"category-button"}>판매내역</button>
+                    <StCategoryButton
+                      value={3}
+                      onClick={(e) => changeCategory(e)}
+                      select={category.number === 3 ? true : false}
+                    >
+                      판매내역
+                    </StCategoryButton>
                   </div>
                 </div>
                 <div className={"category-half"}>
                   <div className={"category-tick"}>
-                    <button className={"category-button"}>구매내역</button>
+                    <StCategoryButton
+                      value={4}
+                      onClick={(e) => changeCategory(e)}
+                      select={category.number === 4 ? true : false}
+                    >
+                      구매내역
+                    </StCategoryButton>
                   </div>
                   <div className={"category-tick"}>
-                    <button className={"category-button"}>찜한 게시글</button>
+                    <StCategoryButton
+                      value={5}
+                      onClick={(e) => changeCategory(e)}
+                      select={category.number === 5 ? true : false}
+                    >
+                      찜한 게시글
+                    </StCategoryButton>
                   </div>
                   <div className={"category-tick"}>
-                    <button className={"category-button"}>관심 소식</button>
+                    <StCategoryButton
+                      value={6}
+                      onClick={(e) => changeCategory(e)}
+                      select={category.number === 6 ? true : false}
+                    >
+                      관심 소식
+                    </StCategoryButton>
                   </div>
                 </div>
               </div>
