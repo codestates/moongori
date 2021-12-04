@@ -23,7 +23,7 @@ const ModalBackground = styled.div`
 `;
 const StMypageHead = styled.div`
   width: 100%;
-  padding-bottom: 200px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -56,6 +56,7 @@ const StMypageHead = styled.div`
       .mypage-profile-box {
         width: 40%;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         .profile-img {
@@ -249,11 +250,14 @@ const StMypageHead = styled.div`
         margin-top: 20px;
         height: 100%;
         width: 70%;
-        border-top: dashed 1px gray;
-        border-bottom: dotted 1px gray;
+        border-top: solid 1px #b7b7b7;
+        border-bottom: solid 1px #b7b7b7;
         display: flex;
         justify-content: center;
         align-items: center;
+        @media all and (max-width: 768px) {
+          width: 90%;
+        }
         .category-align {
           height: 100%;
           width: 100%;
@@ -298,15 +302,111 @@ const StMypageHead = styled.div`
       }
     }
 
-    .content-wrap {
+    .content-head {
       width: 100%;
       height: 60%;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      .content-wrap {
+        margin-top: 30px;
+        width: 60%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        @media all and (max-width: 768px) {
+          width: 90%;
+        }
+      }
     }
   }
 `;
+const StContent = styled.div`
+  background: white;
+  width: 60%;
+  height: 100px;
+  border-radius: 15px;
+  border: 1px solid #aae8c5;
+  @media all and (max-width: 768px) {
+    width: 90%;
+  }
+  &:hover {
+    cursor: pointer;
+    box-shadow: gray 3px 3px 3px;
+  }
+  &:active {
+    box-shadow: none;
+  }
+  .title-tick {
+    width: 100%;
+    height: 25%;
+    margin-top: 2px;
+    margin-left: 5px;
+    .title {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 15px;
+      background: #aae8c5;
+      width: 50px;
+      height: 100%;
+    }
+  }
+  .content-tick {
+    height: 35%;
+    width: 100%;
+    margin-left: 10px;
+    .content {
+      font-size: 11px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+  }
+  .address-tick {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    margin-left: 10px;
+    .address-area {
+      font-size: 9px;
+      color: gray;
+      display: flex;
+      width: 50%;
+      .nickname {
+        margin-right: 5px;
+      }
+    }
+    .data-area {
+      font-size: 9px;
+      color: gray;
+      width: 50%;
+      display: flex;
+      justify-content: end;
+      margin-right: 20px;
+    }
+  }
+  .comment-tick {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    margin-left: 10px;
+    .comment-area {
+      display: flex;
+      font-size: 9px;
+      color: gray;
+      .views {
+        margin-right: 5px;
+      }
+    }
+  }
+`;
+
 const StCategoryButton = styled.button.attrs((props) => ({
   type: "button",
 }))`
@@ -533,6 +633,7 @@ export default function Mypage({ login, userinfo }) {
             <div className={"mypage-wrap"}>
               <div className={"mypage-profile-box"}>
                 <img src={editInfo.img} className={"profile-img"}></img>
+                <button>사진 변경</button>
               </div>
               <div className={"mypage-userinfo-box"}>
                 <div className={"edit-wrap"}>
@@ -693,8 +794,35 @@ export default function Mypage({ login, userinfo }) {
               </div>
             </div>
           </div>
-          <div className={"content-wrap"}>
-            <div>게시글</div>
+          <div className={"content-head"}>
+            <div className={"content-wrap"}>
+              <StContent>
+                <div className={"title-tick"}>
+                  <div className={"title"}>
+                    <div>질문</div>
+                  </div>
+                </div>
+                <div className={"content-tick"}>
+                  <div className={"content"}>
+                    <div>내용</div>
+                  </div>
+                </div>
+                <div className={"address-tick"}>
+                  <div className={"address-area"}>
+                    <div className={"nickname"}>닉네임</div>
+                    <div className={"town"}>동네</div>
+                  </div>
+                  <div className={"data-area"}>1달 전</div>
+                </div>
+                <div className={"comment-tick"}>
+                  <div className={"comment-area"}>
+                    {" "}
+                    <div className={"views"}>조회수</div>
+                    <div className={"comment"}>댓글</div>
+                  </div>
+                </div>
+              </StContent>
+            </div>
           </div>
         </div>
       </div>
