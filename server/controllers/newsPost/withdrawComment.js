@@ -1,8 +1,8 @@
-const { newsPost, comment } = require("../../models");
+const { comment } = require("../../models");
 const { verify } = require("jsonwebtoken");
 
 module.exports = async (req, res) => {
-  const postId = req.params.id;
+  const commentId = req.params.id;
   const cookie = req.cookies.accesstoken;
   if (!cookie) {
     return res.status(403).json({ message: "no exist cookie" });
@@ -11,15 +11,15 @@ module.exports = async (req, res) => {
     if (!verified) {
       return res.status(403).json({ message: "invalid cookie" });
     } else {
-      const postOne = await newsPost.findOne({
-        where: { id: postId }
+      const commentOne = await comment.findOne({
+        where: { id: commentId }
       });
-      if (postOne.user_Id !== verified.id) {
+      if (commentOne.user_Id !== verified.id) {
         return res.status(403).json({ message: "not correspond user" })
       }
       try {
-        await newsPost.destroy({
-          where: { id: postId }
+        await comment.destroy({
+          where: { id: commentId }
         });
         return res.status(200).json({ message: "success withdrawal" });
       } catch (err) {

@@ -7,4 +7,5 @@ module.exports = {
     modification: require("./modifyNewsPost"),
     writeComment: require("./writeComment"),
     modifyComment: require("./modifyComment"),
+    withdrawalComment: require("./withdrawComment"),
 }
