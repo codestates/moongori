@@ -12,6 +12,12 @@ module.exports = async (req, res) => {
     if (!verified) {
       return res.status(403).json({ message: "invalid cookie" });
     } else {
+      const postOne = await newsPost.findOne({
+        where: { id: postId }
+      });
+      if (postOne.user_Id !== verified.id) {
+        return res.status(403).json({ message: "not correspond user" })
+      }
       try {
         const { category, content, location, img } = req.body;
         const payload = { category, content, location, img };
