@@ -1,7 +1,20 @@
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
+import MapContainer from "../components/MapContainer";
+import SearchPlace from "../components/SearchPlace";
+import MapPopUp from "../components/MapPopUp";
+import DaumPostcode from "react-daum-postcode";
 
+const StPopupBackground = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+`;
 const StNewsPostWriteHead = styled.div`
   width: 100%;
   height: 100%;
@@ -13,7 +26,7 @@ const StNewsPostWriteHead = styled.div`
 `;
 const StWriteTitle = styled.div`
   height: 50px;
-  width: 80%;
+  width: 60%;
   display: flex;
   justify-content: start;
   border-bottom: 1px solid #b7b7b7;
@@ -24,7 +37,7 @@ const StWriteTitle = styled.div`
 `;
 const StWriteBox = styled.div`
   height: 700px;
-  width: 80%;
+  width: 60%;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -51,6 +64,12 @@ const StWriteBox = styled.div`
     border-radius: 2px;
     line-height: 2.5rem;
     font-size: 15px;
+    @media all and (max-width: 768px) {
+      width: 300px;
+    }
+    @media all and (max-width: 557px) {
+      width: 250px;
+    }
   }
 `;
 const StButtonBox = styled.div`
@@ -72,16 +91,22 @@ const StButtonBox = styled.div`
     }
   }
 `;
-export default function NewsPostWrite() {
+export default function NewsPostWrite({ searchPlace }) {
   const [selected, setSelected] = useState("");
   const [postWrite, setPostWrite] = useState({
     contents: "",
   });
+  const [location, setLocation] = useState({
+    address: "",
+  });
 
+  const [isOpenPopup, setisOpenPopup] = useState(false);
   const handleInputValue = (key) => (e) => {
     setPostWrite({ ...postWrite, [key]: e.target.value });
   };
 
+  const locationInfo = location.address;
+  console.log(locationInfo);
   const options = useMemo(
     () => [
       { value: "취미", label: "취미" },
@@ -91,9 +116,57 @@ export default function NewsPostWrite() {
     ],
     []
   );
+
+  const onCompletePost = (data) => {
+    let fullAddr = data.address;
+    let extraAddr = "";
+
+    if (data.addressType === "R") {
+      if (data.buildingName !== "") {
+        extraAddr +=
+          extraAddr !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      if (data.sigungu !== "") {
+        extraAddr += `, ${data.sigungu}`;
+      }
+      if (data.bname !== "") {
+        extraAddr += `, ${data.bname}`;
+      }
+      fullAddr += extraAddr !== "" ? ` ${extraAddr}` : "";
+    }
+    setLocation({ ...location, ["address"]: fullAddr });
+    setisOpenPopup(false);
+  };
+  const postCodeStyle = {
+    display: "block",
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    width: "400px",
+    height: "400px",
+    transform: "translate(-50%, -50%)",
+    padding: "7px",
+  };
+
+  const postThemeStyle = {
+    bgColor: "#D6FFEA",
+    outlineColor: "#222222",
+  };
   const handleChange = (selected) => {
     setSelected(selected);
   };
+  const onCloseModal = (e) => {
+    if (e.target === e.currentTarget) {
+      closePopup();
+    }
+  };
+  const openPopup = () => {
+    setisOpenPopup(true);
+  };
+  const closePopup = () => {
+    setisOpenPopup(false);
+  };
+
   return (
     <>
       <StNewsPostWriteHead>
@@ -109,7 +182,28 @@ export default function NewsPostWrite() {
           </div>
           <div className={"addition-wrap"}>
             <div>사진</div>
-            <div>위치</div>
+            <div
+              className={"location-button"}
+              onClick={() => {
+                openPopup();
+              }}
+            >
+              위치
+            </div>
+            {isOpenPopup && (
+              <StPopupBackground
+                onClick={() => {
+                  closePopup();
+                }}
+              >
+                <DaumPostcode
+                  style={postCodeStyle}
+                  theme={postThemeStyle}
+                  autoClose
+                  onComplete={onCompletePost}
+                />
+              </StPopupBackground>
+            )}
           </div>
           <div className={"write-wrap"}>
             <textarea
@@ -119,7 +213,7 @@ export default function NewsPostWrite() {
             <div className={"picture-area"}></div>
           </div>
           <div className={"location-wrap"}>
-            <div>지도</div>
+            <MapContainer locationInfo={locationInfo} />
           </div>
         </StWriteBox>
         <StButtonBox>
