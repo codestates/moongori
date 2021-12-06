@@ -8,11 +8,10 @@ module.exports = async (req, res) => {
   let postInfo = await newsPost.findOne({
     where: { id: postId },
     include: [
-      { model: user, attributes: ["nickname", "address", "img"] },
+      { model: user, attributes: ["nickname", "town", "img"] },
       {
         model: comment,
-        attributes: ["comments", "createdAt"],
-        include: { model: user, attributes: ["nickname", "address", "img"] },
+        include: { model: user, attributes: ["nickname", "town", "img"] },
       },
     ],
   });
@@ -29,13 +28,12 @@ module.exports = async (req, res) => {
       postInfo = await newsPost.findOne({
         where: { id: postId },
         include: [
-          { model: user, attributes: ["nickname", "address", "img"] },
+          { model: user, attributes: ["nickname", "town", "img"] },
           {
             model: comment,
-            attributes: ["comment", "createdAt"],
             include: {
               model: user,
-              attributes: ["nickname", "address", "img"],
+              attributes: ["nickname", "town", "img"],
             },
           },
         ],
@@ -54,11 +52,10 @@ module.exports = async (req, res) => {
   postInfo = await newsPost.findOne({
     where: { id: postId },
     include: [
-      { model: user, attributes: ["nickname", "address", "img"] },
+      { model: user, attributes: ["nickname", "town", "img"] },
       {
         model: comment,
-        attributes: ["comment", "createdAt"],
-        include: { model: user, attributes: ["nickname", "address", "img"] },
+        include: { model: user, attributes: ["nickname", "town", "img"] },
       },
     ],
   });

@@ -1,9 +1,9 @@
-const { comment } = require("../../models");
+const { comment, user, newsPost } = require("../../models");
 
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const commentId = req.params.id;
-
+  console.log(req.body);
   const commentOne = await comment.findOne({
     where: { id: commentId },
   });
@@ -14,7 +14,17 @@ module.exports = async (req, res) => {
     await comment.destroy({
       where: { id: commentId },
     });
-    return res.status(200).json({ message: "success withdrawal" });
+    const updateComment = await comment.findAll({
+      where: { newsPost_Id: req.body.newsPost_Id },
+      include: { model: user, attributes: ["nickname", "town", "img"] },
+    });
+    await newsPost.update(
+      { comment_cnt: updateComment.length },
+      { where: { id: req.body.newsPost_Id } }
+    );
+    return res
+      .status(200)
+      .json({ data: updateComment, message: "success withdrawal" });
   } catch (err) {
     return res.status(500).json({ message: "error" });
   }

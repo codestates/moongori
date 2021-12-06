@@ -12,8 +12,7 @@ module.exports = async (req, res) => {
     await comment.create(payload);
     const updateComment = await comment.findAll({
       where: { newsPost_Id: req.body.newsPost_Id },
-      attributes: ["user_id", "comment", "createdAt"],
-      include: { model: user, attributes: ["nickname", "address", "img"] },
+      include: { model: user, attributes: ["nickname", "town", "img"] },
     });
     await newsPost.update(
       { comment_cnt: updateComment.length },
