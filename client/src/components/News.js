@@ -28,7 +28,7 @@ const StContentsDiv = styled.div`
   }
 `;
 
-const StContentInfoDiv = styled.div`
+export const StContentInfoDiv = styled.div`
   display: flex;
   color: ${(props) => props.color};
   height: ${(props) => (props.top ? "50px" : "auto")};
@@ -48,49 +48,50 @@ const StCategoryDiv = styled.div`
   margin-bottom: 10px;
 `;
 
-export default function News({ news }) {
-  const category = {
-    1: "취미",
-    2: "일상",
-    3: "맛집",
-    4: "동네소식",
-    5: "사건,사고",
-    6: "분실,실종",
-    7: "질문",
-    8: "일상",
-    9: "육아",
-    10: "기타",
-  };
+export const category = {
+  1: "취미",
+  2: "일상",
+  3: "맛집",
+  4: "동네소식",
+  5: "사건,사고",
+  6: "분실,실종",
+  7: "질문",
+  8: "반려동물",
+  9: "육아",
+  10: "기타",
+};
 
-  // 시간계산 함수
-  function timeForToday(value) {
-    const today = new Date();
-    const timeValue = new Date(value);
+export function timeForToday(value) {
+  const today = new Date();
+  const timeValue = new Date(value);
 
-    const betweenTime = Math.floor(
-      (today.getTime() - timeValue.getTime()) / 1000 / 60
-    );
-    if (betweenTime < 1) return "방금전";
-    if (betweenTime < 60) {
-      return `${betweenTime}분전`;
-    }
-
-    const betweenTimeHour = Math.floor(betweenTime / 60);
-    if (betweenTimeHour < 24) {
-      return `${betweenTimeHour}시간전`;
-    }
-
-    const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-    if (betweenTimeDay < 365) {
-      return `${betweenTimeDay}일전`;
-    }
-
-    return `${Math.floor(betweenTimeDay / 365)}년전`;
+  const betweenTime = Math.floor(
+    (today.getTime() - timeValue.getTime()) / 1000 / 60
+  );
+  if (betweenTime < 1) return "방금전";
+  if (betweenTime < 60) {
+    return `${betweenTime}분전`;
   }
+
+  const betweenTimeHour = Math.floor(betweenTime / 60);
+  if (betweenTimeHour < 24) {
+    return `${betweenTimeHour}시간전`;
+  }
+
+  const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+  if (betweenTimeDay < 365) {
+    return `${betweenTimeDay}일전`;
+  }
+
+  return `${Math.floor(betweenTimeDay / 365)}년전`;
+}
+
+export default function News({ news }) {
+  // 시간계산 함수
 
   return (
     <StNewsDiv>
-      <Link to="">
+      <Link to={`/news/read=${news.id}`}>
         <StContentsDiv>
           <StCategoryDiv>
             <div>{category[`${news.category}`]}</div>
