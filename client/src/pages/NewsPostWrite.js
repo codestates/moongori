@@ -1,10 +1,13 @@
 import React, { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 import Select from "react-select";
 import MapContainer from "../components/MapContainer";
-import SearchPlace from "../components/SearchPlace";
-import MapPopUp from "../components/MapPopUp";
 import DaumPostcode from "react-daum-postcode";
+import locationicon from "../images/locationicon.png";
+import photoicon from "../images/photoicon.png";
+import axios from "axios";
 
 const StPopupBackground = styled.div`
   width: 100%;
@@ -53,6 +56,11 @@ const StWriteBox = styled.div`
     display: flex;
     justify-content: end;
     width: 80%;
+    .add-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
   }
   .input-area {
     overflow-y: hidden;
@@ -64,11 +72,31 @@ const StWriteBox = styled.div`
     border-radius: 2px;
     line-height: 2.5rem;
     font-size: 15px;
+    @media all and (max-width: 1024px) {
+      width: 400px;
+    }
     @media all and (max-width: 768px) {
       width: 300px;
     }
     @media all and (max-width: 557px) {
-      width: 250px;
+      width: 200px;
+    }
+  }
+  .location-wrap {
+    margin-top: 20px;
+    width: 600px;
+    height: 400px;
+    @media all and (max-width: 1024px) {
+      width: 400px;
+      height: 300px;
+    }
+    @media all and (max-width: 768px) {
+      width: 300px;
+      height: 300px;
+    }
+    @media all and (max-width: 557px) {
+      width: 200px;
+      height: 300px;
     }
   }
 `;
@@ -92,6 +120,7 @@ const StButtonBox = styled.div`
   }
 `;
 export default function NewsPostWrite({ searchPlace }) {
+  const navigate = useNavigate();
   const [selected, setSelected] = useState("");
   const [postWrite, setPostWrite] = useState({
     contents: "",
@@ -99,23 +128,56 @@ export default function NewsPostWrite({ searchPlace }) {
   const [location, setLocation] = useState({
     address: "",
   });
-
   const [isOpenPopup, setisOpenPopup] = useState(false);
   const handleInputValue = (key) => (e) => {
     setPostWrite({ ...postWrite, [key]: e.target.value });
   };
-
+  const [showMap, setShowMap] = useState(false);
   const locationInfo = location.address;
-  console.log(locationInfo);
+
+  console.log(selected);
   const options = useMemo(
     () => [
-      { value: "취미", label: "취미" },
-      { value: "맛집", label: "맛집" },
-      { value: "반려동물", label: "반려동물" },
-      { value: "동네소식", label: "동네소식" },
+      { value: "1", label: "취미" },
+      { value: "2", label: "일상" },
+      { value: "3", label: "맛집" },
+      { value: "4", label: "동네소식" },
+      { value: "5", label: "사건,사고" },
+      { value: "6", label: "분실,실종" },
+      { value: "7", label: "질문" },
+      { value: "8", label: "일상" },
+      { value: "9", label: "육아" },
+      { value: "10", label: "기타" },
     ],
     []
   );
+
+  const creatNewsPost = () => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/news/post`, {
+        category: selected.value,
+        contents: postWrite.contents,
+        location: location.address,
+        img: "",
+      })
+      .then((res) => {
+        Swal.fire({
+          icon: "success",
+          title: "글 작성 완료!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate(`/news/list=${selected.value}/1`);
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "카테고리와 내용은 필수사항입니다",
+          text: "",
+          footer: "",
+        });
+      });
+  };
 
   const onCompletePost = (data) => {
     let fullAddr = data.address;
@@ -136,6 +198,7 @@ export default function NewsPostWrite({ searchPlace }) {
     }
     setLocation({ ...location, ["address"]: fullAddr });
     setisOpenPopup(false);
+    setShowMap(true);
   };
   const postCodeStyle = {
     display: "block",
@@ -181,14 +244,16 @@ export default function NewsPostWrite({ searchPlace }) {
             />
           </div>
           <div className={"addition-wrap"}>
-            <div>사진</div>
+            <div>
+              <img src={photoicon} className={"add-icon"}></img>
+            </div>
             <div
               className={"location-button"}
               onClick={() => {
                 openPopup();
               }}
             >
-              위치
+              <img src={locationicon} className={"add-icon"}></img>
             </div>
             {isOpenPopup && (
               <StPopupBackground
@@ -213,7 +278,7 @@ export default function NewsPostWrite({ searchPlace }) {
             <div className={"picture-area"}></div>
           </div>
           <div className={"location-wrap"}>
-            <MapContainer locationInfo={locationInfo} />
+            <MapContainer locationInfo={locationInfo} showMap={showMap} />
           </div>
         </StWriteBox>
         <StButtonBox>
