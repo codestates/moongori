@@ -5,7 +5,6 @@ import {
   faCheck,
   faSearch,
   faPlusSquare,
-  faPlusCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -18,12 +17,11 @@ axios.defaults.withCredentials = true;
 const StBodyDiv = styled.div`
   width: 100%;
   height: 100%;
-  min-height: 900px;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
-  margin-bottom: 40px;
+  margin-bottom: 200px;
   .category {
     display: flex;
     flex-wrap: wrap;
@@ -35,7 +33,7 @@ const StCategoryButton = styled.button`
   background: ${(props) => (props.select ? "#92E3A9" : "#EFEFEF")};
   cursor: pointer;
   border-radius: 10px;
-  width: 100px;
+  width: 80px;
   height: 30px;
   margin: 20px;
   @media all and (max-width: 425px) {
@@ -46,7 +44,7 @@ const StCategoryButton = styled.button`
 
 const StContentsHeadDiv = styled.div`
   margin: 10px 0 10px 0;
-  width: 70%;
+  width: 60%;
   .write-post {
     display: flex;
     justify-content: flex-end;
@@ -97,7 +95,7 @@ const StAddressSearchDiv = styled.div`
 `;
 
 const StContentsBodyDiv = styled.div`
-  width: 70%;
+  width: 60%;
   @media all and (min-width: 1440px) {
     max-width: 990px;
   }
@@ -275,7 +273,7 @@ export default function NewsList({ userinfo, login }) {
           {login ? (
             <div class="myAddress">
               <FontAwesomeIcon icon={faCheck} size={"2x"}></FontAwesomeIcon>
-              <div>{userinfo.town.split(",")[1]}</div>
+              <div>{userinfo.town}</div>
             </div>
           ) : null}
           <div>
