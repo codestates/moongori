@@ -1,4 +1,4 @@
-const { comment, newsPost } = require("../../models");
+const { comment, user, newsPost } = require("../../models");
 
 module.exports = async (req, res) => {
   const id = req.cookies.id;
@@ -12,6 +12,8 @@ module.exports = async (req, res) => {
     await comment.create(payload);
     const updateComment = await comment.findAll({
       where: { newsPost_Id: req.body.newsPost_Id },
+      attributes: ["user_id", "comment", "createdAt"],
+      include: { model: user, attributes: ["nickname", "address", "img"] },
     });
     await newsPost.update(
       { comment_cnt: updateComment.length },

@@ -22,14 +22,14 @@ router.post("/user/email", userCtrl.email);
 router.post("/email", userCtrl.sendEmail);
 router.get("/cert/:email", userCtrl.cert);
 
-//router.post("/uplod", userCtrl.img);
+// router.post("/uplod", userCtrl.img);
 // router.post("/user/test", userCtrl.test);
 
 //newsPost
 router.get("/news/list", newsPostCtrl.list);
 router.get("/news/list/:category", newsPostCtrl.category);
-router.get("/news/post/:id", auth.accessToken, newsPostCtrl.read);
-router.post("/news/post", auth.accessToken, newsPostCtrl.write);
+router.get("/news/post/:id", newsPostCtrl.read);
+router.post("/news/post", auth.accessToken, userCtrl.img, newsPostCtrl.write);
 router.delete("/news/post/:id", auth.accessToken, newsPostCtrl.withdrawal);
 router.patch("/news/post/:id", auth.accessToken, newsPostCtrl.modification);
 router.post("/news/comment", auth.accessToken, newsPostCtrl.writeComment);
@@ -42,8 +42,10 @@ router.delete(
 router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
 
 //tradePost
-router.get("trade/list", tradePost.list);
-// router.get("trade/list/:nomalOrNot", tradePost.nomalOrNot);
-// router.get("trade/post/:id", tradePost.read);
+router.get("/trade/list", tradePost.list);
+router.get("/trade/list/:nomalOrNot", tradePost.nomalOrNot);
+router.get("/trade/post", tradePost.read);
+router.post("/trade/post", auth.accessToken, tradePost.write);
+router.patch("/trade/nomal/:id", auth.accessToken, tradePost.modifynomal);
 
 module.exports = router;
