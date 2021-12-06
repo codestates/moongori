@@ -11,6 +11,7 @@ import Mypage from "./pages/Mypage";
 import NotFound from "./pages/NotFound";
 import PrivateRoute from "./components/PrivateRoute";
 import NewsPost from "./pages/NewsPost";
+import NewsPostWrite from "./pages/NewsPostWrite";
 import axios from "axios";
 
 import Swal from "sweetalert2";
@@ -75,14 +76,15 @@ export default function App() {
             path="/mypage"
             element={<PrivateRoute login={login} userinfo={userinfo} />}
           />
+
           {/* 
           <Route path="/trade-normal/read=:id" element={<TradeNormalPost />} />
-
+                 
           <Route
             path="/trade-suggestion/read=:id"
             element={<TradeSuggestionPost />}
           />
-
+          
           <Route path="/trade/write" element={<TradePostWrite />} /> */}
 
           <Route
