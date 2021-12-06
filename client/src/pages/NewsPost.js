@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
@@ -53,9 +53,10 @@ const StPostUserDiv = styled.div`
   img {
     height: 35px;
     width: 35px;
+    margin: 10px 10px 0 0;
   }
   .info {
-    margin-left: 10px;
+    margin: 10px 10px 0 0;
     text-align: left;
     span {
       margin-right: 20px;
@@ -70,8 +71,6 @@ const StPostBodyDiv = styled.div`
   text-align: left;
   border-bottom: 1px solid;
 `;
-
-const StContentInfoReUse = styled(StContentInfoDiv)``;
 
 const StCommentInputDiv = styled.div`
   width: 100%;
@@ -115,6 +114,25 @@ const StPostHeaderReUse = styled(StPostHeaderDiv)`
   img {
     padding-top: 10px;
   }
+  input {
+    width: 300px;
+    height: 20px;
+    font-size: 1em;
+    outline-color: #aae8c5;
+  }
+`;
+
+const StCommentButtonDiv = styled.div`
+  padding: 30px 0 0 30px;
+  text-align: right;
+  button {
+    border-radius: 30px;
+    background: #92e3a9;
+    height: 30px;
+    margin-right: 10px;
+    width: 70px;
+    cursor: pointer;
+  }
 `;
 
 export default function NewsPost({ login, userinfo }) {
@@ -123,16 +141,67 @@ export default function NewsPost({ login, userinfo }) {
   const [commentList, setCommentList] = useState([]);
   const [postUser, setPostUser] = useState(null);
   const [loading, isLoading] = useState(true);
+  const [commentId, setCommentId] = useState(null);
+  const inputCommentRef = useRef(null);
+  const inputRevisedCommentRef = useRef(null);
+
+  // 서버에 댓글 등록을 요청하는 함수
+  const registerComment = () => {
+    if (inputCommentRef.current.value !== "") {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/news/comment`, {
+          newsPost_Id: id,
+          comment: inputCommentRef.current.value,
+        })
+        .then((res) => {
+          console.log(commentList);
+          console.log(res.data);
+          setCommentList([...res.data.data].reverse());
+        })
+        .catch();
+      inputCommentRef.current.focus();
+      inputCommentRef.current.value = "";
+    }
+  };
+
+  // 댓글 수정 아이콘을 눌렀을 때 실행하는 함수
+  const handleRevise = (comment_id) => {
+    setCommentId(comment_id);
+  };
+
+  // 댓글 수정하는 함수
+  const revisedComment = (comment_id) => {
+    axios
+      .patch(`${process.env.REACT_APP_API_URL}/news/comment/${comment_id}`, {
+        newsPost_Id: id,
+        comment: inputRevisedCommentRef.current.value,
+      })
+      .then((res) => {
+        console.log(commentList);
+        console.log(res.data);
+        setCommentList([...res.data.data].reverse());
+        setCommentId(null);
+      });
+  };
+
+  // 댓글을 삭제하는 함수
+  const deleteComment = (comment_id) => {
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/news/comment/${comment_id}`, {
+        data: { newsPost_Id: id },
+      })
+      .then((res) => {
+        setCommentList([...res.data.data].reverse());
+      });
+  };
 
   useEffect(() => {
     isLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_URL}/news/post/${id}`)
       .then((res) => {
-        console.log(userinfo);
-        console.log(res.data.data);
         setContents(res.data.data);
-        setCommentList(res.data.data.comments);
+        setCommentList(res.data.data.comments.reverse());
         setPostUser(res.data.data.user);
         isLoading(false);
       });
@@ -149,14 +218,14 @@ export default function NewsPost({ login, userinfo }) {
             <StPostUserDiv>
               <img src={postUser.img} alt="프로필사진"></img>
               <div className={"info"}>
-                <StContentInfoReUse>
+                <StContentInfoDiv>
                   <span>{postUser.nickname}</span>
                   <span>{postUser.town}</span>
-                </StContentInfoReUse>
-                <StContentInfoReUse color={"#c4c4c4"}>
+                </StContentInfoDiv>
+                <StContentInfoDiv color={"#c4c4c4"}>
                   <span>조회수 {contents.view}</span>
                   <span>{timeForToday(contents.createdAt)}</span>
-                </StContentInfoReUse>
+                </StContentInfoDiv>
               </div>
             </StPostUserDiv>
             {login && userinfo.id === contents.user_Id ? (
@@ -170,11 +239,17 @@ export default function NewsPost({ login, userinfo }) {
             <p>{contents.content}</p>
           </StPostBodyDiv>
           <StCommentInputDiv>
-            <div className="comment-cnt">댓글 {contents.comment_cnt}</div>
+            <div className="comment-cnt">댓글 {commentList.length}</div>
             <div className="input-button">
-              <input type={"text"} placeholder={"댓글 입력"}></input>
+              <input
+                type={"text"}
+                placeholder={"댓글 입력"}
+                ref={inputCommentRef}
+              ></input>
               <div>
-                <button type={"button"}>등 록</button>
+                <button type={"button"} onClick={registerComment}>
+                  등 록
+                </button>
               </div>
             </div>
           </StCommentInputDiv>
@@ -184,21 +259,49 @@ export default function NewsPost({ login, userinfo }) {
                 <StPostUserDiv>
                   <img src={comment.user.img} alt="프로필사진"></img>
                   <div className={"info"}>
-                    <StContentInfoReUse>
+                    <StContentInfoDiv>
                       <span>{comment.user.nickname}</span>
                       <span>{comment.user.town}</span>
-                    </StContentInfoReUse>
-                    <div>{comment.comment}</div>
-                    <StContentInfoReUse color={"#c4c4c4"}>
+                    </StContentInfoDiv>
+                    {comment.id === commentId ? (
+                      <input
+                        type={"text "}
+                        defaultValue={comment.comment}
+                        ref={inputRevisedCommentRef}
+                      />
+                    ) : (
+                      <div>{comment.comment}</div>
+                    )}
+                    <StContentInfoDiv color={"#c4c4c4"}>
                       <span>{timeForToday(contents.createdAt)}</span>
-                    </StContentInfoReUse>
+                    </StContentInfoDiv>
                   </div>
                 </StPostUserDiv>
-                {login && userinfo.id === comment.user.id ? (
-                  <div className={"icon"}>
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                    <FontAwesomeIcon icon={faTrashAlt} />
-                  </div>
+                {login && userinfo.id === comment.user_Id ? (
+                  comment.id === commentId ? (
+                    <StCommentButtonDiv>
+                      <button
+                        type={"button"}
+                        onClick={() => setCommentId(null)}
+                      >
+                        취소
+                      </button>
+                      <button onClick={() => revisedComment(comment.id)}>
+                        확인
+                      </button>
+                    </StCommentButtonDiv>
+                  ) : (
+                    <div className={"icon"}>
+                      <FontAwesomeIcon
+                        icon={faPencilAlt}
+                        onClick={() => handleRevise(comment.id)}
+                      />
+                      <FontAwesomeIcon
+                        icon={faTrashAlt}
+                        onClick={() => deleteComment(comment.id)}
+                      />
+                    </div>
+                  )
                 ) : null}
               </StPostHeaderReUse>
             ))}
