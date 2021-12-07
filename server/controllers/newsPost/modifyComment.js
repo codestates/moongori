@@ -1,4 +1,4 @@
-const { comment } = require("../../models");
+const { comment, user } = require("../../models");
 
 module.exports = async (req, res) => {
   const id = req.cookies.id;
@@ -19,13 +19,21 @@ module.exports = async (req, res) => {
         },
       }
     );
-    const payload = {
-      id: commentId,
-      user_Id: id,
-      newsPost_Id: commentInfo.newsPost_Id,
-      comment: req.body.comment,
-    };
-    return res.status(200).json({ data: payload, message: "modify comment!" });
+    // const payload = {
+    //   id: commentId,
+    //   user_Id: id,
+    //   newsPost_Id: commentInfo.newsPost_Id,
+    //   comment: req.body.comment,
+    // };
+
+    const updateComment = await comment.findAll({
+      where: { newsPost_Id: req.body.newsPost_Id },
+      include: { model: user, attributes: ["nickname", "town", "img"] },
+    });
+
+    return res
+      .status(200)
+      .json({ data: updateComment, message: "modify comment!" });
   } catch (err) {
     return res.status(500).json({ message: "error" });
   }
