@@ -26,10 +26,13 @@ module.exports = async (req, res) => {
           .json({ message: "input address" })
           .rediect(`${process.env.ORIGIN}/mypage`);
       }
-      const town = userInfo.town.split(",")[0];
+      const town = userInfo.town;
       list = await newsPost.findAll({
-        where: { location: { [Op.like]: `${town}%` } },
+        where: { town: { [Op.like]: `${town}%` } },
+        include: [{ model: user, attributes: ["nickname", "town"] }],
+        // include: [{ model: user, where: { town: { [Op.like]: `%${town}%` } } }],
       });
+      console.log(`#######`, list);
       return res.status(200).json({ data: list, message: "ok" });
     });
   }

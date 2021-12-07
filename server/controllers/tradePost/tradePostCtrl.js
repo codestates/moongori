@@ -8,4 +8,6 @@ module.exports = {
   delete: require("./withdrawal"),
   state: require("./modifyState"),
   modifyTrade: require("./modifyTrade"),
+  suggestion: require("./suggestion"),
+  modifyCost: require("./modifyCost"),
 };

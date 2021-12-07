@@ -10,4 +10,5 @@ module.exports = {
   withdrawalComment: require("./withdrawComment"),
   myList: require("./myList"),
   img: require("./img"),
+  myComment: require("./myComment"),
 };

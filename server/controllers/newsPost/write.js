@@ -1,14 +1,21 @@
-const { newsPost } = require("../../models");
+const { newsPost, user } = require("../../models");
 
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   console.log("@@@@@", req.body);
-  const { category, content, location, img } = req.body;
+  const imgs = req.files.map((el) => el.location).join(",");
+  console.log(`$$$$$news`, imgs);
+  const userInfo = await user.findOne({
+    where: { id: id },
+  });
+
+  const { category, content, location } = req.body;
   const payload = {
     category,
     content,
     location,
-    img,
+    town: userInfo.town,
+    img: imgs,
     user_Id: id,
   };
   try {

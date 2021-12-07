@@ -46,6 +46,7 @@ router.delete(
   newsPostCtrl.withdrawalComment
 );
 router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
+router.get("/news/comment", auth.accessToken, newsPostCtrl.myComment);
 
 //tradePost
 router.get("/trade/list", tradePost.list);
@@ -55,9 +56,12 @@ router.post("/trade/post", auth.accessToken, tradePost.write);
 router.patch("/trade/nomal/:id", auth.accessToken, tradePost.modifynomal);
 router.delete("/trade/post/:id", auth.accessToken, tradePostCtrl.delete);
 router.patch("/trade/state/:id", auth.accessToken, tradePostCtrl.state);
+router.patch("/trade/post/:id", auth.accessToken, tradePostCtrl.modifyTrade);
+router.post("/trade/suggestion", auth.accessToken, tradePostCtrl.suggestion);
 router.patch(
   "/trade/suggestion/:id",
   auth.accessToken,
-  tradePostCtrl.modifyTrade
+  tradePostCtrl.modifyCost
 );
+
 module.exports = router;
