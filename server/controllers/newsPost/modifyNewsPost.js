@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
   const postOne = await newsPost.findOne({
     where: { id: postId },
   });
+  // console.log("!!!!!!", req.body);
   if (postOne.user_Id !== id) {
     return res.status(403).json({ message: "not correspond user" });
   }
@@ -16,7 +17,7 @@ module.exports = async (req, res) => {
       const payload = {
         category: category || postOne.category,
         content: content || postOne.content,
-        location: location || postOne.location,
+        location: location === "null" ? null : location || postOne.location,
         img: img || postOne.img,
       };
       await newsPost.update(payload, {
@@ -27,11 +28,12 @@ module.exports = async (req, res) => {
         .status(200)
         .json({ data: modification, message: "successful modification" });
     } else {
-      const { category, content, location } = req.body;
+      const { category, content, location, img } = req.body;
       const payload = {
         category: category || postOne.category,
         content: content || postOne.content,
-        location: location || postOne.location,
+        location: location === "null" ? null : location || postOne.location,
+        img: img === "null" ? null : postOne.img,
       };
       await newsPost.update(payload, {
         where: { id: postId },
