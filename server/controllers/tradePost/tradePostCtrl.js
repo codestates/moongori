@@ -4,4 +4,5 @@ module.exports = {
   read: require("./post"),
   delete: require("./withdrawal"),
   state: require("./modifyState"),
+  modifyTrade: require("./modifyTrade"),
 };

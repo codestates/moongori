@@ -46,6 +46,7 @@ router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
 router.get("trade/list", tradePost.list);
 router.delete("/trade/post/:id", auth.accessToken, tradePostCtrl.delete);
 router.patch("/trade/state/:id", auth.accessToken, tradePostCtrl.state);
+router.patch("/trade/suggestion/:id", auth.accessToken, tradePostCtrl.modifyTrade);
 // router.get("trade/list/:nomalOrNot", tradePost.nomalOrNot);
 // router.get("trade/post/:id", tradePost.read);
 
