@@ -1,6 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import logoWhite from "./../images/흰색 로고.png";
 
 const FooterBox = styled.div`
@@ -180,7 +179,7 @@ const FooterBox = styled.div`
   }
   .name {
     margin-right: 5px;
-    font-szie: 11px;
+    font-size: 11px;
   }
   .About-title {
     font-size: 13px;
@@ -218,7 +217,7 @@ export default function Footer() {
       <div className={"footer-wrap"}>
         <div className={"footer-master"}>
           <div className={"footer-material"}>
-            <img src={logoWhite}></img>
+            <img src={logoWhite} alt={"footer logo"}></img>
             <div className={"LogoName"}>moongori</div>
           </div>
         </div>
@@ -229,18 +228,12 @@ export default function Footer() {
                 <div className={"About-title"}>About us</div>
                 <div className={"About-content"}>
                   <p className={"name"}>
-                    <a
-                      href="https://github.com/codestates/moongori/wiki"
-                      target="_blank"
-                    >
+                    <a href="https://github.com/codestates/moongori/wiki">
                       Moongori Wiki
                     </a>
                   </p>
                   <p>
-                    <a
-                      href="https://github.com/codestates/moongori"
-                      target="_blank"
-                    >
+                    <a href="https://github.com/codestates/moongori">
                       Repository
                     </a>
                   </p>
@@ -252,24 +245,16 @@ export default function Footer() {
                 <div className={"Contact-comment"}>Contact us</div>
                 <div className={"Contact-content"}>
                   <p className={"name"}>
-                    <a href="https://github.com/Lawen-s" target="_blank">
-                      사범기
-                    </a>
+                    <a href="https://github.com/Lawen-s">사범기</a>
                   </p>
                   <p className={"name"}>
-                    <a href="https://github.com/rmfhsep" target="_blank">
-                      김정훈
-                    </a>
+                    <a href="https://github.com/rmfhsep">김정훈</a>
                   </p>
                   <p className={"name"}>
-                    <a href="https://github.com/lsm6627" target="_blank">
-                      이성민
-                    </a>
+                    <a href="https://github.com/lsm6627">이성민</a>
                   </p>
                   <p className={"name"}>
-                    <a href="https://github.com/lsj135779" target="_blank">
-                      이승준
-                    </a>
+                    <a href="https://github.com/lsj135779">이승준</a>
                   </p>
                 </div>
               </div>

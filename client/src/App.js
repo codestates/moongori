@@ -7,14 +7,14 @@ import Footer from "./components/Footer";
 import Main from "./pages/Main";
 import TradeList from "./pages/TradeList";
 import NewsList from "./pages/NewsList";
-import Mypage from "./pages/Mypage";
 import NotFound from "./pages/NotFound";
 import PrivateRoute from "./components/PrivateRoute";
 import NewsPost from "./pages/NewsPost";
 import NewsPostWrite from "./pages/NewsPostWrite";
+import EditNewsPostWrite from "./pages/EditNewsPostWrite";
 import axios from "axios";
 
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 
 axios.defaults.withCredentials = true;
 
@@ -91,7 +91,7 @@ export default function App() {
             path="/news/read=:id"
             element={<NewsPost login={login} userinfo={userinfo} />}
           />
-
+          <Route path="/news/edit=:id" element={<EditNewsPostWrite />} />
           <Route path="/news/write" element={<NewsPostWrite />} />
 
           {/* <Route path="/chat" element={<Chat />} /> */}

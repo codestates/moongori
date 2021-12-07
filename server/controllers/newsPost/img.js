@@ -17,8 +17,9 @@ const storage = multerS3({
     cb(null, { fieldName: file.fieldname });
   },
   key: function (req, file, cb) {
-    const id = req.cookies.id;
-    cb(null, `profile/${id}/${Date.now()}_${file.originalname}`);
+    // const id = req.cookies.id;
+    // 게시글 newsPost폴더 아래에 게시글별 폴더로 세분화하기
+    cb(null, `newsPost/${Date.now()}_${file.originalname}`);
   },
 });
 

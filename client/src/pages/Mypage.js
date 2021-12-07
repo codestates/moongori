@@ -442,12 +442,6 @@ export default function Mypage({ login, userinfo }) {
     setEditInfo({ ...editInfo, [key]: e.target.value });
   };
 
-  console.log(editInfo);
-  const onCloseModal = (e) => {
-    if (e.target === e.currentTarget) {
-      modalClose();
-    }
-  };
   const modalClose = () => {
     setModalOpen(!modalOpen);
   };
@@ -460,16 +454,7 @@ export default function Mypage({ login, userinfo }) {
   const editHandler = () => {
     setEdit(!edit);
   };
-  // useEffect(() => {
-  //   if (!userinfo.address) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "원활한 서비스 이용을 위해 동네 인증을 해주세요",
-  //       text: "",
-  //       footer: "",
-  //     });
-  //   }
-  // }, []);
+
   const checkDuplicate = () => {
     axios
       .post(`${process.env.REACT_APP_API_URL}/user/nickname`, {
@@ -501,6 +486,7 @@ export default function Mypage({ login, userinfo }) {
         .patch(`${process.env.REACT_APP_API_URL}/user`, {
           nickname: editInfo.nickname,
           address: editInfo.address,
+          town: editInfo.town,
         })
         .then((res) => {
           setEdit(true);
@@ -532,7 +518,7 @@ export default function Mypage({ login, userinfo }) {
       }
       fullAddr += extraAddr !== "" ? ` ${extraAddr}` : "";
     }
-    setEditInfo({ ...editInfo, ["address"]: fullAddr });
+    setEditInfo({ ...editInfo, address: fullAddr });
     isOpenPost(false);
   };
   const postCodeStyle = {
@@ -564,13 +550,14 @@ export default function Mypage({ login, userinfo }) {
             //기존 상태
             <div className={"mypage-wrap"}>
               <div className={"mypage-profile-box"}>
-                <img src={editInfo.img} className={"profile-img"}></img>
+                <img src={editInfo.img} alt="" className={"profile-img"}></img>
               </div>
               <div className={"mypage-userinfo-box"}>
                 <div className={"edit-wrap"}>
                   <div className={"edit-box"}>
                     <img
                       src={editImg}
+                      alt=""
                       className={"edit-img"}
                       onClick={() => {
                         editHandler();
@@ -631,14 +618,15 @@ export default function Mypage({ login, userinfo }) {
             //편집 상태
             <div className={"mypage-wrap"}>
               <div className={"mypage-profile-box"}>
-                <img src={editInfo.img} className={"profile-img"}></img>
-                <button>사진 변경</button>
+                <img src={editInfo.img} alt="" className={"profile-img"}></img>
+                <button className={"imgButton"}>사진 변경</button>
               </div>
               <div className={"mypage-userinfo-box"}>
                 <div className={"edit-wrap"}>
                   <div className={"edit-box"}>
                     <img
                       src={complete}
+                      alt=""
                       className={"edit-img"}
                       onClick={() => {
                         editHandler();
@@ -708,7 +696,7 @@ export default function Mypage({ login, userinfo }) {
             <div className={"button-box-empty"}></div>
             <div className={"button-box"}>
               <div className={"button-area"}>
-                <img src={lock} className={"button-icon"}></img>
+                <img src={lock} alt="" className={"button-icon"}></img>
                 <div onClick={modalClose} className={"request-button"}>
                   비밀번호 변경
                 </div>
@@ -717,7 +705,7 @@ export default function Mypage({ login, userinfo }) {
                 )}
               </div>
               <div className={"button-area"}>
-                <img src={cancel} className={"button-icon"}></img>
+                <img src={cancel} alt="" className={"button-icon"}></img>
                 <div onClick={modalClose2} className={"request-button"}>
                   회원탈퇴
                 </div>
