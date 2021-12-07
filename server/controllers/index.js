@@ -29,7 +29,12 @@ router.get("/cert/:email", userCtrl.cert);
 router.get("/news/list", newsPostCtrl.list);
 router.get("/news/list/:category", newsPostCtrl.category);
 router.get("/news/post/:id", newsPostCtrl.read);
-router.post("/news/post", auth.accessToken, userCtrl.img, newsPostCtrl.write);
+router.post(
+  "/news/post",
+  auth.accessToken,
+  newsPostCtrl.img,
+  newsPostCtrl.write
+);
 router.delete("/news/post/:id", auth.accessToken, newsPostCtrl.withdrawal);
 router.patch("/news/post/:id", auth.accessToken, newsPostCtrl.modification);
 router.post("/news/comment", auth.accessToken, newsPostCtrl.writeComment);

@@ -9,4 +9,5 @@ module.exports = {
   modifyComment: require("./modifyComment"),
   withdrawalComment: require("./withdrawComment"),
   myList: require("./myList"),
+  img: require("./img"),
 };

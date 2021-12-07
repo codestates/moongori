@@ -3,6 +3,7 @@ const { tradePost } = require("../../models");
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const postId = req.params.id;
+  console.log("!!!!!!!!!!", req.files);
 
   const postOne = await tradePost.findOne({
     where: { id: postId },
@@ -11,7 +12,7 @@ module.exports = async (req, res) => {
     return res.status(403).json({ message: "not correspond user" });
   }
   try {
-    const { title, content, sCost, img } = req.body;
+    const { title, content, sCost } = req.body;
     const payload = { title, content, sCost, img };
     let modification = await tradePost.update(payload, {
       where: { id: postId },

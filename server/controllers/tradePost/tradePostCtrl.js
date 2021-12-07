@@ -4,4 +4,5 @@ module.exports = {
   read: require("./post"),
   write: require("./write"),
   modifynomal: require("./modifynomal"),
+  img: require("./img"),
 };
