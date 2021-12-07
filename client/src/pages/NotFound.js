@@ -29,7 +29,7 @@ export default function NewsPostWrite() {
     <>
       <NotFoundBox>
         <div className={"NotFounfImg-wrap"}>
-          <img src={unknown} className={"NotFoundImg"}></img>
+          <img src={unknown} className={"NotFoundImg"} alt={"404페이지"}></img>
         </div>
       </NotFoundBox>
     </>

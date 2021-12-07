@@ -1,12 +1,11 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Swal from "sweetalert2";
 import Select from "react-select";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMapMarkedAlt, faImage } from "@fortawesome/free-solid-svg-icons";
 import MapContainer from "../components/MapContainer";
 import DaumPostcode from "react-daum-postcode";
-import locationicon from "../images/locationicon.png";
-import photoicon from "../images/photoicon.png";
 import axios from "axios";
 
 const StPopupBackground = styled.div`
@@ -94,10 +93,6 @@ const StWriteBox = styled.div`
       width: 80%;
       display: flex;
       justify-content: start;
-      .upload-img {
-        width: 100px;
-        height: 100px;
-      }
     }
   }
 
@@ -119,13 +114,19 @@ const StWriteBox = styled.div`
     }
   }
 `;
+
+const StuploadIimg = styled.img`
+  width: 100px;
+  height: 100px;
+`;
+
 const StButtonBox = styled.div`
   height: 100px;
   width: 75%;
   display: flex;
   .button-wrap {
     margin-top: 20px;
-    width: 50%;
+    width: 90%;
     display: flex;
     justify-content: end;
     .button {
@@ -151,14 +152,16 @@ export default function NewsPostWrite({ searchPlace }) {
   const handleInputValue = (key) => (e) => {
     setPostWrite({ ...postWrite, [key]: e.target.value });
   };
+  //지도 상태
   const [showMap, setShowMap] = useState(false);
-  const locationInfo = location.address;
-
-  // const [imgFile, setImgFile] = useState(null); //파일
+  //이미지 상태
+  const [showImg, setShowImg] = useState(false);
+  //이미지
   const [imgFile, setImgFile] = useState(null); //파일
-
+  //작성 요청 보낼 때 사용
   const contents = postWrite.contents;
   const category = selected.value;
+  const locationInfo = location.address;
 
   const options = useMemo(
     () => [
@@ -169,41 +172,15 @@ export default function NewsPostWrite({ searchPlace }) {
       { value: "5", label: "사건,사고" },
       { value: "6", label: "분실,실종" },
       { value: "7", label: "질문" },
-      { value: "8", label: "일상" },
+      { value: "8", label: "반려동물" },
       { value: "9", label: "육아" },
       { value: "10", label: "기타" },
     ],
     []
   );
 
-  // const creatNewsPost = () => {
-  //   axios
-  //     .post(`${process.env.REACT_APP_API_URL}/news/post`, {
-  //       category: selected.value,
-  //       contents: postWrite.contents,
-  //       location: location.address,
-  //       img: "",
-  //     })
-  //     .then((res) => {
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "글 작성 완료!",
-  //         showConfirmButton: false,
-  //         timer: 1500,
-  //       });
-  //       navigate(`/news/list=${selected.value}/1`);
-  //     })
-  //     .catch(() => {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "카테고리와 내용은 필수사항입니다",
-  //         text: "",
-  //         footer: "",
-  //       });
-  //     });
-  // };
   const backButton = () => {
-    navigate(`/news/list=${selected.value}/1`);
+    navigate(`/news=0`);
   };
   //지도 찾기
   const onCompletePost = (data) => {
@@ -215,30 +192,15 @@ export default function NewsPostWrite({ searchPlace }) {
         extraAddr +=
           extraAddr !== "" ? `, ${data.buildingName}` : data.buildingName;
       }
-      if (data.sigungu !== "") {
-        extraAddr += `, ${data.sigungu}`;
-      }
       if (data.bname !== "") {
         extraAddr += `, ${data.bname}`;
       }
       fullAddr += extraAddr !== "" ? ` ${extraAddr}` : "";
     }
-    setLocation({ ...location, ["address"]: fullAddr });
+    setLocation({ ...location, address: fullAddr });
 
     setisOpenPopup(false);
     setShowMap(true);
-  };
-  //위도, 경도 찾기
-
-  const [addressCoordinate, setAddressCoordinate] = useState([]);
-
-  const searchCoordinateHandle = (lat, log) => {
-    // console.log(lat, log);
-    let newCoordinate = [];
-    newCoordinate.push(lat);
-    newCoordinate.push(log);
-    setAddressCoordinate(newCoordinate);
-    console.log(addressCoordinate);
   };
 
   const postCodeStyle = {
@@ -259,39 +221,31 @@ export default function NewsPostWrite({ searchPlace }) {
   const handleChange = (selected) => {
     setSelected(selected);
   };
-  const onCloseModal = (e) => {
-    if (e.target === e.currentTarget) {
-      closePopup();
-    }
-  };
+
   const openPopup = () => {
     setisOpenPopup(true);
   };
   const closePopup = () => {
     setisOpenPopup(false);
   };
-  console.log(imgFile);
+
   //사진 부분
   const [image, setImage] = useState("");
+
   const photoChange = (e) => {
     const imageFile = e.target.files[0];
     const imageUrl = URL.createObjectURL(imageFile);
 
     setImage(imageFile);
     setImgFile(imageUrl); // 파일 상태 업데이트
-  };
-
-  const payload = {
-    contents: contents,
-    category: category,
-    location: location,
+    setShowImg(!showImg);
   };
 
   const creatNewsPost = async () => {
     if (selected !== "" && postWrite.contents !== "") {
       const formData = new FormData();
       formData.append("img", image);
-      formData.append("contents", contents);
+      formData.append("content", contents);
       formData.append("category", category);
       formData.append("location", locationInfo);
 
@@ -303,13 +257,11 @@ export default function NewsPostWrite({ searchPlace }) {
       await axios
         .post(`${process.env.REACT_APP_API_URL}/news/post`, formData, config)
         .then((res) => {
-          alert("성공");
+          navigate(`/news=${category}`);
         });
     }
   };
-  //위도, 경도
-  // formData.append("latitude", `${addressCoordinate[0]}`);
-  // formData.append("longitude", `${addressCoordinate[1]}`);
+
   return (
     <>
       <StNewsPostWriteHead>
@@ -325,8 +277,8 @@ export default function NewsPostWrite({ searchPlace }) {
           </div>
           <div className={"addition-wrap"}>
             <div>
-              <label for="input-file" src={photoicon} className={"add-icon"}>
-                하이
+              <label for="input-file" className={"add-icon"}>
+                <FontAwesomeIcon icon={faImage} />
               </label>
               <input
                 type="file"
@@ -336,7 +288,6 @@ export default function NewsPostWrite({ searchPlace }) {
                 onChange={photoChange}
                 style={{ display: "none" }}
               />
-              {/* <input type="submit" style={{ display: "none" }}></input> */}
             </div>
             <div
               className={"location-button"}
@@ -344,7 +295,7 @@ export default function NewsPostWrite({ searchPlace }) {
                 openPopup();
               }}
             >
-              <img src={locationicon} className={"add-icon"}></img>
+              <FontAwesomeIcon icon={faMapMarkedAlt} />
             </div>
             {isOpenPopup && (
               <StPopupBackground
@@ -366,21 +317,23 @@ export default function NewsPostWrite({ searchPlace }) {
               className={"input-area"}
               onChange={handleInputValue("contents")}
             ></textarea>
-            <div className={"picture-area"}>
-              <div></div>
-              <img src={imgFile} alt="" className={"upload-img"}></img>
+            {showImg ? (
+              <div className={"picture-area"}>
+                {/* <div className={"add-img"}></div> */}
+                <StuploadIimg
+                  src={imgFile}
+                  alt={"게시글 이미지"}
+                ></StuploadIimg>
+              </div>
+            ) : null}
+          </div>
+          {showMap ? (
+            <div className={"location-wrap"}>
+              <MapContainer locationInfo={locationInfo} />
             </div>
-          </div>
-          <div className={"location-wrap"}>
-            <MapContainer
-              locationInfo={locationInfo}
-              showMap={showMap}
-              searchCoordinateHandle={searchCoordinateHandle}
-            />
-          </div>
+          ) : null}
         </StWriteBox>
         <StButtonBox>
-          <div className={"button-wrap"}></div>
           <div className={"button-wrap"}>
             <button
               className={"button"}

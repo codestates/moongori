@@ -1,24 +1,25 @@
 const { newsPost, user, comment } = require("../../models");
+const { verify } = require("jsonwebtoken");
 
 module.exports = async (req, res) => {
-  const id = req.cookies.id;
   const postId = req.params.id;
-  console.log(req.params.id);
+  const cookie = req.cookies.accesstoken;
+
   let postInfo = await newsPost.findOne({
     where: { id: postId },
     include: [
       { model: user, attributes: ["nickname", "town", "img"] },
       {
         model: comment,
-        attributes: ["comment", "createdAt"],
+        attributes: ["id", "comment", "createdAt"],
         include: { model: user, attributes: ["nickname", "town", "img"] },
-
       },
     ],
   });
   //글을 쓴 작성자가 자신의 글을 클릭하는 경우 조회수 증가 X
-  if (id) {
-    if (postInfo.user_Id !== id) {
+  if (cookie) {
+    const verified = verify(cookie, process.env.ACCESS_SECRET);
+    if (postInfo.user_Id !== verified.id) {
       await newsPost.update(
         { view: postInfo.view + 1 },
         {
@@ -31,7 +32,7 @@ module.exports = async (req, res) => {
           { model: user, attributes: ["nickname", "town", "img"] },
           {
             model: comment,
-            attributes: ["comment", "createdAt"],
+            attributes: ["id", "comment", "createdAt"],
             include: {
               model: user,
               attributes: ["nickname", "town", "img"],
@@ -56,10 +57,8 @@ module.exports = async (req, res) => {
       { model: user, attributes: ["nickname", "town", "img"] },
       {
         model: comment,
-        attributes: ["comment", "createdAt"],
-        include: { model: user, attributes: ["nickname", "address", "img"] },
+        attributes: ["id", "comment", "createdAt"],
         include: { model: user, attributes: ["nickname", "town", "img"] },
-
       },
     ],
   });

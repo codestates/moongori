@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class newsPost extends Model {
     /**
@@ -14,20 +12,24 @@ module.exports = (sequelize, DataTypes) => {
       models.newsPost.belongsTo(models.user, { foreignKey: "user_Id" });
       models.newsPost.hasMany(models.comment, { foreignKey: "newsPost_Id" });
     }
-  };
-  newsPost.init({
-    category: DataTypes.STRING,
-    content: DataTypes.STRING,
-    img: DataTypes.STRING,
-    location: DataTypes.STRING,
-    latitude: DataTypes.DOUBLE,
-    longitude: DataTypes.DOUBLE,
-    user_Id: DataTypes.INTEGER,
-    comment_cnt: { defaultValue: 0, type: DataTypes.INTEGER },
-    view: { defaultValue: 0, type: DataTypes.INTEGER }
-  }, {
-    sequelize,
-    modelName: 'newsPost',
-  });
+  }
+  newsPost.init(
+    {
+      category: DataTypes.STRING,
+      content: DataTypes.STRING,
+      img: DataTypes.STRING,
+      town: DataTypes.STRING,
+      location: DataTypes.STRING,
+      latitude: DataTypes.DOUBLE,
+      longitude: DataTypes.DOUBLE,
+      user_Id: DataTypes.INTEGER,
+      comment_cnt: { defaultValue: 0, type: DataTypes.INTEGER },
+      view: { defaultValue: 0, type: DataTypes.INTEGER },
+    },
+    {
+      sequelize,
+      modelName: "newsPost",
+    }
+  );
   return newsPost;
 };
