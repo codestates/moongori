@@ -96,7 +96,11 @@ export default function News({ news }) {
           <StCategoryDiv>
             <div>{category[`${news.category}`]}</div>
           </StCategoryDiv>
-          <StContentInfoDiv top>{news.content}</StContentInfoDiv>
+          <StContentInfoDiv top>
+            {news.content.length >= 30
+              ? news.content.slice(0, 30) + "..."
+              : news.content}
+          </StContentInfoDiv>
           <StContentInfoDiv color={"#c4c4c4"}>
             <div className="front">{news.user.nickname}</div>
             <div>{news.user.town}</div>

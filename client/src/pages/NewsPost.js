@@ -21,7 +21,7 @@ const StBodyDiv = styled.div`
 `;
 
 const StContentsDiv = styled(StBodyDiv)`
-  width: 70%;
+  width: 55%;
   margin-top: 100px;
   margin-bottom: 40px;
   .category {
@@ -40,6 +40,9 @@ const StPostHeaderDiv = styled.div`
   .icon {
     padding: 10px 10px 0 0;
     font-size: 20px;
+    @media all and (max-width: 540px) {
+      font-size: 15px;
+    }
     svg {
       cursor: pointer;
       margin-right: 10px;
@@ -55,10 +58,15 @@ const StPostUserDiv = styled.div`
     height: 35px;
     width: 35px;
     margin: 10px 10px 0 0;
+    @media all and (max-width: 540px) {
+      height: 30px;
+      width: 30px;
+    }
   }
   .info {
     margin: 10px 10px 0 0;
     text-align: left;
+    font-size: 0.8em;
     span {
       margin-right: 20px;
     }
@@ -74,14 +82,18 @@ const StPostBodyDiv = styled.div`
   .contents {
     width: 100%;
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+    @media all and (max-width: 768px) {
+      flex-direction: column-reverse;
+    }
     p {
-      flex: 8 0 0;
+      flex: 0.8 0 0;
     }
     img {
-      flex: 2 0 0;
+      flex: 0.2 0 0;
       width: 200px;
       height: 200px;
+      margin-right: 10px;
     }
   }
 `;
@@ -100,7 +112,7 @@ const StCommentInputDiv = styled.div`
     input {
       border: none;
       height: 60%;
-      width: 99%;
+      width: 98%;
       font-size: 1em;
     }
     div {
@@ -233,7 +245,7 @@ export default function NewsPost({ login, userinfo }) {
         isLoading(false);
       });
   }, [id]);
-
+  console.log(commentList);
   return (
     <StBodyDiv>
       {loading ? (

@@ -16,7 +16,7 @@ router.get("/user/google", userCtrl.google);
 router.get("/user/googleCallback", userCtrl.googleCallback);
 router.post("/user/signout", auth.accessToken, userCtrl.signOut);
 router.delete("/user", auth.accessToken, userCtrl.withdrawal);
-router.patch("/user", auth.accessToken, userCtrl.img, userCtrl.modifyUser);
+router.post("/user", auth.accessToken, userCtrl.img, userCtrl.modifyUser);
 router.patch("/user/password", auth.accessToken, userCtrl.password);
 router.post("/user/nickname", userCtrl.nickname);
 router.post("/user/email", userCtrl.email);
@@ -57,16 +57,31 @@ router.get("/news/comment", auth.accessToken, newsPostCtrl.myComment);
 router.get("/trade/list", tradePost.list);
 router.get("/trade/list/:nomalOrNot", tradePost.nomalOrNot);
 router.get("/trade/post", tradePost.read);
-router.post("/trade/post", auth.accessToken, tradePost.write);
-router.patch("/trade/nomal/:id", auth.accessToken, tradePost.modifynomal);
+router.post("/trade/post", auth.accessToken, tradePost.img, tradePost.write);
+router.post(
+  "/trade/nomal/:id",
+  auth.accessToken,
+  tradePost.img,
+  tradePost.modifynomal
+);
 router.delete("/trade/post/:id", auth.accessToken, tradePostCtrl.delete);
 router.patch("/trade/state/:id", auth.accessToken, tradePostCtrl.state);
-router.patch("/trade/post/:id", auth.accessToken, tradePostCtrl.modifyTrade);
+router.post(
+  "/trade/post/:id",
+  auth.accessToken,
+  tradePost.img,
+  tradePostCtrl.modifyTrade
+);
 router.post("/trade/suggestion", auth.accessToken, tradePostCtrl.suggestion);
 router.patch(
   "/trade/suggestion/:id",
   auth.accessToken,
   tradePostCtrl.modifyCost
+);
+router.delete(
+  "/trade/suggestion/:id",
+  auth.accessToken,
+  tradePostCtrl.suggestionDelete
 );
 
 module.exports = router;

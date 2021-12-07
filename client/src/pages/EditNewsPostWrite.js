@@ -175,11 +175,13 @@ export default function NewsPostWrite({ searchPlace }) {
   const [showImg, setShowImg] = useState(false);
   //이미지
   const [imgFile, setImgFile] = useState(null); //파일
-
   //수정 요청 보낼 때 사용
+  const [editSomething, setEditSomething] = useState(false);
   const contents = postWrite.content;
   const locationInfo = location.address;
   const editCategory = selected.value;
+  //사진 부분
+  const [image, setImage] = useState("");
 
   const { id } = useParams();
 
@@ -198,10 +200,6 @@ export default function NewsPostWrite({ searchPlace }) {
     ],
     []
   );
-
-  const backButton = () => {
-    navigate(`/news=0`);
-  };
 
   //지도 찾기
   const onCompletePost = (data) => {
@@ -250,9 +248,6 @@ export default function NewsPostWrite({ searchPlace }) {
     setisOpenPopup(false);
   };
 
-  //사진 부분
-  const [image, setImage] = useState(null);
-
   const photoChange = (e) => {
     const imageFile = e.target.files[0];
     const imageUrl = URL.createObjectURL(imageFile);
@@ -261,10 +256,14 @@ export default function NewsPostWrite({ searchPlace }) {
     setImgFile(imageUrl); // 파일 상태 업데이트
     setShowImg(true);
   };
-
+  // 취소버튼 눌렀을 때 함수
+  const backButton = () => {
+    navigate(`/news=0`);
+  };
+  // 확인버튼 눌렀을 때 함수
   const modifyNewsPost = async () => {
     const formData = new FormData();
-    if (image) formData.append("img", image);
+    if (image !== "") formData.append("img", image);
     if (contents !== "") formData.append("content", contents);
     if (editCategory) formData.append("category", editCategory);
     if (locationInfo !== "") formData.append("location", locationInfo);
@@ -275,7 +274,13 @@ export default function NewsPostWrite({ searchPlace }) {
       },
     };
 
-    if (image || contents !== "" || editCategory || locationInfo !== "") {
+    if (
+      image ||
+      contents !== "" ||
+      editCategory ||
+      locationInfo !== "" ||
+      editSomething === true
+    ) {
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/news/post/${id}`,
@@ -297,14 +302,16 @@ export default function NewsPostWrite({ searchPlace }) {
 
   // 이미지 삭제하는 함수
   const deleteImg = () => {
-    setImgFile(null);
+    setImage(null);
     setShowImg(true);
+    setEditSomething(true);
   };
 
   // 지도 삭제하는 함수
   const deleteMap = () => {
-    setLocation({ ...location, address: "" });
+    setLocation({ ...location, address: null });
     setShowMap(true);
+    setEditSomething(true);
   };
 
   useEffect(() => {
@@ -382,7 +389,7 @@ export default function NewsPostWrite({ searchPlace }) {
                 onChange={handleInputValue("content")}
               ></textarea>
               {showImg ? (
-                imgFile ? (
+                image ? (
                   <div className={"picture-area"}>
                     <FontAwesomeIcon icon={faMinusSquare} onClick={deleteImg} />
                     <StuploadIimg
@@ -402,7 +409,7 @@ export default function NewsPostWrite({ searchPlace }) {
               ) : null}
             </div>
             {showMap ? (
-              location.address !== "" ? (
+              location.address ? (
                 <div className={"location-wrap"}>
                   <FontAwesomeIcon icon={faMinusSquare} onClick={deleteMap} />
                   <MapContainer locationInfo={locationInfo} />
