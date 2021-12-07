@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import mainImg1 from "./../images/mainImg1.png";
@@ -10,7 +10,6 @@ import exampleImg1 from "./../images/example1.png";
 import exampleImg2 from "./../images/example2.png";
 import dongne from "./../images/dongne.png";
 import trade from "./../images/trade.png";
-import queryString from "query-string";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import { category, timeForToday } from "./../components/News";
@@ -8,6 +8,7 @@ import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import Loading from "./../components/Loading";
 import { StContentInfoDiv } from "./../components/News";
+import MapContainer from "../components/MapContainer";
 axios.defaults.withCredentials = true;
 
 const StBodyDiv = styled.div`
@@ -70,6 +71,19 @@ const StPostBodyDiv = styled.div`
   width: 100%;
   text-align: left;
   border-bottom: 1px solid;
+  .contents {
+    width: 100%;
+    display: flex;
+    margin-bottom: 20px;
+    p {
+      flex: 8 0 0;
+    }
+    img {
+      flex: 2 0 0;
+      width: 200px;
+      height: 200px;
+    }
+  }
 `;
 
 const StCommentInputDiv = styled.div`
@@ -144,6 +158,19 @@ export default function NewsPost({ login, userinfo }) {
   const [commentId, setCommentId] = useState(null);
   const inputCommentRef = useRef(null);
   const inputRevisedCommentRef = useRef(null);
+  const navigate = useNavigate();
+  // 게시글을 수정하는 함수
+  const revisePost = () => {
+    navigate(`/news/edit=${id}`);
+  };
+
+  // 게시글을 삭제하는 함수
+  const deletePost = () => {
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/news/post/${id}`)
+      .then((res) => navigate("/news=0"))
+      .catch();
+  };
 
   // 서버에 댓글 등록을 요청하는 함수
   const registerComment = () => {
@@ -170,7 +197,7 @@ export default function NewsPost({ login, userinfo }) {
   };
 
   // 댓글 수정하는 함수
-  const revisedComment = (comment_id) => {
+  const reviseComment = (comment_id) => {
     axios
       .patch(`${process.env.REACT_APP_API_URL}/news/comment/${comment_id}`, {
         newsPost_Id: id,
@@ -230,13 +257,21 @@ export default function NewsPost({ login, userinfo }) {
             </StPostUserDiv>
             {login && userinfo.id === contents.user_Id ? (
               <div className={"icon"}>
-                <FontAwesomeIcon icon={faPencilAlt} />
-                <FontAwesomeIcon icon={faTrashAlt} />
+                <FontAwesomeIcon icon={faPencilAlt} onClick={revisePost} />
+                <FontAwesomeIcon icon={faTrashAlt} onClick={deletePost} />
               </div>
             ) : null}
           </StPostHeaderDiv>
           <StPostBodyDiv>
-            <p>{contents.content}</p>
+            <div className={"contents"}>
+              {contents.img !== null ? (
+                <img src={contents.img} alt={"게시글 이미지"} />
+              ) : null}
+              <p>{contents.content}</p>
+            </div>
+            {contents.location !== null ? (
+              <MapContainer locationInfo={contents.location} />
+            ) : null}
           </StPostBodyDiv>
           <StCommentInputDiv>
             <div className="comment-cnt">댓글 {commentList.length}</div>
@@ -286,7 +321,7 @@ export default function NewsPost({ login, userinfo }) {
                       >
                         취소
                       </button>
-                      <button onClick={() => revisedComment(comment.id)}>
+                      <button onClick={() => reviseComment(comment.id)}>
                         확인
                       </button>
                     </StCommentButtonDiv>

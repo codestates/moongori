@@ -251,7 +251,7 @@ export default function NewsList({ userinfo, login }) {
           onClick={(e) => changeCategory(e)}
           select={category.number === 8 ? true : false}
         >
-          일상
+          반려동물
         </StCategoryButton>
         <StCategoryButton
           value={9}
@@ -283,7 +283,7 @@ export default function NewsList({ userinfo, login }) {
         </StAddressSearchDiv>
         {login ? (
           <div class="write-post">
-            <Link to="/">
+            <Link to="/news/write">
               <FontAwesomeIcon
                 className={"write-button"}
                 icon={faPlusSquare}

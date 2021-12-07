@@ -1,5 +1,4 @@
 import React from "react";
-import { Route, useNavigate, Redirect } from "react-router-dom";
 import Mypage from "../pages/Mypage";
 import NotFound from "../pages/NotFound";
 

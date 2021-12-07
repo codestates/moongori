@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logoImg from "./../images/Logo.png";
 import axios from "axios";
@@ -152,7 +152,7 @@ export default function PasswordModal({ modalClose }) {
       <div className={"password-modal"}>
         <div className={"password-modal-wrap"}>
           <div className={"password-modal-logo"}>
-            <img src={logoImg}></img>
+            <img src={logoImg} alt={"f" }></img>
             <div className={"password-logoname"}>moongori</div>
           </div>
           <div className={"password-modal-input-wrap"}>

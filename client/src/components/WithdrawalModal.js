@@ -149,7 +149,7 @@ export default function WithdrawalModal({ modalClose2 }) {
       <div className={"Withdrawal-modal"}>
         <div className={"Withdrawal-modal-wrap"}>
           <div className={"Withdrawal-modal-logo"}>
-            <img src={logoImg}></img>
+            <img src={logoImg} alt={"로고"}></img>
             <div className={"Withdrawal-logoname"}>moongori</div>
           </div>
           <div className={"Withdrawal-modal-input-wrap"}>
