@@ -3,14 +3,16 @@ const { newsPost, user, comment } = require("../../models");
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const postId = req.params.id;
-
+  console.log(req.params.id);
   let postInfo = await newsPost.findOne({
     where: { id: postId },
     include: [
       { model: user, attributes: ["nickname", "town", "img"] },
       {
         model: comment,
+        attributes: ["comment", "createdAt"],
         include: { model: user, attributes: ["nickname", "town", "img"] },
+
       },
     ],
   });
@@ -29,6 +31,7 @@ module.exports = async (req, res) => {
           { model: user, attributes: ["nickname", "town", "img"] },
           {
             model: comment,
+            attributes: ["comment", "createdAt"],
             include: {
               model: user,
               attributes: ["nickname", "town", "img"],
@@ -53,7 +56,10 @@ module.exports = async (req, res) => {
       { model: user, attributes: ["nickname", "town", "img"] },
       {
         model: comment,
+        attributes: ["comment", "createdAt"],
+        include: { model: user, attributes: ["nickname", "address", "img"] },
         include: { model: user, attributes: ["nickname", "town", "img"] },
+
       },
     ],
   });

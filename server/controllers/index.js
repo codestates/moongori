@@ -22,14 +22,14 @@ router.post("/user/email", userCtrl.email);
 router.post("/email", userCtrl.sendEmail);
 router.get("/cert/:email", userCtrl.cert);
 
-//router.post("/uplod", userCtrl.img);
+// router.post("/uplod", userCtrl.img);
 // router.post("/user/test", userCtrl.test);
 
 //newsPost
 router.get("/news/list", newsPostCtrl.list);
 router.get("/news/list/:category", newsPostCtrl.category);
 router.get("/news/post/:id", auth.accessToken, newsPostCtrl.read);
-router.post("/news/post", auth.accessToken, newsPostCtrl.write);
+router.post("/news/post", auth.accessToken, userCtrl.img, newsPostCtrl.write);
 router.delete("/news/post/:id", auth.accessToken, newsPostCtrl.withdrawal);
 router.patch("/news/post/:id", auth.accessToken, newsPostCtrl.modification);
 router.post("/news/comment", auth.accessToken, newsPostCtrl.writeComment);

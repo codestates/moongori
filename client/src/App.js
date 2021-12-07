@@ -92,7 +92,7 @@ export default function App() {
             element={<NewsPost login={login} userinfo={userinfo} />}
           />
 
-          {/* <Route path="/news/write" element={<NewsPostWrite />} /> */}
+          <Route path="/news/write" element={<NewsPostWrite />} />
 
           {/* <Route path="/chat" element={<Chat />} /> */}
 
