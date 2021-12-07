@@ -4,9 +4,9 @@ const { verify, sign } = require("jsonwebtoken");
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const { nickname, address, town } = req.body;
-  // console.log("!!!!!!!!!!", req.files);
+  console.log("!!!!!!!!!!", req.file);
   //const imgs = req.files
-  const imgs = req.files.map((el) => el.location).join(",");
+  // const imgs = req.files.map((el) => el.location).join(",");
   // console.log(`$$$$$$$$$$$$4`, imgs);
 
   try {
@@ -19,9 +19,8 @@ module.exports = async (req, res) => {
         { where: { id: id } }
       );
     }
-    if (imgs.length > 0 || imgs !== undefined) {
-      //imgs = imgs[0].location;
-      await user.update({ img: imgs }, { where: { id: id } });
+    if (req.file) {
+      await user.update({ img: req.file.location }, { where: { id: id } });
     }
     const userInfo = await user.findOne({
       where: id,

@@ -10,4 +10,5 @@ module.exports = {
   modifyTrade: require("./modifyTrade"),
   suggestion: require("./suggestion"),
   modifyCost: require("./modifyCost"),
+  suggestionDelete: require("./withdrawSuggestion"),
 };

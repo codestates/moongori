@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   newsPost.init(
     {
       category: DataTypes.STRING,
-      content: DataTypes.STRING,
+      content: DataTypes.TEXT,
       img: DataTypes.STRING,
       town: DataTypes.STRING,
       location: DataTypes.STRING,
