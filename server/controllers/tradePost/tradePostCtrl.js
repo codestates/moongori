@@ -5,4 +5,7 @@ module.exports = {
   write: require("./write"),
   modifynomal: require("./modifynomal"),
   img: require("./img"),
+  delete: require("./withdrawal"),
+  state: require("./modifyState"),
+  modifyTrade: require("./modifyTrade"),
 };

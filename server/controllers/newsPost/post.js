@@ -11,6 +11,7 @@ module.exports = async (req, res) => {
       { model: user, attributes: ["nickname", "town", "img"] },
       {
         model: comment,
+        attributes: ["comment", "createdAt"],
         include: { model: user, attributes: ["nickname", "town", "img"] },
       },
     ],
@@ -31,6 +32,7 @@ module.exports = async (req, res) => {
           { model: user, attributes: ["nickname", "town", "img"] },
           {
             model: comment,
+            attributes: ["comment", "createdAt"],
             include: {
               model: user,
               attributes: ["nickname", "town", "img"],
@@ -55,6 +57,8 @@ module.exports = async (req, res) => {
       { model: user, attributes: ["nickname", "town", "img"] },
       {
         model: comment,
+        attributes: ["comment", "createdAt"],
+        include: { model: user, attributes: ["nickname", "address", "img"] },
         include: { model: user, attributes: ["nickname", "town", "img"] },
       },
     ],

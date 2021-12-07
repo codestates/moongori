@@ -2,7 +2,7 @@ const { newsPost } = require("../../models");
 
 module.exports = async (req, res) => {
   const id = req.cookies.id;
-
+  console.log("@@@@@", req.body);
   const { category, content, location, img } = req.body;
   const payload = {
     category,

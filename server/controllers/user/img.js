@@ -17,7 +17,9 @@ const storage = multerS3({
     cb(null, { fieldName: file.fieldname });
   },
   key: function (req, file, cb) {
-    cb(null, `${Date.now()}_${file.originalname}`);
+    const id = req.cookies.id;
+    console.log(req.params);
+    cb(null, `uploads/${id}/${Date.now()}_${file.originalname}`);
   },
 });
 

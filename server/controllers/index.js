@@ -4,6 +4,7 @@ const userCtrl = require("./user/userCtrl");
 const newsPostCtrl = require("./newsPost/newsPostCtrl");
 const tradePost = require("./tradePost/tradePostCtrl");
 const auth = require("./auth/accessToken");
+const tradePostCtrl = require("./tradePost/tradePostCtrl");
 
 //user
 router.get("/user/info", auth.accessToken, userCtrl.info);
@@ -52,5 +53,11 @@ router.get("/trade/list/:nomalOrNot", tradePost.nomalOrNot);
 router.get("/trade/post", tradePost.read);
 router.post("/trade/post", auth.accessToken, tradePost.write);
 router.patch("/trade/nomal/:id", auth.accessToken, tradePost.modifynomal);
-
+router.delete("/trade/post/:id", auth.accessToken, tradePostCtrl.delete);
+router.patch("/trade/state/:id", auth.accessToken, tradePostCtrl.state);
+router.patch(
+  "/trade/suggestion/:id",
+  auth.accessToken,
+  tradePostCtrl.modifyTrade
+);
 module.exports = router;

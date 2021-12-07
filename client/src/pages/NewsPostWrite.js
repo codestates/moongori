@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Swal from "sweetalert2";
@@ -39,12 +39,13 @@ const StWriteTitle = styled.div`
   font-weight: bold;
 `;
 const StWriteBox = styled.div`
-  height: 700px;
+  height: 800px;
   width: 60%;
   display: flex;
   align-items: center;
   flex-direction: column;
-  border: 1px solid black;
+  border: 1px solid #b7b7b7;
+  border-radius: 15px;
   .select-category {
     margin-bottom: 20px;
     width: 80%;
@@ -62,41 +63,59 @@ const StWriteBox = styled.div`
       margin-right: 10px;
     }
   }
-  .input-area {
-    overflow-y: hidden;
-    resize: none;
-    width: 600px;
-    height: 300px;
-    border: 1px solid gray;
-    outline: none;
-    border-radius: 2px;
-    line-height: 2.5rem;
-    font-size: 15px;
-    @media all and (max-width: 1024px) {
-      width: 400px;
+  .write-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .input-area {
+      overflow-y: hidden;
+      resize: none;
+      width: 80%;
+      height: 200px;
+      border: 1px solid gray;
+      outline: none;
+      border-radius: 2px;
+      line-height: 2.5rem;
+      font-size: 15px;
+      @media all and (max-width: 1024px) {
+        width: 80%;
+      }
+      @media all and (max-width: 768px) {
+        width: 80%;
+      }
+      @media all and (max-width: 557px) {
+        width: 80%;
+      }
     }
-    @media all and (max-width: 768px) {
-      width: 300px;
-    }
-    @media all and (max-width: 557px) {
-      width: 200px;
+    .picture-area {
+      margin-top: 20px;
+      width: 80%;
+      display: flex;
+      justify-content: start;
+      .upload-img {
+        width: 100px;
+        height: 100px;
+      }
     }
   }
+
   .location-wrap {
     margin-top: 20px;
-    width: 600px;
-    height: 400px;
+    width: 80%;
+    height: 300px;
     @media all and (max-width: 1024px) {
-      width: 400px;
+      width: 80%;
       height: 300px;
     }
     @media all and (max-width: 768px) {
-      width: 300px;
+      width: 80%;
       height: 300px;
     }
     @media all and (max-width: 557px) {
-      width: 200px;
-      height: 300px;
+      width: 80%;
+      height: 250px;
     }
   }
 `;
@@ -135,7 +154,12 @@ export default function NewsPostWrite({ searchPlace }) {
   const [showMap, setShowMap] = useState(false);
   const locationInfo = location.address;
 
-  console.log(selected);
+  // const [imgFile, setImgFile] = useState(null); //파일
+  const [imgFile, setImgFile] = useState(null); //파일
+
+  const contents = postWrite.contents;
+  const category = selected.value;
+
   const options = useMemo(
     () => [
       { value: "1", label: "취미" },
@@ -152,33 +176,36 @@ export default function NewsPostWrite({ searchPlace }) {
     []
   );
 
-  const creatNewsPost = () => {
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/news/post`, {
-        category: selected.value,
-        contents: postWrite.contents,
-        location: location.address,
-        img: "",
-      })
-      .then((res) => {
-        Swal.fire({
-          icon: "success",
-          title: "글 작성 완료!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        navigate(`/news/list=${selected.value}/1`);
-      })
-      .catch(() => {
-        Swal.fire({
-          icon: "error",
-          title: "카테고리와 내용은 필수사항입니다",
-          text: "",
-          footer: "",
-        });
-      });
+  // const creatNewsPost = () => {
+  //   axios
+  //     .post(`${process.env.REACT_APP_API_URL}/news/post`, {
+  //       category: selected.value,
+  //       contents: postWrite.contents,
+  //       location: location.address,
+  //       img: "",
+  //     })
+  //     .then((res) => {
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "글 작성 완료!",
+  //         showConfirmButton: false,
+  //         timer: 1500,
+  //       });
+  //       navigate(`/news/list=${selected.value}/1`);
+  //     })
+  //     .catch(() => {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "카테고리와 내용은 필수사항입니다",
+  //         text: "",
+  //         footer: "",
+  //       });
+  //     });
+  // };
+  const backButton = () => {
+    navigate(`/news/list=${selected.value}/1`);
   };
-
+  //지도 찾기
   const onCompletePost = (data) => {
     let fullAddr = data.address;
     let extraAddr = "";
@@ -197,9 +224,23 @@ export default function NewsPostWrite({ searchPlace }) {
       fullAddr += extraAddr !== "" ? ` ${extraAddr}` : "";
     }
     setLocation({ ...location, ["address"]: fullAddr });
+
     setisOpenPopup(false);
     setShowMap(true);
   };
+  //위도, 경도 찾기
+
+  const [addressCoordinate, setAddressCoordinate] = useState([]);
+
+  const searchCoordinateHandle = (lat, log) => {
+    // console.log(lat, log);
+    let newCoordinate = [];
+    newCoordinate.push(lat);
+    newCoordinate.push(log);
+    setAddressCoordinate(newCoordinate);
+    console.log(addressCoordinate);
+  };
+
   const postCodeStyle = {
     display: "block",
     position: "fixed",
@@ -229,7 +270,46 @@ export default function NewsPostWrite({ searchPlace }) {
   const closePopup = () => {
     setisOpenPopup(false);
   };
+  console.log(imgFile);
+  //사진 부분
+  const [image, setImage] = useState("");
+  const photoChange = (e) => {
+    const imageFile = e.target.files[0];
+    const imageUrl = URL.createObjectURL(imageFile);
 
+    setImage(imageFile);
+    setImgFile(imageUrl); // 파일 상태 업데이트
+  };
+
+  const payload = {
+    contents: contents,
+    category: category,
+    location: location,
+  };
+
+  const creatNewsPost = async () => {
+    if (selected !== "" && postWrite.contents !== "") {
+      const formData = new FormData();
+      formData.append("img", image);
+      formData.append("contents", contents);
+      formData.append("category", category);
+      formData.append("location", locationInfo);
+
+      const config = {
+        Headers: {
+          "content-type": "multipart/form-data",
+        },
+      };
+      await axios
+        .post(`${process.env.REACT_APP_API_URL}/news/post`, formData, config)
+        .then((res) => {
+          alert("성공");
+        });
+    }
+  };
+  //위도, 경도
+  // formData.append("latitude", `${addressCoordinate[0]}`);
+  // formData.append("longitude", `${addressCoordinate[1]}`);
   return (
     <>
       <StNewsPostWriteHead>
@@ -245,7 +325,18 @@ export default function NewsPostWrite({ searchPlace }) {
           </div>
           <div className={"addition-wrap"}>
             <div>
-              <img src={photoicon} className={"add-icon"}></img>
+              <label for="input-file" src={photoicon} className={"add-icon"}>
+                하이
+              </label>
+              <input
+                type="file"
+                name="file"
+                id="input-file"
+                accept="image/*"
+                onChange={photoChange}
+                style={{ display: "none" }}
+              />
+              {/* <input type="submit" style={{ display: "none" }}></input> */}
             </div>
             <div
               className={"location-button"}
@@ -275,17 +366,38 @@ export default function NewsPostWrite({ searchPlace }) {
               className={"input-area"}
               onChange={handleInputValue("contents")}
             ></textarea>
-            <div className={"picture-area"}></div>
+            <div className={"picture-area"}>
+              <div></div>
+              <img src={imgFile} alt="" className={"upload-img"}></img>
+            </div>
           </div>
           <div className={"location-wrap"}>
-            <MapContainer locationInfo={locationInfo} showMap={showMap} />
+            <MapContainer
+              locationInfo={locationInfo}
+              showMap={showMap}
+              searchCoordinateHandle={searchCoordinateHandle}
+            />
           </div>
         </StWriteBox>
         <StButtonBox>
           <div className={"button-wrap"}></div>
           <div className={"button-wrap"}>
-            <button className={"button"}>취소</button>
-            <button className={"button"}>완료</button>
+            <button
+              className={"button"}
+              onClick={() => {
+                backButton();
+              }}
+            >
+              취소
+            </button>
+            <button
+              className={"button"}
+              onClick={() => {
+                creatNewsPost();
+              }}
+            >
+              완료
+            </button>
           </div>
         </StButtonBox>
       </StNewsPostWriteHead>

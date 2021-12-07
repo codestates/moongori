@@ -5,7 +5,7 @@ import styled from "styled-components";
 import markericon from "../images/moongorimarker.png";
 const StMapstyle = styled.div`
   width: 100%;
-  height: 100%;
+  height: 300px;
   display: ${(props) => (props.showMap === true ? "block" : "none")};
   .custom {
     font-size: 12px;
@@ -14,8 +14,8 @@ const StMapstyle = styled.div`
 
 const { kakao } = window;
 
-const MapContainer = ({ locationInfo, showMap }) => {
-  console.log(locationInfo);
+const MapContainer = ({ locationInfo, showMap, searchCoordinateHandle }) => {
+  //   console.log(locationInfo);
   useEffect(() => {
     const container = document.getElementById("myMap");
     const options = {
@@ -48,8 +48,10 @@ const MapContainer = ({ locationInfo, showMap }) => {
         //해당 주소에 대한 좌표를 받아서
         const coords = new kakao.maps.LatLng(result.y, result.x);
         //지도를 보여준다
-
-        const imageSrc = "../images/moongorimarker.png"; // 마커 이미지 주소
+        if (searchCoordinateHandle) {
+          searchCoordinateHandle(result.y, result.x);
+        }
+        const imageSrc = { markericon }; // 마커 이미지 주소
         const imageSize = new window.kakao.maps.Size(60, 72); // 마커 이미지 크기
         const imageOption = {
           offset: new window.kakao.maps.Point(20, 69), // 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정
