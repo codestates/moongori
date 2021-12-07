@@ -33,7 +33,6 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       endTime: {
-        allowNull: false,
         type: Sequelize.DATE,
       },
       createdAt: {
