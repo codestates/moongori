@@ -1,9 +1,11 @@
 const { newsPost, user } = require("../../models");
 const { verify } = require("jsonwebtoken");
+const sequelize = require("sequelize");
+const Op = sequelize.Op;
 
 module.exports = async (req, res) => {
   const cookie = req.cookies.accesstoken;
-  const list = await newsPost.findAll({
+  let list = await newsPost.findAll({
     include: [{ model: user, attributes: ["nickname", "address"] }],
   });
   if (!cookie) {
@@ -24,6 +26,12 @@ module.exports = async (req, res) => {
           .json({ message: "input address" })
           .redirect(`${process.env.ORIGIN}/mypage`);
       }
+      const town = userInfo.town;
+      list = await newsPost.findAll({
+        where: { town: { [Op.like]: `${town}%` } },
+        include: [{ model: user, attributes: ["nickname", "town"] }],
+      });
+      console.log(`#######`, list);
       return res.status(200).json({ data: list, message: "ok" });
     });
   }

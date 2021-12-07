@@ -19,12 +19,6 @@ module.exports = async (req, res) => {
         },
       }
     );
-    // const payload = {
-    //   id: commentId,
-    //   user_Id: id,
-    //   newsPost_Id: commentInfo.newsPost_Id,
-    //   comment: req.body.comment,
-    // };
 
     const updateComment = await comment.findAll({
       where: { newsPost_Id: req.body.newsPost_Id },

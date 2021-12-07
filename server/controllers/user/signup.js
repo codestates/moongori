@@ -3,7 +3,7 @@ const CryptoJS = require("crypto-js");
 const sendEmail = require("./sendEmail");
 
 module.exports = async (req, res) => {
-  const { email, nickname, address, password } = req.body;
+  const { email, nickname, address, town, password } = req.body;
   const saltIssue = CryptoJS.lib.WordArray.random(128 / 8);
   const salt = saltIssue.toString(CryptoJS.enc.Base64);
   const encrypted = CryptoJS.PBKDF2(password, salt, {
@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
       email,
       nickname,
       address,
+      town,
       password: encryptedPW,
       salt,
     })

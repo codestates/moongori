@@ -1,8 +1,7 @@
-const { newsPost } = require("../../models");
+const { newsPost, user } = require("../../models");
 
 module.exports = async (req, res) => {
   const id = req.cookies.id;
-
   try {
     if (req.file) {
       const img = req.file.location;
