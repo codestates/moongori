@@ -17,9 +17,9 @@ const storage = multerS3({
     cb(null, { fieldName: file.fieldname });
   },
   key: function (req, file, cb) {
-    // const id = req.cookies.id;
-    cb(null, `users/${Date.now()}_${file.originalname}`);
+    const id = req.cookies.id;
+    cb(null, `profile/${id}/${Date.now()}_${file.originalname}`);
   },
 });
 
-module.exports = multer({ storage: storage }).array("img");
+module.exports = multer({ storage: storage }).single("img");

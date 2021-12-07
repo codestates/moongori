@@ -37,7 +37,12 @@ router.post(
   newsPostCtrl.write
 );
 router.delete("/news/post/:id", auth.accessToken, newsPostCtrl.withdrawal);
-router.patch("/news/post/:id", auth.accessToken, newsPostCtrl.modification);
+router.post(
+  "/news/post/:id",
+  auth.accessToken,
+  newsPostCtrl.img,
+  newsPostCtrl.modification
+);
 router.post("/news/comment", auth.accessToken, newsPostCtrl.writeComment);
 router.patch("/news/comment/:id", auth.accessToken, newsPostCtrl.modifyComment);
 router.delete(

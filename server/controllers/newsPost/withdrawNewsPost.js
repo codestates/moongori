@@ -15,6 +15,7 @@ module.exports = async (req, res) => {
       where: { id: postId },
     });
     return res.status(200).json({ message: "successful withdrawal" });
+
   } catch (err) {
     return res.status(500).json({ message: "error" });
   }
