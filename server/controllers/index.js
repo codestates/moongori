@@ -4,6 +4,7 @@ const userCtrl = require("./user/userCtrl");
 const newsPostCtrl = require("./newsPost/newsPostCtrl");
 const tradePost = require("./tradePost/tradePostCtrl");
 const auth = require("./auth/accessToken");
+const tradePostCtrl = require("./tradePost/tradePostCtrl");
 
 //user
 router.get("/user/info", auth.accessToken, userCtrl.info);
@@ -43,6 +44,7 @@ router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
 
 //tradePost
 router.get("trade/list", tradePost.list);
+router.delete("/trade/post/:id", auth.accessToken, tradePostCtrl.delete);
 // router.get("trade/list/:nomalOrNot", tradePost.nomalOrNot);
 // router.get("trade/post/:id", tradePost.read);
 
