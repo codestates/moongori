@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     await newsPost.destroy({
       where: { id: postId },
     });
-    return res.status(200).json({ message: "success withdrawal" });
+    return res.status(200).json({ message: "successful withdrawal" });
   } catch (err) {
     return res.status(500).json({ message: "error" });
   }

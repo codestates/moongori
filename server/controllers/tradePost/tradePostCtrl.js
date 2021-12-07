@@ -3,4 +3,5 @@ module.exports = {
   nomalOrNot: require("./nomalOrNot"),
   read: require("./post"),
   delete: require("./withdrawal"),
+  state: require("./modifyState"),
 };
