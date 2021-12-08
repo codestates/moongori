@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
   const cookie = req.cookies.accesstoken;
   //   const pageNum = req.query.page;
   const list = await tradePost.findAll({
-    include: [{ model: user, attributes: ["address"] }, { model: like, attributes: ["user_Id"] }],
+    include: [{ model: user, attributes: ["town"] }, { model: like, attributes: ["user_Id"] }],
   });
 
   if (!cookie) {
