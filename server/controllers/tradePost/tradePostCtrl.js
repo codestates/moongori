@@ -13,4 +13,6 @@ module.exports = {
   suggestionDelete: require("./withdrawSuggestion"),
   like: require("./like"),
   deleteLike: require("./withdrawLike"),
+  myList: require("./myList"),
+  myLike: require("./myLike"),
 };
