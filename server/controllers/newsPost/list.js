@@ -5,8 +5,22 @@ const Op = sequelize.Op;
 
 module.exports = async (req, res) => {
   const cookie = req.cookies.accesstoken;
+  const page = req.query.page;
+  let offset = 0;
+  if (page > 1) {
+    offset = 10 * (page - 1);
+  }
+
+  const allPostCount = await newsPost.count();
+  if (offset >= allPostCount) {
+    return res.status(204).json({ message: "no more data" });
+  }
+
   let list = await newsPost.findAll({
     include: [{ model: user, attributes: ["nickname", "address"] }],
+    order: [["createdAt", "DESC"]],
+    limit: 10,
+    offset: offset,
   });
   if (!cookie) {
     return res.status(200).json({ data: list, message: "ok" });
@@ -30,8 +44,10 @@ module.exports = async (req, res) => {
       list = await newsPost.findAll({
         where: { town: { [Op.like]: `${town}%` } },
         include: [{ model: user, attributes: ["nickname", "town"] }],
+        order: [["createdAt", "DESC"]],
+        limit: 10,
+        offset: offset,
       });
-      console.log(`#######`, list);
       return res.status(200).json({ data: list, message: "ok" });
     });
   }
