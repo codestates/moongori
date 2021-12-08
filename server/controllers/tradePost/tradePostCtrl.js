@@ -11,4 +11,6 @@ module.exports = {
   suggestion: require("./suggestion"),
   modifyCost: require("./modifyCost"),
   suggestionDelete: require("./withdrawSuggestion"),
+  like: require("./like"),
+  deleteLike: require("./withdrawLike"),
 };
