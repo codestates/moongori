@@ -1,12 +1,13 @@
-const { tradePost, user } = require("../../models");
+const { tradePost, user, like } = require("../../models");
 const { verify } = require("jsonwebtoken");
 
 module.exports = async (req, res) => {
   const cookie = req.cookies.accesstoken;
   //   const pageNum = req.query.page;
   const list = await tradePost.findAll({
-    include: [{ model: user, attributes: ["address"] }],
+    include: [{ model: user, attributes: ["address"] }, { model: like, attributes: ["user_Id"] }],
   });
+
   if (!cookie) {
     return res.status(200).json({ data: list, message: "ok" });
   } else {
