@@ -52,20 +52,20 @@ router.delete(
 );
 router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
 router.get("/news/comment", auth.accessToken, newsPostCtrl.myComment);
-router.get("/news/search/?", newsPostCtrl.search);
+router.get("/news/", newsPostCtrl.search);
 
 
 
 //tradePost
 router.get("/trade/list", tradePost.list);
-router.get("/trade/list/:nomalOrNot", tradePost.nomalOrNot);
+router.get("/trade/list/:normalOrNot", tradePost.normalOrNot);
 router.get("/trade/post/:id", tradePost.read);
 router.post("/trade/post", auth.accessToken, tradePost.img, tradePost.write);
 router.post(
-  "/trade/nomal/:id",
+  "/trade/normal/:id",
   auth.accessToken,
   tradePost.img,
-  tradePost.modifynomal
+  tradePost.modifynormal
 );
 router.delete("/trade/post/:id", auth.accessToken, tradePostCtrl.delete);
 router.patch("/trade/state/:id", auth.accessToken, tradePostCtrl.state);
