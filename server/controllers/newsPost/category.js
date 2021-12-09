@@ -4,6 +4,7 @@ const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
 module.exports = async (req, res) => {
+
   const cookie = req.cookies.accesstoken;
   const category = req.params.category;
   const page = req.query.page;
@@ -11,7 +12,6 @@ module.exports = async (req, res) => {
   if (page > 1) {
     offset = 10 * (page - 1);
   }
-
   const allPostCount = await newsPost.count({ where: { category: category } });
   if (offset >= allPostCount) {
     return res.status(204).json({ message: "no more data" });

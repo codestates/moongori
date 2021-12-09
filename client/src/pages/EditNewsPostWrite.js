@@ -173,8 +173,7 @@ export default function NewsPostWrite({ searchPlace }) {
   const [showMap, setShowMap] = useState(false);
   //이미지 상태
   const [showImg, setShowImg] = useState(false);
-  //이미지
-  const [imgFile, setImgFile] = useState(null); //파일
+
   //수정 요청 보낼 때 사용
   const [editSomething, setEditSomething] = useState(false);
   const contents = postWrite.content;
@@ -182,6 +181,7 @@ export default function NewsPostWrite({ searchPlace }) {
   const editCategory = selected.value;
   //사진 부분
   const [image, setImage] = useState("");
+  const [imgFile, setImgFile] = useState(null); //파일
 
   const { id } = useParams();
 

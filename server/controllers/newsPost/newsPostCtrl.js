@@ -11,4 +11,5 @@ module.exports = {
   myList: require("./myList"),
   img: require("./img"),
   myComment: require("./myComment"),
+  search: require("./search"),
 };

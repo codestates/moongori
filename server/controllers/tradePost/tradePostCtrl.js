@@ -1,9 +1,9 @@
 module.exports = {
   list: require("./list"),
-  nomalOrNot: require("./nomalOrNot"),
+  normalOrNot: require("./normalOrNot"),
   read: require("./post"),
   write: require("./write"),
-  modifynomal: require("./modifynomal"),
+  modifynormal: require("./modifynormal"),
   img: require("./img"),
   delete: require("./withdrawal"),
   state: require("./modifyState"),
@@ -15,4 +15,5 @@ module.exports = {
   deleteLike: require("./withdrawLike"),
   myList: require("./myList"),
   myLike: require("./myLike"),
+  search: require("./search"),
 };
