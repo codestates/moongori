@@ -1,11 +1,29 @@
 const { tradePost, user, like } = require("../../models");
 const { verify } = require("jsonwebtoken");
+const sequelize = require("sequelize");
+const Op = sequelize.Op;
 
 module.exports = async (req, res) => {
   const cookie = req.cookies.accesstoken;
-  //   const pageNum = req.query.page;
-  const list = await tradePost.findAll({
-    include: [{ model: user, attributes: ["town"] }, { model: like, attributes: ["user_Id"] }],
+  const page = req.query.page;
+  let offset = 0;
+  if (page > 1) {
+    offset = 10 * (page - 1);
+  }
+
+  const allPostCount = await tradePost.count();
+  if (offset >= allPostCount) {
+    return res.status(204).json({ message: "no more data" });
+  }
+
+  let list = await tradePost.findAll({
+    include: [
+      { model: user, attributes: ["town"] },
+      { model: like, attributes: ["user_Id"] },
+    ],
+    order: [["createdAt", "DESC"]],
+    limit: 10,
+    offset: offset,
   });
 
   if (!cookie) {
@@ -26,6 +44,20 @@ module.exports = async (req, res) => {
           .json({ message: "input address" })
           .rediect(`${process.env.ORIGIN}/mypage`);
       }
+      const town = userInfo.town;
+      list = await tradePost.findAll({
+        include: [
+          {
+            model: user,
+            attributes: ["town"],
+            where: { town: { [Op.like]: `${town}%` } },
+          },
+          { model: like, attributes: ["user_Id"] },
+        ],
+        order: [["createdAt", "DESC"]],
+        limit: 10,
+        offset: offset,
+      });
       return res.status(200).json({ data: list, message: "ok" });
     });
   }
