@@ -15,4 +15,5 @@ module.exports = {
   deleteLike: require("./withdrawLike"),
   myList: require("./myList"),
   myLike: require("./myLike"),
+  search: require("./search"),
 };
