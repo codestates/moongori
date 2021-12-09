@@ -52,6 +52,8 @@ router.delete(
 );
 router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
 router.get("/news/comment", auth.accessToken, newsPostCtrl.myComment);
+router.get("/news/search/?", newsPostCtrl.search);
+
 
 
 //tradePost
@@ -88,5 +90,6 @@ router.post("/trade/like", auth.accessToken, tradePostCtrl.like);
 router.delete("/trade/like", auth.accessToken, tradePostCtrl.deleteLike);
 router.get("/trade/myList", auth.accessToken, tradePostCtrl.myList);
 router.get("/trade/myLike", auth.accessToken, tradePostCtrl.myLike);
+
 
 module.exports = router;

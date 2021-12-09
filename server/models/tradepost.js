@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       content: DataTypes.TEXT,
       cCost: DataTypes.INTEGER,
       img: DataTypes.STRING,
-      nomalOrNot: DataTypes.INTEGER,
+      normalOrNot: DataTypes.INTEGER,
       sCost: DataTypes.INTEGER,
       state: DataTypes.INTEGER,
       likes_cnt: { defaultValue: 0, type: DataTypes.INTEGER },
