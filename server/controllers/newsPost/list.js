@@ -6,7 +6,7 @@ const Op = sequelize.Op;
 module.exports = async (req, res) => {
   const cookie = req.cookies.accesstoken;
   let list = await newsPost.findAll({
-    include: [{ model: user, attributes: ["nickname", "address"] }],
+    include: [{ model: user, attributes: ["nickname", "town"] }],
   });
   if (!cookie) {
     return res.status(200).json({ data: list, message: "ok" });

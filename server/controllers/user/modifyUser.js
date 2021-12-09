@@ -4,6 +4,7 @@ const { verify, sign } = require("jsonwebtoken");
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const { nickname, address, town } = req.body;
+  console.log(req.body);
   console.log("!!!!!!!!!!", req.file);
   //const imgs = req.files
   // const imgs = req.files.map((el) => el.location).join(",");
@@ -40,16 +41,14 @@ module.exports = async (req, res) => {
     });
     // console.log("userInfo-img;;;;", userInfo.dataValues.img.split(","));
 
-    return (
-      res
-        .status(200)
-        // .cookie("accesstoken", token, {
-        //   sameSite: "None",
-        //   httpOnly: true,
-        //   secure: true,
-        // })
-        .json({ data: userInfo, message: "successful modify info" })
-    );
+    return res
+      .status(200)
+      .cookie("accesstoken", token, {
+        sameSite: "None",
+        httpOnly: true,
+        secure: true,
+      })
+      .json({ data: userInfo, message: "successful modify info" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err });

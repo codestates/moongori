@@ -186,14 +186,6 @@ export default function NewsList({ userinfo, login }) {
     };
   });
 
-  const presentState = () => {
-    console.log("newsList", newsList);
-    console.log("category", category);
-    console.log("page", page);
-    console.log("loading", loading);
-    console.log("fetch", fetch);
-  };
-
   return (
     <StBodyDiv>
       <div className="category">
@@ -294,7 +286,7 @@ export default function NewsList({ userinfo, login }) {
       </StContentsHeadDiv>
       <StContentsBodyDiv>
         {newsList.map((news, index) => (
-          <News news={news} key={index} />
+          <News mypage={false} news={news} key={index} />
         ))}
       </StContentsBodyDiv>
       {loading ? <Loading /> : null}

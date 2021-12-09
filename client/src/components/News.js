@@ -5,8 +5,8 @@ import styled from "styled-components";
 const StNewsDiv = styled.div`
   border: 2px solid #92e3a9;
   border-radius: 10px;
-  width: 100%;
-  height: 150px;
+  width: ${(props) => (props.mypage ? "60%" : "100%")};
+  height: ${(props) => (props.mypage ? "120px" : "150px")};
   margin-bottom: 40px;
   a {
     color: black;
@@ -26,14 +26,19 @@ const StContentsDiv = styled.div`
     display: flex;
     justify-content: space-between;
   }
+  .time {
+    font-size: 0.8em;
+  }
 `;
 
 export const StContentInfoDiv = styled.div`
   display: flex;
   color: ${(props) => props.color};
-  height: ${(props) => (props.top ? "50px" : "auto")};
-  margin-bottom: ${(props) => (props.top ? "10px" : "5px")};
-  font-size: ${(props) => (props.top ? "1.2em" : null)};
+  height: ${(props) => (props.top && !props.mypage ? "50px" : "auto")};
+  margin-bottom: ${(props) =>
+    props.top ? (props.mypage ? "15px" : "10px") : "5px"};
+  font-size: ${(props) =>
+    props.top ? (props.mypage ? "1em" : "1.2em") : "0.8em"};
   .front {
     margin-right: 20px;
   }
@@ -86,17 +91,17 @@ export function timeForToday(value) {
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 }
 
-export default function News({ news }) {
+export default function News({ news, mypage }) {
   // 시간계산 함수
 
   return (
-    <StNewsDiv>
+    <StNewsDiv mypage={mypage}>
       <Link to={`/news/read=${news.id}`}>
         <StContentsDiv>
           <StCategoryDiv>
             <div>{category[`${news.category}`]}</div>
           </StCategoryDiv>
-          <StContentInfoDiv top>
+          <StContentInfoDiv top mypage={mypage}>
             {news.content.length >= 30
               ? news.content.slice(0, 30) + "..."
               : news.content}
@@ -110,7 +115,7 @@ export default function News({ news }) {
               <div className="front">조회수 {news.view}</div>
               <div>댓글 {news.comment_cnt}</div>
             </StContentInfoDiv>
-            <div>{timeForToday(news.createdAt)}</div>
+            <div className={"time"}>{timeForToday(news.createdAt)}</div>
           </div>
         </StContentsDiv>
       </Link>

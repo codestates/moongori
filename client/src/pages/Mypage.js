@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import PasswordModal from "../components/PasswordModal";
 import WithdrawalModal from "../components/WithdrawalModal";
@@ -7,13 +7,25 @@ import axios from "axios";
 import lock from "../images/locked.png";
 import cancel from "../images/cancel.png";
 import editImg from "../images/edit.png";
-import complete from "../images/complete.png";
 import Swal from "sweetalert2";
 import DaumPostcode from "react-daum-postcode";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import MypageNews from "../components/MypageNews";
+import Loading from "./../components/Loading";
+import News from "./../components/News";
+import {
+  faCheckSquare,
+  faWindowClose,
+  faImage,
+} from "@fortawesome/free-regular-svg-icons";
 
+const Body = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 const ModalBackground = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 10;
   position: fixed;
@@ -23,20 +35,41 @@ const ModalBackground = styled.div`
 const StMypageHead = styled.div`
   width: 100%;
   height: 100%;
+  align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  .content-head {
+    width: 65%;
+    height: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .content-wrap {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: scroll;
+      @media all and (max-width: 768px) {
+        width: 90%;
+      }
+    }
+  }
   .mypage-master {
-    height: 800px;
     width: 100%;
+    height: 700px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
   .mypage-box {
-    width: 40%;
-    height: 60%;
+    width: 50%;
+    height: 80%;
     background-color: #aae8c5;
     border-radius: 15px;
     @media all and (max-width: 768px) {
@@ -54,6 +87,7 @@ const StMypageHead = styled.div`
       }
       .mypage-profile-box {
         width: 40%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -63,6 +97,12 @@ const StMypageHead = styled.div`
           height: 45%;
           border-radius: 70%;
           overflow: hidden;
+        }
+        .imgButton {
+          margin-top: 10px;
+          width: 30px;
+          height: 30px;
+          cursor: pointer;
         }
       }
       .mypage-userinfo-box {
@@ -82,6 +122,13 @@ const StMypageHead = styled.div`
           .edit-img {
             width: 20px;
             height: 20px;
+            cursor: pointer;
+          }
+          .edit-back-img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
           }
           @media all and (max-width: 768px) {
             margin-right: 82px;
@@ -154,6 +201,14 @@ const StMypageHead = styled.div`
               text-align: center;
               @media all and (max-width: 768px) {
                 font-size: 9px;
+              }
+              .edit-wrap {
+                width: 100%;
+                display: flex;
+                .edit-box {
+                  width: 100%;
+                  display: flex;
+                }
               }
             }
             .dupicate-wrap {
@@ -230,14 +285,15 @@ const StMypageHead = styled.div`
   }
   .mypage-category {
     width: 100%;
-    height: 30%;
+    height: 10%;
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
     .category-wrap {
+      margin-top: 10px;
       width: 62%;
-      height: 20%;
+      height: 80%;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -246,7 +302,6 @@ const StMypageHead = styled.div`
         width: 100%;
       }
       .category-box {
-        margin-top: 20px;
         height: 100%;
         width: 70%;
         border-top: solid 1px #b7b7b7;
@@ -300,109 +355,6 @@ const StMypageHead = styled.div`
         }
       }
     }
-
-    .content-head {
-      width: 100%;
-      height: 60%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .content-wrap {
-        margin-top: 30px;
-        width: 60%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        @media all and (max-width: 768px) {
-          width: 90%;
-        }
-      }
-    }
-  }
-`;
-const StContent = styled.div`
-  background: white;
-  width: 60%;
-  height: 100px;
-  border-radius: 15px;
-  border: 1px solid #aae8c5;
-  @media all and (max-width: 768px) {
-    width: 90%;
-  }
-  &:hover {
-    cursor: pointer;
-    box-shadow: gray 3px 3px 3px;
-  }
-  &:active {
-    box-shadow: none;
-  }
-  .title-tick {
-    width: 100%;
-    height: 25%;
-    margin-top: 2px;
-    margin-left: 5px;
-    .title {
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 12px;
-      font-weight: bold;
-      border-radius: 15px;
-      background: #aae8c5;
-      width: 50px;
-      height: 100%;
-    }
-  }
-  .content-tick {
-    height: 35%;
-    width: 100%;
-    margin-left: 10px;
-    .content {
-      font-size: 11px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-    }
-  }
-  .address-tick {
-    height: 20%;
-    width: 100%;
-    display: flex;
-    margin-left: 10px;
-    .address-area {
-      font-size: 9px;
-      color: gray;
-      display: flex;
-      width: 50%;
-      .nickname {
-        margin-right: 5px;
-      }
-    }
-    .data-area {
-      font-size: 9px;
-      color: gray;
-      width: 50%;
-      display: flex;
-      justify-content: end;
-      margin-right: 20px;
-    }
-  }
-  .comment-tick {
-    height: 20%;
-    width: 100%;
-    display: flex;
-    margin-left: 10px;
-    .comment-area {
-      display: flex;
-      font-size: 9px;
-      color: gray;
-      .views {
-        margin-right: 5px;
-      }
-    }
   }
 `;
 
@@ -424,6 +376,12 @@ const StCategoryButton = styled.button.attrs((props) => ({
 `;
 
 export default function Mypage({ login, userinfo }) {
+  //카테고리 별 게시글 받아오기
+  const [data, setData] = useState(false);
+  const [loading, isLoading] = useState(true);
+  const [myNews, SetMyNews] = useState([]);
+  const [myComment, setMyComment] = useState([]);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
   const [category, setCategory] = useState({ number: null });
@@ -434,9 +392,19 @@ export default function Mypage({ login, userinfo }) {
     address: userinfo.address,
     town: userinfo.town,
   });
-  const [duplicate, setDuplicate] = useState({
-    nickname: false,
-  });
+  //이미지 보낼때 사용
+  const [image, setImage] = useState("");
+
+  //이미지 보이기용
+  const [imgFile, setImgFile] = useState(null); //파일
+
+  //번경 유무
+  const [checkEdit, setCheckEdit] = useState(false);
+  const nickname = editInfo.nickname;
+  const address = editInfo.address;
+  const town = editInfo.town;
+
+  const [duplicate, setDuplicate] = useState(false);
   const [openPost, isOpenPost] = useState(false);
   const handleInputValue = (key) => (e) => {
     setEditInfo({ ...editInfo, [key]: e.target.value });
@@ -454,47 +422,95 @@ export default function Mypage({ login, userinfo }) {
   const editHandler = () => {
     setEdit(!edit);
   };
+  const cancelEdit = () => {
+    setEdit(true);
+  };
 
   const checkDuplicate = () => {
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/user/nickname`, {
-        nickname: editInfo.nickname,
-      })
-      .then((res) => {
-        setDuplicate(true);
-
-        Swal.fire({
-          icon: "success",
-          title: "사용 가능한 닉네임입니다",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch(() => {
-        Swal.fire({
-          icon: "error",
-          title: "중복된 닉네임입니다",
-          text: "",
-          footer: "",
-        });
+    if (userinfo.nickname === nickname) {
+      Swal.fire({
+        icon: "success",
+        title: "기존 닉네임과 동일한 닉네임입니다",
+        showConfirmButton: false,
+        timer: 1500,
       });
-  };
-  //수정 요청
-  const submitEditInfo = () => {
-    if (duplicate === true) {
+      setDuplicate(true);
+    } else {
       axios
-        .patch(`${process.env.REACT_APP_API_URL}/user`, {
+        .post(`${process.env.REACT_APP_API_URL}/user/nickname`, {
           nickname: editInfo.nickname,
-          address: editInfo.address,
-          town: editInfo.town,
         })
         .then((res) => {
+          Swal.fire({
+            icon: "success",
+            title: "사용 가능한 닉네임입니다",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          setDuplicate(true);
+          setCheckEdit(true);
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "중복된 닉네임입니다",
+            text: "",
+            footer: "",
+          });
+        });
+    }
+  };
+
+  const photoChange = (e) => {
+    const imageFile = e.target.files[0];
+    const imageUrl = URL.createObjectURL(imageFile);
+
+    setImage(imageFile);
+    setImgFile(imageUrl); // 파일 상태 업데이트
+    setCheckEdit(true);
+  };
+
+  //수정 요청
+  // console.log(address);
+  // console.log(town);
+  // console.log(nickname);
+  // console.log(image);
+  // console.log(checkEdit);
+
+  const submitEditInfo = async () => {
+    const formData = new FormData();
+    if (image !== "") formData.append("img", image);
+    if (nickname !== userinfo.nickname && nickname !== "") {
+      formData.append("nickname", nickname);
+    }
+    formData.append("address", address);
+    formData.append("town", town);
+
+    const config = {
+      Headers: {
+        "content-type": "multipart/form-data",
+      },
+    };
+
+    if (checkEdit === true || duplicate === true) {
+      await axios
+        .post(`${process.env.REACT_APP_API_URL}/user`, formData, config)
+        .then((res) => {
+          console.log(res.data.data);
+          setEditInfo(res.data.data);
+          Swal.fire({
+            icon: "sucess",
+            title: "변경되었습니다",
+            text: "",
+            footer: "",
+          });
+
           setEdit(true);
         });
     } else {
       Swal.fire({
         icon: "error",
-        title: "닉네임 중복 확인을 해주세요",
+        title: "변경된 사항이 없습니다",
         text: "",
         footer: "",
       });
@@ -507,20 +523,15 @@ export default function Mypage({ login, userinfo }) {
 
     if (data.addressType === "R") {
       if (data.buildingName !== "") {
-        extraAddr +=
-          extraAddr !== "" ? `, ${data.buildingName}` : data.buildingName;
+        extraAddr += data.buildingName;
       }
-      if (data.sigungu !== "") {
-        extraAddr += `, ${data.sigungu}`;
-      }
-      if (data.bname !== "") {
-        extraAddr += `, ${data.bname}`;
-      }
-      fullAddr += extraAddr !== "" ? ` ${extraAddr}` : "";
+      fullAddr += extraAddr;
     }
-    setEditInfo({ ...editInfo, address: fullAddr });
+    setEditInfo({ ...editInfo, town: data.bname, address: fullAddr });
     isOpenPost(false);
+    setCheckEdit(true);
   };
+  console.log(editInfo);
   const postCodeStyle = {
     display: "block",
     position: "fixed",
@@ -542,277 +553,321 @@ export default function Mypage({ login, userinfo }) {
     setCategory({ ...category, number: Number(e.target.value) });
   };
 
+  //내 게시글 카테고리 불러오기
+  const requestMyNews = async () => {
+    isLoading(true);
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/news/mylist`)
+      .then((res) => {
+        SetMyNews(res.data.data);
+        isLoading(false);
+        setData(true);
+      })
+      .catch();
+  };
+  //댓글 단 게시글 가져오기
+  const requestMyComment = async () => {
+    isLoading(true);
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/news/comment`)
+      .then((res) => {
+        setMyComment(res.data.data);
+        isLoading(false);
+        setData(true);
+      })
+      .catch();
+  };
+  console.log(myComment);
   return (
-    <StMypageHead>
-      <div className={"mypage-master"}>
-        <div className={"mypage-box"}>
-          {edit ? (
-            //기존 상태
-            <div className={"mypage-wrap"}>
-              <div className={"mypage-profile-box"}>
-                <img src={editInfo.img} alt="" className={"profile-img"}></img>
-              </div>
-              <div className={"mypage-userinfo-box"}>
-                <div className={"edit-wrap"}>
-                  <div className={"edit-box"}>
-                    <img
-                      src={editImg}
-                      alt=""
-                      className={"edit-img"}
-                      onClick={() => {
-                        editHandler();
-                      }}
-                    ></img>
-                  </div>
+    <Body>
+      <StMypageHead>
+        <div className={"mypage-master"}>
+          <div className={"mypage-box"}>
+            {edit ? (
+              //기존 상태
+              <div className={"mypage-wrap"}>
+                <div className={"mypage-profile-box"}>
+                  <img
+                    src={`${editInfo.img}`}
+                    alt=""
+                    className={"profile-img"}
+                  ></img>
                 </div>
-                <div className={"mypage-userinfo-wrap"}>
-                  <div className={"mypage-input-box"}>
-                    <div className={"input-title"}>닉네임</div>
-                    <div className={"input-tick"}>
-                      {/* <input
+                <div className={"mypage-userinfo-box"}>
+                  <div className={"edit-wrap"}>
+                    <div className={"edit-box"}>
+                      <img
+                        src={editImg}
+                        alt=""
+                        className={"edit-img"}
+                        onClick={() => {
+                          editHandler();
+                        }}
+                      ></img>
+                    </div>
+                  </div>
+                  <div className={"mypage-userinfo-wrap"}>
+                    <div className={"mypage-input-box"}>
+                      <div className={"input-title"}>닉네임</div>
+                      <div className={"input-tick"}>
+                        {/* <input
                     type="text"
                     className={"input-area"}
                       defaultValue={userinfo.email}
                   ></input> */}
-                      <div className={"input-area"}>
-                        <div className={"userinfo-contents"}>
-                          {editInfo.nickname}
+                        <div className={"input-area"}>
+                          <div className={"userinfo-contents"}>
+                            {editInfo.nickname}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={"mypage-input-box"}>
-                    <div className={"input-title"}>이메일</div>
-                    <div className={"input-tick"}>
-                      {/* <input
+                    <div className={"mypage-input-box"}>
+                      <div className={"input-title"}>이메일</div>
+                      <div className={"input-tick"}>
+                        {/* <input
                     type="text"
                     className={"input-area"}
                     defaultValue={userinfo.email}
                   ></input> */}
-                      <div className={"input-area"}>
-                        <div className={"userinfo-contents"}>
-                          {userinfo.email}
+                        <div className={"input-area"}>
+                          <div className={"userinfo-contents"}>
+                            {userinfo.email}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={"mypage-input-box"}>
-                    <div className={"input-title"}>동네</div>
-                    <div className={"input-tick"}>
-                      {/* <input
+                    <div className={"mypage-input-box"}>
+                      <div className={"input-title"}>동네</div>
+                      <div className={"input-tick"}>
+                        {/* <input
                     type="text"
                     className={"input-area"}
                     defaultValue={userinfo.address}
                   ></input> */}
-                      <div className={"input-area"}>
-                        <div className={"userinfo-contents"}>
-                          {editInfo.address}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            //편집 상태
-            <div className={"mypage-wrap"}>
-              <div className={"mypage-profile-box"}>
-                <img src={editInfo.img} alt="" className={"profile-img"}></img>
-                <button className={"imgButton"}>사진 변경</button>
-              </div>
-              <div className={"mypage-userinfo-box"}>
-                <div className={"edit-wrap"}>
-                  <div className={"edit-box"}>
-                    <img
-                      src={complete}
-                      alt=""
-                      className={"edit-img"}
-                      onClick={() => {
-                        editHandler();
-                        submitEditInfo();
-                      }}
-                    ></img>
-                  </div>
-                </div>
-                <div className={"mypage-userinfo-wrap"}>
-                  <div className={"mypage-input-box"}>
-                    <div className={"input-title"}>닉네임</div>
-                    <div className={"input-tick"}>
-                      <input
-                        type="text"
-                        className={"input-area edit"}
-                        defaultValue={editInfo.nickname}
-                        onChange={handleInputValue("nickname")}
-                      ></input>
-                      <div className={"dupicate-wrap"}>
-                        <div className={"dupicate-button"}>
-                          <div
-                            className={"dupicate-check"}
-                            onClick={() => checkDuplicate()}
-                          >
-                            중복 확인
+                        <div className={"input-area"}>
+                          <div className={"userinfo-contents"}>
+                            {editInfo.address}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className={"mypage-input-box"}>
-                    <div className={"input-title"}>이메일</div>
-                    <div className={"input-tick"}>
-                      <div className={"input-area"}>
-                        <div className={"userinfo-contents"}>
-                          {userinfo.email}
+                </div>
+              </div>
+            ) : (
+              //편집 상태
+              <div className={"mypage-wrap"}>
+                <div className={"mypage-profile-box"}>
+                  {imgFile ? (
+                    <img src={imgFile} alt="" className={"profile-img"}></img>
+                  ) : (
+                    <img
+                      src={editInfo.img}
+                      alt=""
+                      className={"profile-img"}
+                    ></img>
+                  )}
+
+                  <label for="input-file">
+                    <FontAwesomeIcon className={"imgButton"} icon={faImage} />
+                  </label>
+                  <input
+                    type="file"
+                    name="file"
+                    id="input-file"
+                    accept="image/*"
+                    onChange={photoChange}
+                    style={{ display: "none" }}
+                  />
+                </div>
+                <div className={"mypage-userinfo-box"}>
+                  <div className={"edit-wrap"}>
+                    <div className={"edit-box"}>
+                      <FontAwesomeIcon
+                        className={"edit-back-img"}
+                        icon={faWindowClose}
+                        onClick={() => {
+                          cancelEdit();
+                        }}
+                      />
+                      <FontAwesomeIcon
+                        className={"edit-img"}
+                        icon={faCheckSquare}
+                        onClick={() => {
+                          submitEditInfo();
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className={"mypage-userinfo-wrap"}>
+                    <div className={"mypage-input-box"}>
+                      <div className={"input-title"}>닉네임</div>
+                      <div className={"input-tick"}>
+                        <input
+                          type="text"
+                          className={"input-area edit"}
+                          defaultValue={editInfo.nickname}
+                          onChange={handleInputValue("nickname")}
+                        ></input>
+                        <div className={"dupicate-wrap"}>
+                          <div className={"dupicate-button"}>
+                            <div
+                              className={"dupicate-check"}
+                              onClick={() => checkDuplicate()}
+                            >
+                              중복 확인
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <div className={"mypage-input-box"}>
+                      <div className={"input-title"}>이메일</div>
+                      <div className={"input-tick"}>
+                        <div className={"input-area"}>
+                          <div className={"userinfo-contents"}>
+                            {userinfo.email}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={"mypage-input-box"}>
+                      <div className={"input-title"}>동네</div>
+                      <div className={"input-tick"}>
+                        <input
+                          className={"input-area"}
+                          value={editInfo.address}
+                          onFocus={() => isOpenPost(true)}
+                        ></input>
+                        {openPost && (
+                          <ModalBackground onClick={() => modalClose3()}>
+                            <DaumPostcode
+                              style={postCodeStyle}
+                              theme={postThemeStyle}
+                              autoClose
+                              onComplete={onCompletePost}
+                            />
+                          </ModalBackground>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div className={"mypage-input-box"}>
-                    <div className={"input-title"}>동네</div>
-                    <div className={"input-tick"}>
-                      <input
-                        className={"input-area"}
-                        value={editInfo.address}
-                        onFocus={() => isOpenPost(true)}
-                      ></input>
-                      {openPost && (
-                        <ModalBackground onClick={() => modalClose3()}>
-                          <DaumPostcode
-                            style={postCodeStyle}
-                            theme={postThemeStyle}
-                            autoClose
-                            onComplete={onCompletePost}
-                          />
-                        </ModalBackground>
-                      )}
+                </div>
+              </div>
+            )}
+
+            <div className={"button-wrap"}>
+              <div className={"button-box-empty"}></div>
+              <div className={"button-box"}>
+                <div className={"button-area"}>
+                  <img src={lock} alt="" className={"button-icon"}></img>
+                  <div onClick={modalClose} className={"request-button"}>
+                    비밀번호 변경
+                  </div>
+                  {modalOpen && (
+                    <PasswordModal modalClose={modalClose}></PasswordModal>
+                  )}
+                </div>
+                <div className={"button-area"}>
+                  <img src={cancel} alt="" className={"button-icon"}></img>
+                  <div onClick={modalClose2} className={"request-button"}>
+                    회원탈퇴
+                  </div>
+                  {modalOpen2 && (
+                    <WithdrawalModal
+                      modalClose2={modalClose2}
+                    ></WithdrawalModal>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={"mypage-category"}>
+            <div className={"category-wrap"}>
+              <div className={"category-box"}>
+                <div className={"category-align"}>
+                  <div className={"category-half"}>
+                    <div className={"category-tick"}>
+                      <StCategoryButton
+                        value={1}
+                        onClick={(e) => changeCategory(e)}
+                        select={category.number === 1 ? true : false}
+                      >
+                        내 게시글
+                      </StCategoryButton>
+                    </div>
+                    <div className={"category-tick"}>
+                      <StCategoryButton
+                        value={2}
+                        onClick={(e) => {
+                          changeCategory(e);
+                          requestMyNews();
+                        }}
+                        select={category.number === 2 ? true : false}
+                      >
+                        내 동네소식
+                      </StCategoryButton>
+                    </div>
+                    <div className={"category-tick"}>
+                      <StCategoryButton
+                        value={3}
+                        onClick={(e) => changeCategory(e)}
+                        select={category.number === 3 ? true : false}
+                      >
+                        판매내역
+                      </StCategoryButton>
+                    </div>
+                  </div>
+                  <div className={"category-half"}>
+                    <div className={"category-tick"}>
+                      <StCategoryButton
+                        value={4}
+                        onClick={(e) => changeCategory(e)}
+                        select={category.number === 4 ? true : false}
+                      >
+                        구매내역
+                      </StCategoryButton>
+                    </div>
+                    <div className={"category-tick"}>
+                      <StCategoryButton
+                        value={5}
+                        onClick={(e) => changeCategory(e)}
+                        select={category.number === 5 ? true : false}
+                      >
+                        찜한 게시글
+                      </StCategoryButton>
+                    </div>
+                    <div className={"category-tick"}>
+                      <StCategoryButton
+                        value={6}
+                        onClick={(e) => {
+                          changeCategory(e);
+                          requestMyComment();
+                        }}
+                        select={category.number === 6 ? true : false}
+                      >
+                        관심 소식
+                      </StCategoryButton>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          )}
-
-          <div className={"button-wrap"}>
-            <div className={"button-box-empty"}></div>
-            <div className={"button-box"}>
-              <div className={"button-area"}>
-                <img src={lock} alt="" className={"button-icon"}></img>
-                <div onClick={modalClose} className={"request-button"}>
-                  비밀번호 변경
-                </div>
-                {modalOpen && (
-                  <PasswordModal modalClose={modalClose}></PasswordModal>
-                )}
-              </div>
-              <div className={"button-area"}>
-                <img src={cancel} alt="" className={"button-icon"}></img>
-                <div onClick={modalClose2} className={"request-button"}>
-                  회원탈퇴
-                </div>
-                {modalOpen2 && (
-                  <WithdrawalModal modalClose2={modalClose2}></WithdrawalModal>
-                )}
-              </div>
-            </div>
           </div>
         </div>
-        <div className={"mypage-category"}>
-          <div className={"category-wrap"}>
-            <div className={"category-box"}>
-              <div className={"category-align"}>
-                <div className={"category-half"}>
-                  <div className={"category-tick"}>
-                    <StCategoryButton
-                      value={1}
-                      onClick={(e) => changeCategory(e)}
-                      select={category.number === 1 ? true : false}
-                    >
-                      내 게시글
-                    </StCategoryButton>
-                  </div>
-                  <div className={"category-tick"}>
-                    <StCategoryButton
-                      value={2}
-                      onClick={(e) => changeCategory(e)}
-                      select={category.number === 2 ? true : false}
-                    >
-                      내 동네소식
-                    </StCategoryButton>
-                  </div>
-                  <div className={"category-tick"}>
-                    <StCategoryButton
-                      value={3}
-                      onClick={(e) => changeCategory(e)}
-                      select={category.number === 3 ? true : false}
-                    >
-                      판매내역
-                    </StCategoryButton>
-                  </div>
-                </div>
-                <div className={"category-half"}>
-                  <div className={"category-tick"}>
-                    <StCategoryButton
-                      value={4}
-                      onClick={(e) => changeCategory(e)}
-                      select={category.number === 4 ? true : false}
-                    >
-                      구매내역
-                    </StCategoryButton>
-                  </div>
-                  <div className={"category-tick"}>
-                    <StCategoryButton
-                      value={5}
-                      onClick={(e) => changeCategory(e)}
-                      select={category.number === 5 ? true : false}
-                    >
-                      찜한 게시글
-                    </StCategoryButton>
-                  </div>
-                  <div className={"category-tick"}>
-                    <StCategoryButton
-                      value={6}
-                      onClick={(e) => changeCategory(e)}
-                      select={category.number === 6 ? true : false}
-                    >
-                      관심 소식
-                    </StCategoryButton>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={"content-head"}>
-            <div className={"content-wrap"}>
-              <StContent>
-                <div className={"title-tick"}>
-                  <div className={"title"}>
-                    <div>질문</div>
-                  </div>
-                </div>
-                <div className={"content-tick"}>
-                  <div className={"content"}>
-                    <div>내용</div>
-                  </div>
-                </div>
-                <div className={"address-tick"}>
-                  <div className={"address-area"}>
-                    <div className={"nickname"}>닉네임</div>
-                    <div className={"town"}>동네</div>
-                  </div>
-                  <div className={"data-area"}>1달 전</div>
-                </div>
-                <div className={"comment-tick"}>
-                  <div className={"comment-area"}>
-                    {" "}
-                    <div className={"views"}>조회수</div>
-                    <div className={"comment"}>댓글</div>
-                  </div>
-                </div>
-              </StContent>
-            </div>
+        <div className={"content-head"}>
+          <div className={"content-wrap"}>
+            {myNews.map((news, index) => (
+              <News mypage={true} news={news} key={index} />
+              // <MypageNews key={index} news={news} />
+            ))}
+            {myComment.map((news, index) => (
+              <News mypage={true} news={news} key={index} />
+            ))}
           </div>
         </div>
-      </div>
-    </StMypageHead>
+      </StMypageHead>
+    </Body>
   );
 }

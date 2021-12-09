@@ -152,7 +152,7 @@ export default function PasswordModal({ modalClose }) {
       <div className={"password-modal"}>
         <div className={"password-modal-wrap"}>
           <div className={"password-modal-logo"}>
-            <img src={logoImg} alt={"f" }></img>
+            <img src={logoImg} alt={"logo" }></img>
             <div className={"password-logoname"}>moongori</div>
           </div>
           <div className={"password-modal-input-wrap"}>
