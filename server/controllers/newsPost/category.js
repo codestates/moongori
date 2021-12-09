@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
 
   let list = await newsPost.findAll({
     where: { category: category },
-    include: [{ model: user, attributes: ["nickname", "address"] }],
+    include: [{ model: user, attributes: ["nickname", "town"] }],
     order: [["createdAt", "DESC"]],
     limit: 10,
     offset: offset,

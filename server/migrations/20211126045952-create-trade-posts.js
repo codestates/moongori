@@ -20,7 +20,7 @@ module.exports = {
       img: {
         type: Sequelize.STRING,
       },
-      nomalOrNot: {
+      normalOrNot: {
         type: Sequelize.INTEGER,
       },
       sCost: {

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const StNewsDiv = styled.div`
+export const StNewsDiv = styled.div`
   border: 2px solid #92e3a9;
   border-radius: 10px;
   width: 100%;
@@ -87,8 +87,6 @@ export function timeForToday(value) {
 }
 
 export default function News({ news }) {
-  // 시간계산 함수
-
   return (
     <StNewsDiv>
       <Link to={`/news/read=${news.id}`}>

@@ -9,6 +9,7 @@ import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import Loading from "./../components/Loading";
 import { StContentInfoDiv } from "./../components/News";
 import MapContainer from "../components/MapContainer";
+import Swal from "sweetalert2";
 axios.defaults.withCredentials = true;
 
 const StBodyDiv = styled.div`
@@ -186,20 +187,27 @@ export default function NewsPost({ login, userinfo }) {
 
   // 서버에 댓글 등록을 요청하는 함수
   const registerComment = () => {
-    if (inputCommentRef.current.value !== "") {
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/news/comment`, {
-          newsPost_Id: id,
-          comment: inputCommentRef.current.value,
-        })
-        .then((res) => {
-          console.log(commentList);
-          console.log(res.data);
-          setCommentList([...res.data.data].reverse());
-        })
-        .catch();
-      inputCommentRef.current.focus();
-      inputCommentRef.current.value = "";
+    if (login) {
+      if (inputCommentRef.current.value !== "") {
+        axios
+          .post(`${process.env.REACT_APP_API_URL}/news/comment`, {
+            newsPost_Id: id,
+            comment: inputCommentRef.current.value,
+          })
+          .then((res) => {
+            console.log(commentList);
+            console.log(res.data);
+            setCommentList([...res.data.data].reverse());
+          })
+          .catch();
+        inputCommentRef.current.focus();
+        inputCommentRef.current.value = "";
+      }
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "로그인이 필요한 기능입니다.",
+      });
     }
   };
 
@@ -245,7 +253,7 @@ export default function NewsPost({ login, userinfo }) {
         isLoading(false);
       });
   }, [id]);
-  console.log(commentList);
+
   return (
     <StBodyDiv>
       {loading ? (

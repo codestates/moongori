@@ -65,7 +65,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Main />} />
 
-          <Route path="/trade=:category" element={<TradeList />} />
+          <Route
+            path="/trade=:category"
+            element={<TradeList login={login} userinfo={userinfo} />}
+          />
 
           <Route
             path="/news=:category"
