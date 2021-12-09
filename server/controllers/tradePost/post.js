@@ -6,14 +6,14 @@ module.exports = async (req, res) => {
   const postInfo = await tradePost.findOne({
     where: { id: postId },
     include: [
+      { model: user, attributes: ["nickname", "town", "img"] },
       {
         model: suggestion,
         attributes: ["cost"],
-        include: { model: user, attributes: ["nickname", "address", "img"] },
+        include: { model: user, attributes: ["nickname", "town", "img"] },
       },
-      { model: like, attributes: ["user_Id"] }
+      { model: like, attributes: ["user_Id"] },
     ],
   });
-
-  return res.status(200).json({ data: { postInfo, like_cnt: postInfo.likes.length } });
+  return res.status(200).json({ data: { postInfo, like_cnt: postInfo.likes } });
 };
