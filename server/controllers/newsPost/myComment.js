@@ -11,6 +11,7 @@ module.exports = async (req, res) => {
       "town",
       "comment_cnt",
       "createdAt",
+      "view",
     ],
     include: [
       { model: user, attributes: ["nickname", "town"] },
