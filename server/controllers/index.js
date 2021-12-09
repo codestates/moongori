@@ -53,10 +53,11 @@ router.delete(
 router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
 router.get("/news/comment", auth.accessToken, newsPostCtrl.myComment);
 
+
 //tradePost
 router.get("/trade/list", tradePost.list);
 router.get("/trade/list/:nomalOrNot", tradePost.nomalOrNot);
-router.get("/trade/post", tradePost.read);
+router.get("/trade/post/:id", tradePost.read);
 router.post("/trade/post", auth.accessToken, tradePost.img, tradePost.write);
 router.post(
   "/trade/nomal/:id",
@@ -83,5 +84,9 @@ router.delete(
   auth.accessToken,
   tradePostCtrl.suggestionDelete
 );
+router.post("/trade/like", auth.accessToken, tradePostCtrl.like);
+router.delete("/trade/like", auth.accessToken, tradePostCtrl.deleteLike);
+router.get("/trade/myList", auth.accessToken, tradePostCtrl.myList);
+router.get("/trade/myLike", auth.accessToken, tradePostCtrl.myLike);
 
 module.exports = router;

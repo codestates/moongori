@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
     });
     return res.status(200).json({ data: modification, message: "successful modification" });
   } catch (err) {
-    return res.status(500).json({ message: "error" })
+    return res.status(500).json({ message: "error" });
   }
 
 }

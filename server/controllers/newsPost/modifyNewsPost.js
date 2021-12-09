@@ -6,7 +6,6 @@ module.exports = async (req, res) => {
   const postOne = await newsPost.findOne({
     where: { id: postId },
   });
-  // console.log("!!!!!!", req.body);
   if (postOne.user_Id !== id) {
     return res.status(403).json({ message: "not correspond user" });
   }

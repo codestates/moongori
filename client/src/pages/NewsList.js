@@ -102,14 +102,6 @@ const StContentsBodyDiv = styled.div`
 `;
 
 export default function NewsList({ userinfo, login }) {
-  //! 해야하는 부분
-  // 카테고리 선택하면 배경색 다르게 지정
-  //? 서버에서 리스트에 대한 정보 받아오기 (조금씩 불러오기)
-  //? map으로 뿌려주기
-  //? 카테고리별로 게시글 받아와 뿌려주기
-  //? 검색한 내용으로 게시글 받아와 뿌려주기
-  //? 글쓰는 버튼 누르면 글쓰는 페이지로 이동하기 (로그인한 유저만)
-  //? 게시글 하나 누르면 상세게시글페이지로 이동하기
   const [newsList, setNewsList] = useState([]);
   const [category, setCategory] = useState({ number: 0 });
   const [page, setPage] = useState(1);
@@ -140,26 +132,32 @@ export default function NewsList({ userinfo, login }) {
           `${process.env.REACT_APP_API_URL}/news/list/${category.number}?page=${page}`
         )
         .then((res) => {
-          const mergeData = newsList.concat(...res.data.data);
-          setTimeout(() => {
+          if (res.status === 204) {
+            isLoading(false);
+          } else {
+            const mergeData = newsList.concat(...res.data.data);
             setNewsList(mergeData);
             setPage((preState) => preState + 1);
             isLoading(false);
             isFetch(false);
-          }, 1000);
+            // setTimeout(() => {}, 1000);
+          }
         })
         .catch();
     } else {
       await axios
         .get(`${process.env.REACT_APP_API_URL}/news/list?page=${page}`)
         .then((res) => {
-          const mergeData = newsList.concat(...res.data.data);
-          setTimeout(() => {
+          if (res.status === 204) {
+            isLoading(false);
+          } else {
+            const mergeData = newsList.concat(...res.data.data);
             setNewsList(mergeData);
             setPage((preState) => preState + 1);
             isLoading(false);
             isFetch(false);
-          }, 1000);
+            // setTimeout(() => {}, 1000);
+          }
         })
         .catch();
     }
@@ -177,6 +175,7 @@ export default function NewsList({ userinfo, login }) {
 
   useEffect(() => {
     requestNews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
 
   useEffect(() => {
