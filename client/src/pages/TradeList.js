@@ -3,7 +3,7 @@ import React from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { StCategoryButton } from "./NewsList";
@@ -63,6 +63,7 @@ export default function TradeList({ login, userinfo }) {
   const [category, setCategory] = useState("all");
   const [loading, isLoading] = useState(true);
   const [fetch, isFetch] = useState(false);
+  const inputSearchRef = useRef(null);
   const navigate = useNavigate();
 
   // 카테고리 변경하는 함수
@@ -78,43 +79,135 @@ export default function TradeList({ login, userinfo }) {
     setPage(1);
   };
 
-  const requestTrade = () => {
+  // 검색어에 따른 데이터 요청하는 함수
+  const handleSearch = (e) => {
+    if (
+      inputSearchRef.current.value !== "" &&
+      (e.key === "Enter" || e.type === "click")
+    ) {
+      if (category.number) {
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/trade/${category.number}?search=${inputSearchRef.current.value}&page=1`
+          )
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+              setTradeList([]);
+            } else {
+              console.log(res.data);
+              const mergeData = [].concat(...res.data.data);
+              setTradeList(mergeData);
+              setPage(2);
+              isLoading(false);
+              isFetch(false);
+            }
+          })
+          .catch();
+      } else {
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/trade?search=${inputSearchRef.current.value}&page=1`
+          )
+          .then((res) => {
+            console.log("실행");
+            if (res.status === 204) {
+              isLoading(false);
+              setTradeList([]);
+            } else {
+              console.log(res.data);
+              const mergeData = [].concat(...res.data.data);
+              setTradeList(mergeData);
+              setPage(2);
+              isLoading(false);
+              isFetch(false);
+            }
+          })
+          .catch();
+      }
+    }
+  };
+
+  // 서버로 데이터를 요청하는 함수
+  const requestTrade = async () => {
     isLoading(true);
     isFetch(true);
-    if (category !== "all") {
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/trade/list/${Number(
-            category
-          )}?page=${page}`
-        )
-        .then((res) => {
-          if (res.status === 204) {
-            isLoading(false);
-          } else {
-            console.log(res.data.data);
-            const mergeData = tradeList.concat(...res.data.data);
-            setTradeList(mergeData);
-            setPage((preState) => preState + 1);
-            isLoading(false);
-            isFetch(false);
-          }
-        });
+    if (category.number) {
+      if (inputSearchRef.current.value !== "") {
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/trade/${category.number}?search=${inputSearchRef.current.value}&page=${page}`
+          )
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+            } else {
+              console.log(res.data);
+              const mergeData = tradeList.concat(...res.data.data);
+              setTradeList(mergeData);
+              setPage((preState) => preState + 1);
+              isLoading(false);
+              isFetch(false);
+            }
+          })
+          .catch();
+      } else {
+        await axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/trade/list/${category.number}?page=${page}`
+          )
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+            } else {
+              console.log(res.data);
+              const mergeData = tradeList.concat(...res.data.data);
+              setTradeList(mergeData);
+              setPage((preState) => preState + 1);
+              isLoading(false);
+              isFetch(false);
+              // setTimeout(() => {}, 1000);
+            }
+          })
+          .catch();
+      }
     } else {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/trade/list?page=${page}`)
-        .then((res) => {
-          if (res.status === 204) {
-            isLoading(false);
-          } else {
-            console.log(res.data.data);
-            const mergeData = tradeList.concat(...res.data.data);
-            setTradeList(mergeData);
-            setPage((preState) => preState + 1);
-            isLoading(false);
-            isFetch(false);
-          }
-        });
+      if (inputSearchRef.current.value !== "") {
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/trade?search=${inputSearchRef.current.value}&page=${page}`
+          )
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+            } else {
+              console.log(res.data);
+              const mergeData = tradeList.concat(...res.data.data);
+              setTradeList(mergeData);
+              setPage((preState) => preState + 1);
+              isLoading(false);
+              isFetch(false);
+            }
+          })
+          .catch();
+      } else {
+        await axios
+          .get(`${process.env.REACT_APP_API_URL}/trade/list?page=${page}`)
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+            } else {
+              console.log(res.data);
+              const mergeData = tradeList.concat(...res.data.data);
+              setTradeList(mergeData);
+              setPage((preState) => preState + 1);
+              isLoading(false);
+              isFetch(false);
+              // setTimeout(() => {}, 1000);
+            }
+          })
+          .catch();
+      }
     }
   };
 
@@ -160,8 +253,16 @@ export default function TradeList({ login, userinfo }) {
             </StCategoryButtonReUse>
           </div>
           <div>
-            <input type={"text"} placeholder={"검색"}></input>
-            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+            <input
+              type={"text"}
+              placeholder={"검색"}
+              ref={inputSearchRef}
+              onKeyPress={(e) => handleSearch(e)}
+            ></input>
+            <FontAwesomeIcon
+              icon={faSearch}
+              onClick={(e) => handleSearch(e)}
+            ></FontAwesomeIcon>
           </div>
         </div>
         {login ? (
