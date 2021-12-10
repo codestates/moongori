@@ -78,7 +78,13 @@ export default function App() {
 
           <Route
             path="/mypage"
-            element={<PrivateRoute login={login} userinfo={userinfo} />}
+            element={
+              <PrivateRoute
+                login={login}
+                userinfo={userinfo}
+                isAuthenticated={isAuthenticated}
+              />
+            }
           />
 
           {/* <Route path="/trade-normal/read=:id" element={<TradeNormalPost />} /> */}
