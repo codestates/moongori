@@ -2,12 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import { category, timeForToday } from "./../components/News";
+import { category, timeForToday, StContentInfoDiv } from "./../components/News";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import Loading from "./../components/Loading";
-import { StContentInfoDiv } from "./../components/News";
 import MapContainer from "../components/MapContainer";
 import Swal from "sweetalert2";
 axios.defaults.withCredentials = true;
@@ -23,7 +22,7 @@ const StBodyDiv = styled.div`
 
 const StContentsDiv = styled(StBodyDiv)`
   width: 55%;
-  margin-top: 100px;
+  margin-top: 100px;ory
   margin-bottom: 40px;
   .category {
     font-size: 2em;
