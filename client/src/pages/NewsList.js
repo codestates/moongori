@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,7 +7,7 @@ import {
   faSearch,
   faPlusSquare,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import News from "./../components/News";
@@ -29,7 +30,7 @@ const StBodyDiv = styled.div`
   }
 `;
 
-const StCategoryButton = styled.button`
+export const StCategoryButton = styled.button`
   background: ${(props) => (props.select ? "#92E3A9" : "#EFEFEF")};
   cursor: pointer;
   border-radius: 10px;
@@ -66,27 +67,31 @@ const StAddressSearchDiv = styled.div`
   justify-content: ${(props) => (props.login ? "space-between" : "flex-end")};
   .myAddress {
     display: flex;
+    font-size: 1.5em;
     svg {
       color: #92e3a9;
     }
     div {
       margin-left: 5px;
       font-weight: bold;
-      font-size: 1.5em;
     }
   }
-  input {
-    border-radius: 10px;
-    height: 20px;
+  .search {
+    input {
+      border-radius: 10px;
+      height: 20px;
+    }
+    svg {
+      cursor: pointer;
+    }
   }
-  @media all and (max-width: 425px) {
+
+  @media all and (max-width: 460px) {
+    text-align: center;
+    flex-direction: column;
     .myAddress {
-      svg {
-        font-size: 1em;
-      }
-      div {
-        font-size: 1em;
-      }
+      margin-bottom: 10px;
+      font-size: 1em;
     }
     input {
       height: 15px;
@@ -107,14 +112,17 @@ export default function NewsList({ userinfo, login }) {
   const [page, setPage] = useState(1);
   const [loading, isLoading] = useState(true);
   const [fetch, isFetch] = useState(false);
+  const inputSearchRef = useRef(null);
   const navigate = useNavigate();
 
   // 카테고리 변경하는 함수
   const changeCategory = (e) => {
     if (Number(e.target.value) === category.number) {
+      inputSearchRef.current.value = "";
       setCategory({ ...category, number: 0 });
       navigate("/news=0");
     } else {
+      inputSearchRef.current.value = "";
       setCategory({ ...category, number: Number(e.target.value) });
       navigate(`/news=${e.target.value}`);
     }
@@ -122,44 +130,134 @@ export default function NewsList({ userinfo, login }) {
     setPage(1);
   };
 
+  // 검색어에 따른 데이터 요청하는 함수
+  const handleSearch = (e) => {
+    if (
+      inputSearchRef.current.value !== "" &&
+      (e.key === "Enter" || e.type === "click")
+    ) {
+      if (category.number) {
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/news/${category.number}?search=${inputSearchRef.current.value}&page=1`
+          )
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+              setNewsList([]);
+            } else {
+              console.log(res.data);
+              const mergeData = [].concat(...res.data.data);
+              setNewsList(mergeData);
+              setPage(2);
+              isLoading(false);
+              isFetch(false);
+            }
+          })
+          .catch();
+      } else {
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/news?search=${inputSearchRef.current.value}&page=1`
+          )
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+              setNewsList([]);
+            } else {
+              console.log(res.data);
+              const mergeData = [].concat(...res.data.data);
+              setNewsList(mergeData);
+              setPage(2);
+              isLoading(false);
+              isFetch(false);
+            }
+          })
+          .catch();
+      }
+    }
+  };
+
   // 서버로 데이터를 요청하는 함수
   const requestNews = async () => {
     isLoading(true);
     isFetch(true);
     if (category.number) {
-      await axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/news/list/${category.number}?page=${page}`
-        )
-        .then((res) => {
-          if (res.status === 204) {
-            isLoading(false);
-          } else {
-            const mergeData = newsList.concat(...res.data.data);
-            setNewsList(mergeData);
-            setPage((preState) => preState + 1);
-            isLoading(false);
-            isFetch(false);
-            // setTimeout(() => {}, 1000);
-          }
-        })
-        .catch();
+      if (inputSearchRef.current.value !== "") {
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/news/${category.number}?search=${inputSearchRef.current.value}&page=${page}`
+          )
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+            } else {
+              console.log(res.data);
+              const mergeData = newsList.concat(...res.data.data);
+              setNewsList(mergeData);
+              setPage((preState) => preState + 1);
+              isLoading(false);
+              isFetch(false);
+            }
+          })
+          .catch();
+      } else {
+        await axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/news/list/${category.number}?page=${page}`
+          )
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+            } else {
+              console.log(res.data);
+              const mergeData = newsList.concat(...res.data.data);
+              setNewsList(mergeData);
+              setPage((preState) => preState + 1);
+              isLoading(false);
+              isFetch(false);
+              // setTimeout(() => {}, 1000);
+            }
+          })
+          .catch();
+      }
     } else {
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}/news/list?page=${page}`)
-        .then((res) => {
-          if (res.status === 204) {
-            isLoading(false);
-          } else {
-            const mergeData = newsList.concat(...res.data.data);
-            setNewsList(mergeData);
-            setPage((preState) => preState + 1);
-            isLoading(false);
-            isFetch(false);
-            // setTimeout(() => {}, 1000);
-          }
-        })
-        .catch();
+      if (inputSearchRef.current.value !== "") {
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/news?search=${inputSearchRef.current.value}&page=${page}`
+          )
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+            } else {
+              console.log(res.data);
+              const mergeData = newsList.concat(...res.data.data);
+              setNewsList(mergeData);
+              setPage((preState) => preState + 1);
+              isLoading(false);
+              isFetch(false);
+            }
+          })
+          .catch();
+      } else {
+        await axios
+          .get(`${process.env.REACT_APP_API_URL}/news/list?page=${page}`)
+          .then((res) => {
+            if (res.status === 204) {
+              isLoading(false);
+            } else {
+              console.log(res.data);
+              const mergeData = newsList.concat(...res.data.data);
+              setNewsList(mergeData);
+              setPage((preState) => preState + 1);
+              isLoading(false);
+              isFetch(false);
+              // setTimeout(() => {}, 1000);
+            }
+          })
+          .catch();
+      }
     }
   };
 
@@ -174,8 +272,8 @@ export default function NewsList({ userinfo, login }) {
   };
 
   useEffect(() => {
+    navigate(`/news=${category.number}`);
     requestNews();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
 
   useEffect(() => {
@@ -262,14 +360,22 @@ export default function NewsList({ userinfo, login }) {
       <StContentsHeadDiv>
         <StAddressSearchDiv login={login}>
           {login ? (
-            <div class="myAddress">
-              <FontAwesomeIcon icon={faCheck} size={"2x"}></FontAwesomeIcon>
+            <div className={"myAddress"}>
+              <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
               <div>{userinfo.town}</div>
             </div>
           ) : null}
-          <div>
-            <input type={"text"} placeholder={"검색"}></input>
-            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+          <div className={"search"}>
+            <input
+              type={"text"}
+              placeholder={"검색"}
+              ref={inputSearchRef}
+              onKeyDown={(e) => handleSearch(e)}
+            ></input>
+            <FontAwesomeIcon
+              icon={faSearch}
+              onClick={(e) => handleSearch(e)}
+            ></FontAwesomeIcon>
           </div>
         </StAddressSearchDiv>
         {login ? (

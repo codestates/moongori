@@ -68,7 +68,7 @@
   line-height: 1;
 
   opacity: 0.75;
-  color: white;
+  color: #020008;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -119,7 +119,7 @@
 
   list-style: none;
 
-  text-align: center;
+  text-align: bottom;
 }
 .slick-dots li {
   position: relative;
