@@ -13,6 +13,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const StTradeBodyDiv = styled.div`
   width: 100%;
@@ -66,7 +69,7 @@ const StPictureDiv = styled.div`
     align-items: center;
   }
   .tradeImg {
-    width: 100%;
+    width: 80%;
   }
 `;
 const StContentDiv = styled.div`
@@ -311,6 +314,20 @@ export default function TradeRead() {
       });
   };
 
+  //img slider 세팅
+  const settings = {
+    dots: true,
+    arrows: true,
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    pauseOnHover: true,
+  }
+
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${1}`)
@@ -396,7 +413,11 @@ export default function TradeRead() {
         <StTradeBoxDiv>
           <StPictureDiv>
             <div className={"img-box"}>
-              <img src={dummyMac} className={"tradeImg"} alt=""></img>
+              <Slider {...settings}>
+                <img src={postInfo.img} className={"tradeImg"} alt=""></img>
+                <img src={dummyMac} className={"tradeImg"} alt=""></img>
+                <img src={vegetable} className={"tradeImg"} alt=""></img>
+              </Slider>
             </div>
           </StPictureDiv>
           <StContentDiv>
@@ -408,8 +429,8 @@ export default function TradeRead() {
                       {soldout
                         ? tradeState[3]
                         : check === 1
-                        ? tradeState[1]
-                        : tradeState[2]}
+                          ? tradeState[1]
+                          : tradeState[2]}
                     </div>
                   </div>
                   {option ? (
