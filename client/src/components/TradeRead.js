@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import dummyMac from "../images/dummyMac.png";
-import vegetable from "../images/vegetable.jpeg";
 import Swal from "sweetalert2";
 import { faStar } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -10,9 +8,12 @@ import {
   faWifi,
   faTimes,
   faLessThanEqual,
+  faArrowRight,
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
+import SimpleSlider from "../components/Slider"
 
 const StTradeBodyDiv = styled.div`
   width: 100%;
@@ -60,13 +61,9 @@ const StPictureDiv = styled.div`
     width: 90%;
     height: 50%;
   }
-  .img-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+
   .tradeImg {
-    width: 100%;
+    width: 80%;
   }
 `;
 const StContentDiv = styled.div`
@@ -311,6 +308,7 @@ export default function TradeRead() {
       });
   };
 
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${1}`)
@@ -332,72 +330,75 @@ export default function TradeRead() {
   }, []);
 
   console.log(check);
+
   return (
     <>
-      {option ? (
-        <StOptionMenuDiv>
-          <li>
-            게시글 수정
-            <i class="fas fa-arrow-right"></i>
-          </li>
-          {check === 1 ? (
-            <li
-              value={2}
-              onClick={() => {
-                changeToreservation();
-                changeState(2);
-              }}
-            >
-              {tradeState[2]}으로 변경
+      {
+        option ? (
+          <StOptionMenuDiv>
+            <li>
+              게시글 수정
               <i class="fas fa-arrow-right"></i>
             </li>
-          ) : (
-            <li
-              value={1}
-              onClick={() => {
-                changeToselling();
-                changeState(1);
-              }}
-            >
-              {tradeState[1]}으로 변경
-              <i class="fas fa-arrow-right"></i>
-            </li>
-          )}
+            {
+              check === 1 ? (
+                <li
+                  value={2}
+                  onClick={() => {
+                    changeToreservation();
+                    changeState(2);
+                  }}
+                >
+                  {tradeState[2]}으로 변경
+                  <i class="fas fa-arrow-right"></i>
+                </li>
+              ) : (
+                <li
+                  value={1}
+                  onClick={() => {
+                    changeToselling();
+                    changeState(1);
+                  }}
+                >
+                  {tradeState[1]}으로 변경
+                  <i class="fas fa-arrow-right"></i>
+                </li>
+              )
+            }
 
-          <li
-            onClick={() => {
-              Swal.fire({
-                title: "판매완료로 변경하시겠습니까?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                cancelButtonText: "취소",
-                confirmButtonText: "확인",
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  soldoutHandler(true);
-                  changeState(3);
-                  Swal.fire("변경완료!", "");
-                }
-              });
-            }}
-          >
-            {tradeState[3]}로 변경
-            <i class="fas fa-arrow-right"></i>
-          </li>
-          <li>
-            게시글 삭제
-            <i class="fas fa-arrow-right"></i>
-          </li>
-        </StOptionMenuDiv>
-      ) : null}
+            <li
+              onClick={() => {
+                Swal.fire({
+                  title: "판매완료로 변경하시겠습니까?",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  cancelButtonText: "취소",
+                  confirmButtonText: "확인",
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    soldoutHandler(true);
+                    changeState(3);
+                    Swal.fire("변경완료!", "");
+                  }
+                });
+              }}
+            >
+              {tradeState[3]}로 변경
+              <i class="fas fa-arrow-right"></i>
+            </li>
+            <li>
+              게시글 삭제
+              <i class="fas fa-arrow-right"></i>
+            </li>
+          </StOptionMenuDiv >
+        ) : null
+      }
       <StTradeBodyDiv>
         <StTradeBoxDiv>
           <StPictureDiv>
-            <div className={"img-box"}>
-              <img src={dummyMac} className={"tradeImg"} alt=""></img>
-            </div>
+            <SimpleSlider />
           </StPictureDiv>
           <StContentDiv>
             <div className={"content-wrap"}>
@@ -408,8 +409,8 @@ export default function TradeRead() {
                       {soldout
                         ? tradeState[3]
                         : check === 1
-                        ? tradeState[1]
-                        : tradeState[2]}
+                          ? tradeState[1]
+                          : tradeState[2]}
                     </div>
                   </div>
                   {option ? (
@@ -472,3 +473,4 @@ export default function TradeRead() {
     </>
   );
 }
+
