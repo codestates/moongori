@@ -4,7 +4,6 @@ const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
 module.exports = async (req, res) => {
-
   const cookie = req.cookies.accesstoken;
   const category = req.params.category;
   const page = req.query.page;
@@ -19,7 +18,7 @@ module.exports = async (req, res) => {
 
   let list = await newsPost.findAll({
     where: { category: category },
-    include: [{ model: user, attributes: ["nickname", "address"] }],
+    include: [{ model: user, attributes: ["nickname", "town"] }],
     order: [["createdAt", "DESC"]],
     limit: 10,
     offset: offset,
@@ -33,16 +32,14 @@ module.exports = async (req, res) => {
           .status(403)
           .json({ message: "invalid cookie. retry signin" });
       }
-      const userInfo = await user.findOne({
-        where: { id: data.id },
-      });
-      if (userInfo.address === null) {
+
+      if (data.address === null) {
         return res
           .status(400)
           .json({ message: "input address" })
           .redirect(`${process.env.ORIGIN}/mypage`);
       }
-      const town = userInfo.town;
+      const town = data.town;
       list = await newsPost.findAll({
         where: { town: { [Op.like]: `${town}%` }, category: category },
         include: [{ model: user, attributes: ["nickname", "town"] }],
