@@ -12,6 +12,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import NewsPost from "./pages/NewsPost";
 import NewsPostWrite from "./pages/NewsPostWrite";
 import EditNewsPostWrite from "./pages/EditNewsPostWrite";
+import TradeNormalPost from "./pages/TradeNormalPost";
 import axios from "axios";
 
 // import Swal from "sweetalert2";
@@ -80,10 +81,10 @@ export default function App() {
             element={<PrivateRoute login={login} userinfo={userinfo} />}
           />
 
-          {/* 
-          <Route path="/trade-normal/read=:id" element={<TradeNormalPost />} />
-                 
-          <Route
+          {/* <Route path="/trade-normal/read=:id" element={<TradeNormalPost />} /> */}
+          <Route path="/trade-normal/read" element={<TradeNormalPost />} />
+
+          {/* <Route
             path="/trade-suggestion/read=:id"
             element={<TradeSuggestionPost />}
           />
@@ -99,7 +100,7 @@ export default function App() {
 
           {/* <Route path="/chat" element={<Chat />} /> */}
 
-          <Route element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </Wrap>

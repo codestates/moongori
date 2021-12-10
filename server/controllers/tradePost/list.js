@@ -35,16 +35,14 @@ module.exports = async (req, res) => {
           .status(403)
           .json({ message: "invalid cookie. retry signin" });
       }
-      const userInfo = await user.findOne({
-        where: { id: data.id },
-      });
-      if (userInfo.address === null) {
+
+      if (data.address === null) {
         return res
           .status(400)
           .json({ message: "input address" })
           .rediect(`${process.env.ORIGIN}/mypage`);
       }
-      const town = userInfo.town;
+      const town = data.town;
       list = await tradePost.findAll({
         include: [
           {

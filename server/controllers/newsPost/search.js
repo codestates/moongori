@@ -43,10 +43,7 @@ module.exports = async (req, res) => {
             .status(403)
             .json({ message: "invalid cookie. retry signin" });
         }
-        const userInfo = await user.findOne({
-          where: { id: data.id },
-        });
-        const town = userInfo.town;
+        const town = data.town;
         searchNews = await newsPost.findAll({
           where: {
             town: { [Op.like]: `${town}%` },
@@ -95,10 +92,7 @@ module.exports = async (req, res) => {
             .status(403)
             .json({ message: "invalid cookie. retry signin" });
         }
-        const userInfo = await user.findOne({
-          where: { id: data.id },
-        });
-        const town = userInfo.town;
+        const town = data.town;
         searchNews = await newsPost.findAll({
           where: {
             category: category,
