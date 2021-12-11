@@ -197,7 +197,7 @@ const StContentDiv = styled.div`
     .contact {
       background: #aae8c5;
       border: 1px solid #b7b7b7;
-      border-radius: 15px;
+      border-radius: 10px;
       width: 100%;
       height: 40px;
       @media all and (max-width: 768px) {
@@ -308,13 +308,29 @@ export default function TradeRead() {
       });
   };
 
+  const like = async () => {
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/trade/like`, {
+        tradePost_Id: 1
+      }).then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        Swal.fire({
+          icon: "error",
+          title: "로그인 후 이용가능합니다",
+          text: "",
+          footer: "",
+        });
+      })
+  }
+
 
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${1}`)
       .then((res) => {
         setCheck(res.data.data.postInfo.state);
-        setPostInfo(res.data.data);
+        console.log(res.data.data.postInfo.user_Id);
         setPostInfo({
           title: res.data.data.postInfo.title,
           sCost: res.data.data.postInfo.sCost,
@@ -329,7 +345,6 @@ export default function TradeRead() {
       });
   }, []);
 
-  console.log(check);
 
   return (
     <>
@@ -449,9 +464,9 @@ export default function TradeRead() {
                 </div>
                 <div className={"like-box"}>
                   <div className={"like-star"}>
-                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} onClick={like} />
                   </div>
-                  <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
+                  <div className={"like-cnt"} >찜 {postInfo.likes_cnt}</div>
                 </div>
               </div>
             </div>

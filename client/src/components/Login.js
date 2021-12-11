@@ -175,11 +175,11 @@ export default function Login({
   };
 
   const handlekakaoLoginBtn = async () => {
-    await window.location.assign("http://localhost:80/user/kakao");
+    await window.location.assign(`${process.env.REACT_APP_API_URL}/user/kakao`);
     handleLoginSuccess();
   };
   const handlegoogleLoginBtn = async () => {
-    await window.location.assign("http://localhost:80/user/google");
+    await window.location.assign(`${process.env.REACT_APP_API_URL}/user/google`);
     handleLoginSuccess();
   };
 
