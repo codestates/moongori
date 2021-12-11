@@ -161,6 +161,7 @@ export default function NewsList({ userinfo, login }) {
             `${process.env.REACT_APP_API_URL}/news?search=${inputSearchRef.current.value}&page=1`
           )
           .then((res) => {
+            console.log("실행");
             if (res.status === 204) {
               isLoading(false);
               setNewsList([]);
@@ -370,7 +371,7 @@ export default function NewsList({ userinfo, login }) {
               type={"text"}
               placeholder={"검색"}
               ref={inputSearchRef}
-              onKeyDown={(e) => handleSearch(e)}
+              onKeyPress={(e) => handleSearch(e)}
             ></input>
             <FontAwesomeIcon
               icon={faSearch}

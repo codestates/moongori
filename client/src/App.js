@@ -26,7 +26,7 @@ const Wrap = styled.div`
 `;
 
 export default function App() {
-  const [userinfo, setUserinfo] = useState(null);
+  const [userinfo, setUserinfo] = useState({});
   const [login, isLogin] = useState(false);
 
   const isAuthenticated = () => {
@@ -78,11 +78,17 @@ export default function App() {
 
           <Route
             path="/mypage"
-            element={<PrivateRoute login={login} userinfo={userinfo} />}
+            element={
+              <PrivateRoute
+                login={login}
+                userinfo={userinfo}
+                isAuthenticated={isAuthenticated}
+              />
+            }
           />
 
           {/* <Route path="/trade-normal/read=:id" element={<TradeNormalPost />} /> */}
-          <Route path="/trade-normal/read" element={<TradeNormalPost />} />
+          <Route path="/trade-normal/read" element={<TradeNormalPost userinfo={userinfo} login={login} />} />
 
           {/* <Route
             path="/trade-suggestion/read=:id"
