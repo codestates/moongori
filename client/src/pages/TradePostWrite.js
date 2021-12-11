@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera, faMinusSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCamera,
+  faMinusSquare,
+  faCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import Swal from "sweetalert2";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { addDays } from "date-fns";
 import ko from "date-fns/locale/ko";
 registerLocale("ko", ko);
 
@@ -97,6 +103,10 @@ const StContentsDiv = styled.div`
       }
     }
   }
+  .guide-text {
+    margin-bottom: 10px;
+    color: red;
+  }
   .calendar {
     display: flex;
     align-items: center;
@@ -119,11 +129,24 @@ const StContentsDiv = styled.div`
 const StPreviewDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
+`;
+
+const StImageDiv = styled.div`
+  position: ${(props) => (props.select ? "relative" : null)};
   img {
     height: 100px;
     width: 100px;
     margin-bottom: 10px;
+    opacity: ${(props) => (props.select ? "0.5" : null)};
+  }
+  .select-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    color: #92e3a9;
   }
 `;
 
@@ -132,8 +155,12 @@ export default function TradePostWrite() {
   const [normalOrNot, setNormalOrNot] = useState(0);
   const [imgFiles, setImgFiles] = useState([]); // 서버에 보내는 이미지 파일
   const [images, setImages] = useState([]); // 화면에 표현해주는 이미지
-  const [startDate, setStartDate] = useState(new Date());
-  console.log("startDate;;", startDate);
+  const [imgNum, setImgNum] = useState(null); // 대표사진 index
+  const [endDate, setEndDate] = useState(null);
+  const inputTitleRef = useRef(null);
+  const inputCostRef = useRef(null);
+  const inputContentsRef = useRef(null);
+
   // 일반, 제시 변경하는 경우
   const handleNormalOrNot = (e) => {
     setNormalOrNot(Number(e.target.value));
@@ -141,7 +168,6 @@ export default function TradePostWrite() {
 
   // 사진 업로드하는 경우
   const handleUploadImg = (e) => {
-    // console.log(e.target.files);
     if (imgFiles.length + e.target.files.length <= 5) {
       const file = [];
       const imgUrl = [];
@@ -152,7 +178,6 @@ export default function TradePostWrite() {
         imgUrl.push(URL.createObjectURL(e.target.files[key]));
         count++;
       }
-      console.log(file, imgUrl);
       setImgFiles([...imgFiles, ...file]);
       setImages([...images, ...imgUrl]);
     } else {
@@ -163,15 +188,40 @@ export default function TradePostWrite() {
     }
   };
 
+  // 대표사진 클릭하는 경우
+  const handleMainImg = (index) => {
+    setImgNum(index);
+  };
+
   // 업로드할 사진 삭제하는 경우
   const handelDeleteImg = (index) => {
-    console.log(index);
     const copyImages = images.slice();
     const copyImgFiles = imgFiles.slice();
     copyImgFiles.splice(index, 1);
     copyImages.splice(index, 1);
     setImgFiles(copyImgFiles);
     setImages(copyImages);
+    if (index === imgNum) {
+      setImgNum(null);
+    }
+  };
+
+  // 마감기한을 설정하는 경우
+  const handleEndDate = (date) => {
+    const today = new Date();
+    date.setHours(23);
+    date.setMinutes(59);
+    const distance = date.getTime() - today.getTime();
+    const day = Math.floor(distance / 1000 / 60 / 60 / 24);
+    console.log(date);
+    if (day > 0 && day <= 7) {
+      setEndDate(date);
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "마감기한을 7일이내로 설정해주세요.",
+      });
+    }
   };
 
   // 취소 버튼 누른 경우
@@ -181,7 +231,40 @@ export default function TradePostWrite() {
 
   // 완료 버튼 누른 경우
   const handleRegister = () => {
-    const formData = new FormData();
+    const title = inputTitleRef.current.value;
+    const cost = inputCostRef.current.value;
+    const contents = inputContentsRef.current.value;
+    const copyImgFiles = imgFiles.slice();
+    const files = [...copyImgFiles.splice(imgNum, 1), ...copyImgFiles];
+    console.log(files);
+    if (title && cost && contents && files.length && imgNum !== null) {
+      const formData = new FormData();
+      for (let file of files) {
+        formData.append("img", file);
+      }
+      formData.append("title", title);
+      formData.append("sCost", cost);
+      formData.append("content", contents);
+      formData.append("normalOrNot", normalOrNot);
+      formData.append("endTime", endDate);
+      console.log(formData.getAll("img"));
+      const config = {
+        Headers: {
+          "content-type": "multipart/form-data",
+        },
+      };
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/trade/post`, formData, config)
+        .then((res) => {
+          console.log(res.data);
+          // navigate(`/trade=${normalOrNot}`);
+        });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "모든 항목을 입력해주세요.",
+      });
+    }
   };
 
   return (
@@ -211,11 +294,21 @@ export default function TradePostWrite() {
         <div className={"info"}>
           <StContentsDiv>
             <div className={"name"}>제목</div>
-            <input type={"text"} />
+            <input
+              type={"text"}
+              placeholder={"제목을 입력해주세요."}
+              ref={inputTitleRef}
+              required
+            />
           </StContentsDiv>
           <StContentsDiv>
             <div className={"name"}>가격</div>
-            <input type={"text"} />
+            <input
+              type={"number"}
+              placeholder={"가격을 입력해주세요."}
+              ref={inputCostRef}
+              required
+            />
           </StContentsDiv>
           <StContentsDiv>
             <div className={"name"}>상품 이미지</div>
@@ -226,6 +319,9 @@ export default function TradePostWrite() {
                   <div>{`${imgFiles.length} / 5`}</div>
                 </div>
               </label>
+              {imgFiles.length ? (
+                <div className={"guide-text"}>대표사진을 선택해주세요.</div>
+              ) : null}
               <input
                 type="file"
                 name="file"
@@ -238,14 +334,24 @@ export default function TradePostWrite() {
               <StPreviewDiv>
                 {images.map((image, index) => {
                   return (
-                    <div>
+                    <StImageDiv key={index} select={imgNum === index}>
                       <FontAwesomeIcon
                         icon={faMinusSquare}
                         pull={"left"}
                         onClick={() => handelDeleteImg(index)}
                       />
-                      <img src={image} alt={"미리보기 이미지"} />
-                    </div>
+                      <img
+                        src={image}
+                        alt={"미리보기 이미지"}
+                        onClick={() => handleMainImg(index)}
+                      />
+                      {imgNum === index ? (
+                        <FontAwesomeIcon
+                          className={"select-img"}
+                          icon={faCheck}
+                        />
+                      ) : null}
+                    </StImageDiv>
                   );
                 })}
               </StPreviewDiv>
@@ -262,8 +368,19 @@ export default function TradePostWrite() {
                   />
                   <DatePicker
                     locale={ko}
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    dateFormat="yyyy/MM/dd"
+                    placeholderText="마감날짜"
+                    selected={endDate}
+                    highlightDates={[
+                      addDays(new Date(), 1),
+                      addDays(new Date(), 2),
+                      addDays(new Date(), 3),
+                      addDays(new Date(), 4),
+                      addDays(new Date(), 5),
+                      addDays(new Date(), 6),
+                      addDays(new Date(), 7),
+                    ]}
+                    onChange={(date) => handleEndDate(date)}
                   />
                   <div className={"warning-text"}>최대 7일까지 가능합니다.</div>
                 </div>
@@ -271,7 +388,12 @@ export default function TradePostWrite() {
             ) : null}
             <StContentsDiv suggestion>
               <div className={"name"}>설명</div>
-              <textarea type={"text"} required />
+              <textarea
+                type={"text"}
+                placeholder={"상품설명을 입력해주세요."}
+                ref={inputContentsRef}
+                required
+              />
             </StContentsDiv>
           </div>
         </div>

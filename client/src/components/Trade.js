@@ -79,8 +79,7 @@ export const tradeState = {
   1: "판매중",
   2: "예약중",
   3: "거래완료",
-  4: "제시",
-  5: "마감",
+  4: "마감",
 };
 
 export const tradeCategory = {
@@ -135,7 +134,7 @@ export default function Trade({ trade, num, login, userinfo }) {
                 <div>{trade.sCost.toLocaleString()} 원</div>
               )}
               {trade.normalOrNot ? (
-                trade.state === 4 ? (
+                trade.state === 1 ? (
                   <StTradeStateDiv background={"#AAE8E1"}>
                     {endForToday(trade.endTime)}
                   </StTradeStateDiv>
