@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-import { faStar } from "@fortawesome/free-regular-svg-icons";
 import {
   faEllipsisV,
   faWifi,
@@ -12,6 +11,8 @@ import {
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-regular-svg-icons";
+import { faStar as rStar } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import SimpleSlider from "../components/Slider";
 
@@ -200,7 +201,7 @@ const StContentDiv = styled.div`
     .contact {
       background: #aae8c5;
       border: 1px solid #b7b7b7;
-      border-radius: 15px;
+      border-radius: 10px;
       width: 100%;
       height: 40px;
       @media all and (max-width: 768px) {
@@ -259,20 +260,23 @@ const StOptionMenuDiv = styled.ul`
   }
 `;
 
-export default function TradeRead() {
+export default function TradeRead({ login, userinfo }) {
   //const { id } = useParams();
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(true);
   const [option, setOption] = useState(false);
   const [postInfo, setPostInfo] = useState({
     title: "",
     sCost: "",
     img: "",
-    nickname: "",
-    town: "",
-    user_img: "",
-    likes_cnt: "",
+    user: {
+      img: "",
+      nickname: "",
+      town: "",
+    },
+    likes_cnt: 0,
     content: "",
   });
+  const [likeState, setLikeState] = useState(false);
 
   //판매 상태 true면 판매중, false면 예약중
   const [state, setState] = useState(true);
@@ -312,51 +316,93 @@ export default function TradeRead() {
       });
   };
 
+  const like = async () => {
+    console.log("likeState;;", likeState)
+    if (likeState) {
+      await axios
+        .delete(`${process.env.REACT_APP_API_URL}/trade/like`, {
+          data: { tradePost_Id: 1 }
+        }).then((res) => {
+          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt - 1 })
+          console.log("/trade/like", res.data);
+          setLikeState(false);
+        }).catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "로그인 후 이용가능합니다",
+            text: "",
+            footer: "",
+          });
+        })
+    } else {
+      await axios
+        .post(`${process.env.REACT_APP_API_URL}/trade/like`, {
+          tradePost_Id: 1
+        }).then((res) => {
+          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt + 1 })
+          console.log("/trade/like", res.data);
+          setLikeState(true);
+        }).catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "로그인 후 이용가능합니다",
+            text: "",
+            footer: "",
+          });
+        })
+
+    }
+
+  }
+
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${1}`)
       .then((res) => {
         setCheck(res.data.data.postInfo.state);
-        setPostInfo(res.data.data);
-        setPostInfo({
-          title: res.data.data.postInfo.title,
-          sCost: res.data.data.postInfo.sCost,
-          img: res.data.data.postInfo.img,
-          nickname: res.data.data.postInfo.user.nickname,
-          town: res.data.data.postInfo.user.town,
-          user_img: res.data.data.postInfo.user.img,
-          likes_cnt: res.data.data.like_cnt.length,
-          content: res.data.data.postInfo.content,
-        });
-        console.log(res.data.data);
-      });
-  }, []);
+        console.log(res.data.data.postInfo);
+        setPostInfo(res.data.data.postInfo);
 
-  console.log(check);
-
+        res.data.data.postInfo.likes.map((el) => {
+          if (login) {
+            if (el.user_Id === userinfo.id) {
+              setLikeState(true)
+            }
+          }
+        }
+        )
+      }
+      )
+  }, [login]);
   return (
     <>
       {option ? (
         <StOptionMenuDiv>
-          {edit ? (
+          {edit ? (postInfo.id === userinfo.id ? (
             <li
               onClick={() => {
-                setEdit(!edit);
+                if (postInfo.id === userinfo.id) {
+                  setEdit(!edit);
+                }
               }}
             >
               게시글 수정
               <i class="fas fa-arrow-right"></i>
             </li>
-          ) : (
-            <li
-              onClick={() => {
-                setEdit(!edit);
-              }}
-            >
-              수정 완료
-              <i class="fas fa-arrow-right"></i>
-            </li>
-          )}
+          ) : null)
+            : (
+              <li
+                onClick={() => {
+                  if (postInfo.id === userinfo.id) {
+                    setEdit(!edit);
+                  }
+                }}
+              >
+                수정 완료
+                <i class="fas fa-arrow-right"></i>
+              </li>
+            )}
 
           {check === 1 ? (
             <li
@@ -425,8 +471,8 @@ export default function TradeRead() {
                       {soldout
                         ? tradeState[3]
                         : check === 1
-                        ? tradeState[1]
-                        : tradeState[2]}
+                          ? tradeState[1]
+                          : tradeState[2]}
                     </div>
 
                     {option ? (
@@ -452,10 +498,10 @@ export default function TradeRead() {
                 <div className={"content-tail"}>
                   <div className={"nickname-box"}>
                     <div className={"profile-img"}>
-                      <img src={postInfo.user_img} className={"image"}></img>
+                      <img src={postInfo.user.img} className={"image"}></img>
                     </div>
-                    <div className={"nickname"}>{postInfo.nickname}</div>
-                    <div className={"towninfo"}>{postInfo.town}</div>
+                    <div className={"nickname"}>{postInfo.user.nickname}</div>
+                    <div className={"towninfo"}>{postInfo.user.town}</div>
                   </div>
                   <div className={"trade-info-box"}>
                     <div className={"trade-cnt"}>판매 103</div>
@@ -465,7 +511,9 @@ export default function TradeRead() {
                   </div>
                   <div className={"like-box"}>
                     <div className={"like-star"}>
-                      <FontAwesomeIcon icon={faStar} />
+                      {likeState ? <FontAwesomeIcon icon={rStar} onClick={like} />
+                        : <FontAwesomeIcon icon={faStar} onClick={like} />
+                      }
                     </div>
                     <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
                   </div>
@@ -501,8 +549,8 @@ export default function TradeRead() {
                       {soldout
                         ? tradeState[3]
                         : check === 1
-                        ? tradeState[1]
-                        : tradeState[2]}
+                          ? tradeState[1]
+                          : tradeState[2]}
                     </div>
 
                     {option ? (
@@ -534,10 +582,10 @@ export default function TradeRead() {
                 <div className={"content-tail"}>
                   <div className={"nickname-box"}>
                     <div className={"profile-img"}>
-                      <img src={postInfo.user_img} className={"image"}></img>
+                      <img src={postInfo.user.img} className={"image"}></img>
                     </div>
-                    <div className={"nickname"}>{postInfo.nickname}</div>
-                    <div className={"towninfo"}>{postInfo.town}</div>
+                    <div className={"nickname"}>{postInfo.user.nickname}</div>
+                    <div className={"towninfo"}>{postInfo.user.town}</div>
                   </div>
                   <div className={"trade-info-box"}>
                     <div className={"trade-cnt"}>판매 103</div>
