@@ -146,7 +146,6 @@ export default function Header({ login, handleLoginSuccess, handleLogout }) {
     isMenu(false);
     isLoginModal(false);
   };
-
   return (
     <>
       <StHeadBoxDiv>

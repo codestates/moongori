@@ -375,7 +375,7 @@ const StCategoryButton = styled.button.attrs((props) => ({
   }
 `;
 
-export default function Mypage({ login, userinfo }) {
+export default function Mypage({ userinfo, isAuthenticated }) {
   //카테고리 별 게시글 받아오기
   const [data, setData] = useState(false);
   const [loading, isLoading] = useState(true);
@@ -393,6 +393,8 @@ export default function Mypage({ login, userinfo }) {
     town: userinfo.town,
   });
   //이미지 보낼때 사용
+  console.log(editInfo);
+  console.log(userinfo);
   const [image, setImage] = useState("");
 
   //이미지 보이기용
@@ -468,6 +470,7 @@ export default function Mypage({ login, userinfo }) {
     setImage(imageFile);
     setImgFile(imageUrl); // 파일 상태 업데이트
     setCheckEdit(true);
+    setEditInfo({ ...editInfo, img: imageFile });
   };
 
   //수정 요청
@@ -497,9 +500,10 @@ export default function Mypage({ login, userinfo }) {
         .post(`${process.env.REACT_APP_API_URL}/user`, formData, config)
         .then((res) => {
           console.log(res.data.data);
+          isAuthenticated(res.data.data);
           setEditInfo(res.data.data);
           Swal.fire({
-            icon: "sucess",
+            icon: "success",
             title: "변경되었습니다",
             text: "",
             footer: "",
@@ -527,11 +531,12 @@ export default function Mypage({ login, userinfo }) {
       }
       fullAddr += extraAddr;
     }
+
     setEditInfo({ ...editInfo, town: data.bname, address: fullAddr });
     isOpenPost(false);
     setCheckEdit(true);
   };
-  console.log(editInfo);
+
   const postCodeStyle = {
     display: "block",
     position: "fixed",
@@ -577,7 +582,7 @@ export default function Mypage({ login, userinfo }) {
       })
       .catch();
   };
-  console.log(myComment);
+
   return (
     <Body>
       <StMypageHead>
@@ -587,11 +592,19 @@ export default function Mypage({ login, userinfo }) {
               //기존 상태
               <div className={"mypage-wrap"}>
                 <div className={"mypage-profile-box"}>
-                  <img
-                    src={`${editInfo.img}`}
-                    alt=""
-                    className={"profile-img"}
-                  ></img>
+                  {checkEdit ? (
+                    <img
+                      src={`${editInfo.img}`}
+                      alt=""
+                      className={"profile-img"}
+                    ></img>
+                  ) : (
+                    <img
+                      src={`${userinfo.img}`}
+                      alt=""
+                      className={"profile-img"}
+                    ></img>
+                  )}
                 </div>
                 <div className={"mypage-userinfo-box"}>
                   <div className={"edit-wrap"}>
