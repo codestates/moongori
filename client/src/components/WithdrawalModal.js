@@ -124,7 +124,7 @@ export default function WithdrawalModal({ modalClose2 }) {
       });
     } else {
       axios
-        .delete("http://localhost:80/user")
+        .delete(`${process.env.REACT_APP_API_URL}/user`)
         .then((res) => {
           Swal.fire({
             icon: "success",

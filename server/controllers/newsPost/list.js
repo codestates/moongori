@@ -32,12 +32,6 @@ module.exports = async (req, res) => {
           .json({ message: "invalid cookie. retry signin" });
       }
 
-      if (data.address === null) {
-        return res
-          .status(400)
-          .json({ message: "input address" })
-          .redirect(`${process.env.ORIGIN}/mypage`);
-      }
       const town = data.town;
       list = await newsPost.findAll({
         where: { town: { [Op.like]: `${town}%` } },

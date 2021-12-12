@@ -222,6 +222,9 @@ export default function TradeList({ login, userinfo }) {
   };
 
   useEffect(() => {
+    if (userinfo.address === null) {
+      navigate('/mypage')
+    }
     navigate(`/trade=${category}`);
     requestTrade();
   }, [category]);

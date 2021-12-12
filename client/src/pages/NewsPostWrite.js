@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkedAlt, faImage } from "@fortawesome/free-solid-svg-icons";
+import { faMapMarkedAlt, faImage, faMinusSquare, } from "@fortawesome/free-solid-svg-icons";
 import MapContainer from "../components/MapContainer";
 import DaumPostcode from "react-daum-postcode";
 import axios from "axios";
@@ -262,6 +262,19 @@ export default function NewsPostWrite({ searchPlace }) {
     }
   };
 
+  // 이미지 삭제하는 함수
+  const deleteImg = () => {
+    setImage(null);
+    setShowImg(true);
+
+  };
+
+  // 지도 삭제하는 함수
+  const deleteMap = () => {
+    setLocation({ ...location, address: null });
+    setShowMap(true);
+
+  };
   return (
     <>
       <StNewsPostWriteHead>
@@ -320,6 +333,7 @@ export default function NewsPostWrite({ searchPlace }) {
             {showImg ? (
               <div className={"picture-area"}>
                 {/* <div className={"add-img"}></div> */}
+                <FontAwesomeIcon icon={faMinusSquare} onClick={deleteImg} />
                 <StuploadIimg
                   src={imgFile}
                   alt={"게시글 이미지"}
@@ -329,6 +343,7 @@ export default function NewsPostWrite({ searchPlace }) {
           </div>
           {showMap ? (
             <div className={"location-wrap"}>
+              <FontAwesomeIcon icon={faMinusSquare} onClick={deleteImg} />
               <MapContainer locationInfo={locationInfo} />
             </div>
           ) : null}

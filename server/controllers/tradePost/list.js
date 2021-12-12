@@ -35,13 +35,6 @@ module.exports = async (req, res) => {
           .status(403)
           .json({ message: "invalid cookie. retry signin" });
       }
-
-      if (data.address === null) {
-        return res
-          .status(400)
-          .json({ message: "input address" })
-          .rediect(`${process.env.ORIGIN}/mypage`);
-      }
       const town = data.town;
       list = await tradePost.findAll({
         include: [
