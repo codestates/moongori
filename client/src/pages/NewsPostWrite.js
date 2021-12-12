@@ -349,7 +349,7 @@ export default function NewsPostWrite({ searchPlace }) {
                 creatNewsPost();
               }}
             >
-              완료
+              등록
             </button>
           </div>
         </StButtonBox>

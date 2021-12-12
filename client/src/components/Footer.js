@@ -6,6 +6,7 @@ const FooterBox = styled.div`
   background-color: #777777;
   color: #ffffff;
   position: relative;
+  left: 0px;
   bottom: 0px;
   display: flex;
   flex-direction: column;
