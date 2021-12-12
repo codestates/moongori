@@ -89,17 +89,15 @@ export default function App() {
             }
           />
 
-          <Route path="/trade-normal/read=:id" element={<TradeNormalPost userinfo={userinfo} login={login} />} />
+          <Route
+            path="/trade-normal/read=:id"
+            element={<TradeNormalPost userinfo={userinfo} login={login} />}
+          />
 
           <Route
             path="/trade-suggestion/read=:id"
-
             element={<TradeSuggestionPost userinfo={userinfo} login={login} />}
           />
-
-          {/*<Route path="/trade/write" element={<TradePostWrite />} /> */}
-            element={<TradeSuggestionPost />}
-          /> */}
 
           <Route path="/trade/write" element={<TradePostWrite />} />
 

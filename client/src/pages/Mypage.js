@@ -582,6 +582,11 @@ export default function Mypage({ userinfo, isAuthenticated }) {
       })
       .catch();
   };
+  // 닉네임 유효성 검사 함수
+  const isNickname = (value) => {
+    let regExp = /^[가-힣]{3,8}$/;
+    return regExp.test(value);
+  };
 
   return (
     <Body>

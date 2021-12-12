@@ -34,6 +34,8 @@ const StContentsHeadDiv = styled.div`
       }
     }
     input {
+      border: 1px solid gray;
+      margin-right: 10px;
       border-radius: 10px;
       height: 20px;
     }
@@ -44,6 +46,7 @@ const StContentsHeadDiv = styled.div`
 `;
 
 const StCategoryButtonReUse = styled(StCategoryButton)`
+  border: 1px solid #b7b7b7;
   margin: 20px 10px 20px 0;
   @media all and (max-width: 540px) {
     width: 60px;
@@ -223,7 +226,7 @@ export default function TradeList({ login, userinfo }) {
 
   useEffect(() => {
     if (userinfo.address === null) {
-      navigate('/mypage')
+      navigate("/mypage");
     }
     navigate(`/trade=${category}`);
     requestTrade();

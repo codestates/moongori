@@ -34,6 +34,7 @@ export const StCategoryButton = styled.button`
   background: ${(props) => (props.select ? "#92E3A9" : "#EFEFEF")};
   cursor: pointer;
   border-radius: 10px;
+  border: 1px solid #b7b7b7;
   width: 80px;
   height: 30px;
   margin: 20px;
@@ -78,6 +79,8 @@ const StAddressSearchDiv = styled.div`
   }
   .search {
     input {
+      border: 1px solid gray;
+      margin-right: 10px;
       border-radius: 10px;
       height: 20px;
     }
@@ -274,7 +277,7 @@ export default function NewsList({ userinfo, login }) {
 
   useEffect(() => {
     if (userinfo.address === null) {
-      navigate('/mypage')
+      navigate("/mypage");
     }
     navigate(`/news=${category.number}`);
     requestNews();
