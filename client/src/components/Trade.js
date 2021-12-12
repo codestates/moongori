@@ -34,7 +34,7 @@ const StTradeDiv = styled(StNewsDiv)`
 `;
 
 const StContentsDiv = styled.div`
-margin-top:10px;
+  margin-top: 10px;
   .trade-img {
     text-align: center;
     img {
@@ -113,7 +113,13 @@ export function endForToday(value) {
 export default function Trade({ trade, num, login, userinfo }) {
   return (
     <StTradeDiv num={num % 2}>
-      <Link to={trade.normalOrNot === 0 ? (`/trade-normal/read=${trade.id}`) : (`/trade-suggestion/read=${trade.id}`)}>
+      <Link
+        to={
+          trade.normalOrNot === 0
+            ? `/trade-normal/read=${trade.id}`
+            : `/trade-suggestion/read=${trade.id}`
+        }
+      >
         <div className={"wrap"}>
           <div className={"category"}>{tradeCategory[trade.normalOrNot]}</div>
           <StContentsDiv>
@@ -139,9 +145,13 @@ export default function Trade({ trade, num, login, userinfo }) {
               {trade.normalOrNot ? (
                 trade.state === 1 ? (
                   <StTradeStateDiv background={"#AAE8E1"}>
-                    {endForToday(trade.endTime)}
+                    {endForToday(trade.endDate)}
                   </StTradeStateDiv>
-                ) : null
+                ) : (
+                  <StTradeStateDiv background={"#C4C4C4"}>
+                    {tradeState[trade.state]}
+                  </StTradeStateDiv>
+                )
               ) : trade.state !== 1 ? (
                 <StTradeStateDiv
                   background={trade.state === 2 ? "#92E3A9" : "#C4C4C4"}
@@ -153,8 +163,8 @@ export default function Trade({ trade, num, login, userinfo }) {
           </StContentsDiv>
           <div className={"like"}>
             {login &&
-              trade.likes.filter((like) => userinfo.id === like.user_Id)
-                .length ? (
+            trade.likes.filter((like) => userinfo.id === like.user_Id)
+              .length ? (
               <FontAwesomeIcon icon={solidStart} />
             ) : (
               <FontAwesomeIcon icon={regularStart} />
