@@ -85,10 +85,10 @@ export default function TradeList({ login, userinfo }) {
       inputSearchRef.current.value !== "" &&
       (e.key === "Enter" || e.type === "click")
     ) {
-      if (category.number) {
+      if (category !== "all") {
         axios
           .get(
-            `${process.env.REACT_APP_API_URL}/trade/${category.number}?search=${inputSearchRef.current.value}&page=1`
+            `${process.env.REACT_APP_API_URL}/trade/${category}?search=${inputSearchRef.current.value}&page=1`
           )
           .then((res) => {
             if (res.status === 204) {
@@ -132,11 +132,11 @@ export default function TradeList({ login, userinfo }) {
   const requestTrade = async () => {
     isLoading(true);
     isFetch(true);
-    if (category.number) {
+    if (category !== "all") {
       if (inputSearchRef.current.value !== "") {
         axios
           .get(
-            `${process.env.REACT_APP_API_URL}/trade/${category.number}?search=${inputSearchRef.current.value}&page=${page}`
+            `${process.env.REACT_APP_API_URL}/trade/${category}?search=${inputSearchRef.current.value}&page=${page}`
           )
           .then((res) => {
             if (res.status === 204) {
@@ -154,7 +154,7 @@ export default function TradeList({ login, userinfo }) {
       } else {
         await axios
           .get(
-            `${process.env.REACT_APP_API_URL}/trade/list/${category.number}?page=${page}`
+            `${process.env.REACT_APP_API_URL}/trade/list/${category}?page=${page}`
           )
           .then((res) => {
             if (res.status === 204) {
@@ -223,7 +223,7 @@ export default function TradeList({ login, userinfo }) {
 
   useEffect(() => {
     if (userinfo.address === null) {
-      navigate('/mypage')
+      navigate("/mypage");
     }
     navigate(`/trade=${category}`);
     requestTrade();
