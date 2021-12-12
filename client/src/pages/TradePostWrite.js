@@ -79,6 +79,10 @@ const StContentsDiv = styled.div`
     font-size: 1em;
     outline-color: #92e3a9;
   }
+  // input태그에 type이 number인 경우 옆에 화살표 안뜨게 하기
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
   textarea {
     width: 60%;
     height: 200px;
@@ -123,6 +127,14 @@ const StContentsDiv = styled.div`
       font-size: 0.8em;
       width: 40%;
     }
+    @media all and (max-width: 768px) {
+      .warning-text {
+        display: none;
+      }
+      .react-datepicker-wrapper {
+        width: 100%;
+      }
+    }
   }
 `;
 
@@ -139,6 +151,7 @@ const StImageDiv = styled.div`
     width: 100px;
     margin-bottom: 10px;
     opacity: ${(props) => (props.select ? "0.5" : null)};
+    margin: 10px;
   }
   .select-img {
     position: absolute;
@@ -163,6 +176,9 @@ export default function TradePostWrite() {
 
   // 일반, 제시 변경하는 경우
   const handleNormalOrNot = (e) => {
+    if (e.target.value === "0") {
+      setEndDate(null);
+    }
     setNormalOrNot(Number(e.target.value));
   };
 
@@ -203,6 +219,8 @@ export default function TradePostWrite() {
     setImages(copyImages);
     if (index === imgNum) {
       setImgNum(null);
+    } else if (index < imgNum) {
+      setImgNum((preState) => preState - 1);
     }
   };
 
@@ -246,23 +264,61 @@ export default function TradePostWrite() {
       formData.append("sCost", cost);
       formData.append("content", contents);
       formData.append("normalOrNot", normalOrNot);
-      formData.append("endTime", endDate);
-      console.log(formData.getAll("img"));
       const config = {
         Headers: {
           "content-type": "multipart/form-data",
         },
       };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/trade/post`, formData, config)
-        .then((res) => {
-          console.log(res.data);
-          // navigate(`/trade=${normalOrNot}`);
+      if (normalOrNot && endDate !== null) {
+        formData.append("endDate", endDate);
+        axios
+          .post(`${process.env.REACT_APP_API_URL}/trade/post`, formData, config)
+          .then((res) => {
+            console.log(res.data);
+            navigate(`/trade=all`);
+          });
+      } else if (normalOrNot === 0) {
+        axios
+          .post(`${process.env.REACT_APP_API_URL}/trade/post`, formData, config)
+          .then((res) => {
+            console.log(res.data);
+            navigate(`/trade=all`);
+          });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "마감날짜를 설정해주세요.",
         });
+      }
+    } else if (title === "") {
+      Swal.fire({
+        icon: "error",
+        title: "제목을 입력해주세요.",
+      });
+    } else if (cost === "") {
+      Swal.fire({
+        icon: "error",
+        title: "가격을 입력해주세요.",
+      });
+    } else if (!imgFiles.length) {
+      Swal.fire({
+        icon: "error",
+        title: "상품 이미지를 올려주세요.",
+      });
+    } else if (!imgNum) {
+      Swal.fire({
+        icon: "error",
+        title: "대표 사진을 선택해주세요.",
+      });
+    } else if (contents === "") {
+      Swal.fire({
+        icon: "error",
+        title: "설명을 확인해주세요.",
+      });
     } else {
       Swal.fire({
         icon: "error",
-        title: "모든 항목을 입력해주세요.",
+        title: "모든 항목을 확인해주세요.",
       });
     }
   };
