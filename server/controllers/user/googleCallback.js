@@ -39,7 +39,6 @@ module.exports = async (req, res) => {
       id: findUser.id,
       email: findUser.email,
       nickname: findUser.nickname,
-      userArea: findUser.userArea,
       img: findUser.img,
       loginType: true,
     };

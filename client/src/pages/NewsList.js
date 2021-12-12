@@ -273,6 +273,9 @@ export default function NewsList({ userinfo, login }) {
   };
 
   useEffect(() => {
+    if (userinfo.address === null) {
+      navigate('/mypage')
+    }
     navigate(`/news=${category.number}`);
     requestNews();
   }, [category]);
