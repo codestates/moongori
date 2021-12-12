@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       user_Id: DataTypes.INTEGER,
       title: DataTypes.STRING,
       content: DataTypes.TEXT,
-      cCost: DataTypes.INTEGER,
+      cCost: { defaultValue: 0, type: DataTypes.INTEGER },
       img: DataTypes.TEXT,
       normalOrNot: DataTypes.INTEGER,
       sCost: DataTypes.INTEGER,

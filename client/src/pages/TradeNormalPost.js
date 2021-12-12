@@ -317,7 +317,7 @@ export default function TradeNoramlPost({ login, userinfo }) {
     if (likeState) {
       await axios
         .delete(`${process.env.REACT_APP_API_URL}/trade/like`, {
-          data: { tradePost_Id: 1 }
+          data: { tradePost_Id: id }
         }).then((res) => {
           setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt - 1 })
           console.log("/trade/like", res.data);
@@ -333,7 +333,7 @@ export default function TradeNoramlPost({ login, userinfo }) {
     } else {
       await axios
         .post(`${process.env.REACT_APP_API_URL}/trade/like`, {
-          tradePost_Id: 1
+          tradePost_Id: id
         }).then((res) => {
           setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt + 1 })
           console.log("/trade/like", res.data);
