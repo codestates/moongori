@@ -139,7 +139,7 @@ export default function Trade({ trade, num, login, userinfo }) {
               {trade.normalOrNot ? (
                 trade.state === 1 ? (
                   <StTradeStateDiv background={"#AAE8E1"}>
-                    {endForToday(trade.endTime)}
+                    {endForToday(trade.endDate)}
                   </StTradeStateDiv>
                 ) : null
               ) : trade.state !== 1 ? (

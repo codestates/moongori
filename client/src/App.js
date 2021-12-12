@@ -97,9 +97,6 @@ export default function App() {
             element={<TradeSuggestionPost userinfo={userinfo} login={login} />}
           />
 
-          {/*<Route path="/trade/write" element={<TradePostWrite />} /> */}
-            element={<TradeSuggestionPost />}
-          /> */}
 
           <Route path="/trade/write" element={<TradePostWrite />} />
 

@@ -13,7 +13,7 @@ import { faStar as rStar, faPencilAlt } from "@fortawesome/free-solid-svg-icons"
 import axios from "axios";
 import SimpleSlider from "../components/Slider";
 import { tradeState } from "../components/Trade";
-import { category, timeForToday, StContentInfoDiv } from "../components/News";
+import { StContentInfoDiv } from "../components/News";
 axios.defaults.withCredentials = true;
 
 
@@ -425,7 +425,7 @@ export default function TradeSuggestionPost({ login, userinfo }) {
     if (likeState) {
       await axios
         .delete(`${process.env.REACT_APP_API_URL}/trade/like`, {
-          data: { tradePost_Id: 1 }
+          data: { tradePost_Id: id }
         }).then((res) => {
           setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt - 1 })
           console.log("/trade/like", res.data);
@@ -441,7 +441,7 @@ export default function TradeSuggestionPost({ login, userinfo }) {
     } else {
       await axios
         .post(`${process.env.REACT_APP_API_URL}/trade/like`, {
-          tradePost_Id: 1
+          tradePost_Id: id
         }).then((res) => {
           setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt + 1 })
           console.log("/trade/like", res.data);
@@ -525,7 +525,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
         setCCost(res.data.data.postInfo.cCost)
         setPostInfo(res.data.data.postInfo);
         setPriceList(res.data.data.postInfo.suggestions.reverse());
-
         res.data.data.postInfo.likes.map((el) => {
           if (login) {
             if (el.user_Id === userinfo.id) {
