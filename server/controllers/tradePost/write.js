@@ -4,39 +4,34 @@ module.exports = async (req, res) => {
   const id = req.cookies.id;
 
   try {
-    if (req.files.length > 0) {
-      const img = req.files.map((el) => el.location).join(",");
-      const { title, content, sCost, nomalOrNot, endTime } = req.body;
-      const payload = {
+    req.files.length > 0;
+    const img = req.files.map((el) => el.location).join(",");
+    const { title, content, sCost, normalOrNot, endDate } = req.body;
+    let payload = {
+      title,
+      content,
+      img,
+      normalOrNot,
+      sCost,
+      state: 1,
+      user_Id: id,
+    };
+    if (req.body.normalOrNot) {
+      payload = {
         title,
         content,
-        sCost,
-        nomalOrNot,
-        endTime,
         img,
-        user_Id: id,
-      };
-      const createPost = await tradePost.create(payload);
-      const updatePost = await tradePost.findOne({
-        where: { id: createPost.id },
-      });
-      return res.status(201).json({ data: updatePost, message: "create" });
-    } else {
-      const { title, content, sCost, nomalOrNot, endTime } = req.body;
-      const payload = {
-        title,
-        content,
+        normalOrNot,
         sCost,
-        nomalOrNot,
-        endTime,
+        state: 1,
+        endDate,
         user_Id: id,
       };
-      const createPost = await tradePost.create(payload);
-      const updatePost = await tradePost.findOne({
-        where: { id: createPost.id },
-      });
-      return res.status(201).json({ data: updatePost, message: "create" });
     }
+
+    console.log("!!!!", payload);
+    await tradePost.create(payload);
+    return res.status(201).json({ message: "create" });
   } catch (err) {
     return res.status(500).json({ message: "error" });
   }

@@ -14,6 +14,7 @@ import NewsPostWrite from "./pages/NewsPostWrite";
 import EditNewsPostWrite from "./pages/EditNewsPostWrite";
 import TradeNormalPost from "./pages/TradeNormalPost";
 import TradeSuggestionPost from "./pages/TradeSuggestionPost";
+import TradePostWrite from "./pages/TradePostWrite";
 import axios from "axios";
 
 // import Swal from "sweetalert2";
@@ -92,10 +93,15 @@ export default function App() {
 
           <Route
             path="/trade-suggestion/read=:id"
+
             element={<TradeSuggestionPost userinfo={userinfo} login={login} />}
           />
 
           {/*<Route path="/trade/write" element={<TradePostWrite />} /> */}
+            element={<TradeSuggestionPost />}
+          /> */}
+
+          <Route path="/trade/write" element={<TradePostWrite />} />
 
           <Route
             path="/news/read=:id"

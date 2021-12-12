@@ -118,7 +118,7 @@ export default function Trade({ trade, num, login, userinfo }) {
           <div className={"category"}>{tradeCategory[trade.normalOrNot]}</div>
           <StContentsDiv>
             <div className={"trade-img"}>
-              <img src={trade.img} alt={"거래 이미지"}></img>
+              <img src={trade.img.split(",")[0]} alt={"거래 이미지"}></img>
             </div>
             <StContentsInfoDiv>
               <div>{trade.title}</div>
@@ -129,13 +129,15 @@ export default function Trade({ trade, num, login, userinfo }) {
               {trade.normalOrNot ? (
                 <div>
                   <div>제시금액 : {trade.sCost.toLocaleString()} 원</div>
-                  <div>현재금액 : {trade.cCost.toLocaleString()} 원</div>
+                  {trade.cCost ? (
+                    <div>현재금액 : {trade.cCost.toLocaleString()} 원</div>
+                  ) : null}
                 </div>
               ) : (
                 <div>{trade.sCost.toLocaleString()} 원</div>
               )}
               {trade.normalOrNot ? (
-                trade.state === 4 ? (
+                trade.state === 1 ? (
                   <StTradeStateDiv background={"#AAE8E1"}>
                     {endForToday(trade.endTime)}
                   </StTradeStateDiv>

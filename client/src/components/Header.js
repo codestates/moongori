@@ -121,10 +121,7 @@ const StMenuBarDiv = styled.ul`
   }
 `;
 
-
 export default function Header({ login, handleLoginSuccess, handleLogout }) {
-
-
   const [menu, isMenu] = useState(false);
   const [loginModal, isLoginModal] = useState(false);
   const [signUpModal, isSingUpModal] = useState(false);

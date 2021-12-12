@@ -270,7 +270,7 @@ export default function TradeList({ login, userinfo }) {
         </div>
         {login ? (
           <div>
-            <Link to="">
+            <Link to="/trade/write">
               <FontAwesomeIcon
                 className={"write-button"}
                 icon={faPlusSquare}

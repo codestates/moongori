@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       img: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       normalOrNot: {
         type: Sequelize.INTEGER,
@@ -32,7 +32,7 @@ module.exports = {
       likes_cnt: {
         type: Sequelize.INTEGER,
       },
-      endTime: {
+      endDate: {
         type: Sequelize.DATE,
       },
       createdAt: {

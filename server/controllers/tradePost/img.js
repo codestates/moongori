@@ -21,4 +21,4 @@ const storage = multerS3({
   },
 });
 
-module.exports = multer({ storage: storage }).array("img");
+module.exports = multer({ storage: storage }).array("img", 5);
