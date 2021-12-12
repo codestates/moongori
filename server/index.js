@@ -14,6 +14,7 @@ app.use(
     credentials: true,
   })
 );
+app.set('etag', false);
 app.use("/", controllers);
 app.get("/", (req, res) => {
   res.status(200).send("Hello sever World!");

@@ -13,6 +13,7 @@ import NewsPost from "./pages/NewsPost";
 import NewsPostWrite from "./pages/NewsPostWrite";
 import EditNewsPostWrite from "./pages/EditNewsPostWrite";
 import TradeNormalPost from "./pages/TradeNormalPost";
+import TradeSuggestionPost from "./pages/TradeSuggestionPost";
 import TradePostWrite from "./pages/TradePostWrite";
 import axios from "axios";
 
@@ -88,11 +89,15 @@ export default function App() {
             }
           />
 
-          {/* <Route path="/trade-normal/read=:id" element={<TradeNormalPost />} /> */}
-          <Route path="/trade-normal/read" element={<TradeNormalPost userinfo={userinfo} login={login} />} />
+          <Route path="/trade-normal/read=:id" element={<TradeNormalPost userinfo={userinfo} login={login} />} />
 
-          {/* <Route
+          <Route
             path="/trade-suggestion/read=:id"
+
+            element={<TradeSuggestionPost userinfo={userinfo} login={login} />}
+          />
+
+          {/*<Route path="/trade/write" element={<TradePostWrite />} /> */}
             element={<TradeSuggestionPost />}
           /> */}
 

@@ -30,6 +30,7 @@ module.exports = async (req, res) => {
         "nickname",
         "email",
         "address",
+        "town",
         "img",
         "authState",
         "reliability",

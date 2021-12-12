@@ -3,7 +3,7 @@ const { suggestion, tradePost, user } = require("../../models");
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const postId = req.params.id;
-
+  console.log(`########`, postId);
   const postOne = await suggestion.findOne({
     where: { id: postId },
   });

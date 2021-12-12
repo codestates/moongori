@@ -11,7 +11,8 @@ module.exports = async (req, res) => {
       tradePost_Id: req.body.tradePost_Id,
       user_Id: id,
     };
-    await suggestion.create(payload);
+    const createSuggestion = await suggestion.create(payload);
+
     const costAll = await suggestion.max("cost", {
       where: { tradePost_Id: payload.tradePost_Id },
     });
@@ -19,15 +20,15 @@ module.exports = async (req, res) => {
       { cCost: costAll },
       { where: { id: req.body.tradePost_Id } }
     );
-    const updateSuggestion = await suggestion.findAll({
-      where: { tradePost_Id: req.body.tradePost_Id },
-      include: { model: user, attributes: ["nickname", "town", "img"] },
-    });
+    // const updateSuggestion = await suggestion.findAll({
+    //   where: { tradePost_Id: req.body.tradePost_Id },
+    //   include: { model: user, attributes: ["nickname", "town", "img"] },
+    // });
 
     return res
       .status(201)
       .json({
-        data: { updateSuggestion, currentCost: costAll },
+        data: { createSuggestion, currentCost: costAll },
         message: "create",
       });
   } catch (err) {
