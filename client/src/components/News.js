@@ -45,10 +45,13 @@ export const StContentInfoDiv = styled.div`
 `;
 
 const StCategoryDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 10px;
   background: #92e3a9;
   width: 80px;
-  height: 20px;
+  height: 25px;
   text-align: center;
   margin-bottom: 10px;
 `;
@@ -97,7 +100,7 @@ export default function News({ news, mypage }) {
       <Link to={`/news/read=${news.id}`}>
         <StContentsDiv>
           <StCategoryDiv>
-            <div>{category[`${news.category}`]}</div>
+            <div className={"category"}>{category[`${news.category}`]}</div>
           </StCategoryDiv>
           <StContentInfoDiv top mypage={mypage}>
             {news.content.length >= 30

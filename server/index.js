@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
-const PORT = 4000;
+const PORT = 80;
 const cookieParser = require("cookie-parser");
 const controllers = require("./controllers");
 const cors = require("cors");
@@ -14,7 +14,7 @@ app.use(
     credentials: true,
   })
 );
-app.set('etag', false);
+app.set("etag", false);
 app.use("/", controllers);
 app.get("/", (req, res) => {
   res.status(200).send("Hello sever World!");

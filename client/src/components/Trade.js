@@ -11,6 +11,7 @@ const StTradeDiv = styled(StNewsDiv)`
   .wrap {
     margin: 20px;
     .category {
+      text-align: center;
       width: 35px;
       padding: 5px;
       border-radius: 10px;
@@ -34,7 +35,7 @@ const StTradeDiv = styled(StNewsDiv)`
 `;
 
 const StContentsDiv = styled.div`
-  margin-top: 10px;
+  margin-top: 20px;
   .trade-img {
     text-align: center;
     img {
@@ -62,15 +63,25 @@ const StContentsInfoDiv = styled.div`
   align-items: flex-start;
   margin: 20px 0 20px 0;
   font-weight: bold;
+  .trade-title {
+    font-size: 18px;
+  }
   .town-day {
+    font-size: 15px;
     color: #9c9c9c;
     span {
       margin-right: 5px;
     }
   }
+  .cost {
+    font-size: 21px;
+  }
 `;
 
 const StTradeStateDiv = styled.div`
+  text-align: center;
+  font-size: 12px;
+  width: 40px;
   padding: 5px;
   background: ${(props) => props.background};
   border-radius: 10px;
@@ -127,20 +138,24 @@ export default function Trade({ trade, num, login, userinfo }) {
               <img src={trade.img.split(",")[0]} alt={"거래 이미지"}></img>
             </div>
             <StContentsInfoDiv>
-              <div>{trade.title}</div>
+              <div className={"trade-title"}>{trade.title}</div>
               <div className={"town-day"}>
                 <span>{trade.user.town}</span>
                 <span>{timeForToday(trade.createdAt)}</span>
               </div>
               {trade.normalOrNot ? (
-                <div>
-                  <div>제시금액 : {trade.sCost.toLocaleString()} 원</div>
+                <div className={"const"}>
+                  <div className={"cost"}>
+                    제시금액 : {trade.sCost.toLocaleString()} 원
+                  </div>
                   {trade.cCost ? (
-                    <div>현재금액 : {trade.cCost.toLocaleString()} 원</div>
+                    <div className={"cost"}>
+                      현재금액 : {trade.cCost.toLocaleString()} 원
+                    </div>
                   ) : null}
                 </div>
               ) : (
-                <div>{trade.sCost.toLocaleString()} 원</div>
+                <div className={"cost"}>{trade.sCost.toLocaleString()} 원</div>
               )}
               {trade.normalOrNot ? (
                 trade.state === 1 ? (
