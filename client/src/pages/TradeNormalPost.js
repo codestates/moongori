@@ -286,9 +286,12 @@ export default function TradeNoramlPost({ login, userinfo }) {
 
   const [check, setCheck] = useState(null);
 
-
   const soldoutHandler = () => {
-    setSoldout(!soldout);
+    console.log(userinfo.id === postInfo.user_Id);
+    if (userinfo.id === postInfo.user_Id) {
+
+      setSoldout(!soldout);
+    }
   };
 
   const openOption = () => {
