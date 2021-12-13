@@ -42,6 +42,9 @@ export const StContentInfoDiv = styled.div`
   .front {
     margin-right: 20px;
   }
+  .town {
+    margin-bottom: 10px;
+  }
 `;
 
 const StCategoryDiv = styled.div`
@@ -109,7 +112,7 @@ export default function News({ news, mypage }) {
           </StContentInfoDiv>
           <StContentInfoDiv color={"#c4c4c4"}>
             <div className="front">{news.user.nickname}</div>
-            <div>{news.user.town}</div>
+            <div className={"town"}>{news.user.town}</div>
           </StContentInfoDiv>
           <div className={"content-info-last"}>
             <StContentInfoDiv>
