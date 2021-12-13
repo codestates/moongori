@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Swal from "sweetalert2";
@@ -283,15 +283,15 @@ export default function TradeNoramlPost({ login, userinfo }) {
   //판매완료 상태변경
   const [soldout, setSoldout] = useState(false);
   //상태 변경 요청할때 사용
-
   const [check, setCheck] = useState(null);
+  // 수정 할때 입력받은 값을 사용
+  const modifyContent = useRef(null);
+  const modifyTitle = useRef(null);
+  const modifyCost = useRef(null);
+
 
   const soldoutHandler = () => {
-    console.log(userinfo.id === postInfo.user_Id);
-    if (userinfo.id === postInfo.user_Id) {
-
-      setSoldout(!soldout);
-    }
+    setSoldout(!soldout);
   };
 
   const openOption = () => {
@@ -349,10 +349,23 @@ export default function TradeNoramlPost({ login, userinfo }) {
             footer: "",
           });
         })
-
     }
-
   }
+
+  //내용을 수정하는 함수
+  const modifyPost = () => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/trade/normal/${id}`, {
+        title: modifyTitle.current.value,
+        content: modifyContent.current.value,
+        sCost: modifyCost.current.value
+      })
+      .then((res) => {
+        console.log(res.data.data);
+        // setPostInfo([...postInfo,])
+      });
+  };
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${id}`)
@@ -376,26 +389,26 @@ export default function TradeNoramlPost({ login, userinfo }) {
 
   return (
     <>
-      {option ? (
+      {userinfo.id === postInfo.user_Id ? (option ? (
         <StOptionMenuDiv>
-          {edit ? (postInfo.id === userinfo.id ? (
-            <li
+          {edit ?
+            (<li
               onClick={() => {
-                if (postInfo.id === userinfo.id) {
+                if (postInfo.user_Id === userinfo.id) {
                   setEdit(!edit);
                 }
               }}
             >
               게시글 수정
               <i class="fas fa-arrow-right"></i>
-            </li>
-          ) : null)
+            </li>)
             : (
               <li
                 onClick={() => {
-                  if (postInfo.id === userinfo.id) {
+                  if (postInfo.user_Id === userinfo.id) {
                     setEdit(!edit);
                   }
+                  modifyPost();
                 }}
               >
                 수정 완료
@@ -454,7 +467,9 @@ export default function TradeNoramlPost({ login, userinfo }) {
             <i class="fas fa-arrow-right"></i>
           </li>
         </StOptionMenuDiv>
-      ) : null}
+      ) : null)
+        : null}
+
       {
         edit ? (
           //기본 상태
@@ -474,20 +489,21 @@ export default function TradeNoramlPost({ login, userinfo }) {
                             ? tradeState[1]
                             : tradeState[2]}
                       </div>
-
-                      {option ? (
-                        <FontAwesomeIcon
-                          icon={faTimes}
-                          className={"option"}
-                          onClick={() => openOption()}
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={faEllipsisV}
-                          className={"option"}
-                          onClick={() => openOption()}
-                        />
-                      )}
+                      {userinfo.id === postInfo.user_Id ?
+                        (option ? (
+                          <FontAwesomeIcon
+                            icon={faTimes}
+                            className={"option"}
+                            onClick={() => openOption()}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faEllipsisV}
+                            className={"option"}
+                            onClick={() => openOption()}
+                          />
+                        ))
+                        : null}
                     </div>
                     <div className={"trade-title"}>{postInfo.title}</div>
                   </div>
@@ -552,24 +568,26 @@ export default function TradeNoramlPost({ login, userinfo }) {
                             ? tradeState[1]
                             : tradeState[2]}
                       </div>
-
-                      {option ? (
-                        <FontAwesomeIcon
-                          icon={faTimes}
-                          className={"option"}
-                          onClick={() => openOption()}
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={faEllipsisV}
-                          className={"option"}
-                          onClick={() => openOption()}
-                        />
-                      )}
+                      {userinfo.id === postInfo.user_Id ?
+                        (option ? (
+                          <FontAwesomeIcon
+                            icon={faTimes}
+                            className={"option"}
+                            onClick={() => openOption()}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faEllipsisV}
+                            className={"option"}
+                            onClick={() => openOption()}
+                          />
+                        ))
+                        : null}
                     </div>
                     <input
                       defaultValue={postInfo.title}
                       className={"trade-title"}
+                      ref={modifyTitle}
                     ></input>
                   </div>
                   <div className={"content-body"}>
@@ -577,7 +595,8 @@ export default function TradeNoramlPost({ login, userinfo }) {
                     <input
                       className={"price"}
                       defaultValue={postInfo.sCost}
-                    ></input>
+                      ref={modifyCost}
+                    />
                   </div>
                   <div className={"content-tail"}>
                     <div className={"nickname-box"}>
@@ -610,6 +629,7 @@ export default function TradeNoramlPost({ login, userinfo }) {
               <textarea
                 className={"trade-explain"}
                 defaultValue={postInfo.content}
+                ref={modifyContent}
               ></textarea>
             </div>
           </StTradeBodyDiv>
@@ -617,3 +637,4 @@ export default function TradeNoramlPost({ login, userinfo }) {
       } </>
   );
 }
+

@@ -710,8 +710,8 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                         {soldout
                           ? tradeState[3]
                           : check === 1
-                          ? tradeState[1]
-                          : tradeState[2]}
+                            ? tradeState[1]
+                            : tradeState[2]}
                       </div>
 
                       {option ? (
@@ -861,8 +861,8 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                         {soldout
                           ? tradeState[3]
                           : check === 1
-                          ? tradeState[1]
-                          : tradeState[2]}
+                            ? tradeState[1]
+                            : tradeState[2]}
                       </div>
 
                       {option ? (

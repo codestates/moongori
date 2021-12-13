@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
     return res.status(403).json({ message: "not correspond user" });
   }
   try {
-    if (req.files.length > 0) {
+    if (req.files.length > 0 || req.files !== undefined) {
       const img = req.files.map((el) => el.location).join(",");
       const { title, content, sCost } = req.body;
       const payload = { title, content, sCost, img };
@@ -26,6 +26,7 @@ module.exports = async (req, res) => {
     } else {
       const { title, content, sCost } = req.body;
       const payload = { title, content, sCost };
+      console.log(`@@@@@@@`, payload);
       let modification = await tradePost.update(payload, {
         where: { id: postId },
       });
@@ -35,6 +36,7 @@ module.exports = async (req, res) => {
         .json({ data: modification, message: "successful modification" });
     }
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: "error" });
   }
 };
