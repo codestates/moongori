@@ -9,13 +9,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
-import { faStar as rStar, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faStar as rStar,
+  faPencilAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import SimpleSlider from "../components/Slider";
 import { tradeState } from "../components/Trade";
 import { StContentInfoDiv } from "../components/News";
 axios.defaults.withCredentials = true;
-
 
 const StTradeBodyDiv = styled.div`
   width: 100%;
@@ -137,7 +139,7 @@ const StContentDiv = styled.div`
       height: 30%;
     }
     .price {
-        border-bottom: 1px solid #b7b7b7;
+      border-bottom: 1px solid #b7b7b7;
       height: 70%;
       font-size: 35px;
       font-weight: 800;
@@ -266,30 +268,51 @@ const StOptionMenuDiv = styled.ul`
   }
 `;
 
-
 //댓글
-const StCommentInputDiv = styled.div`
+const StCommentWrap = styled.div`
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  .comment-box {
+    border: 1px solid gray;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+  }
+`;
+const StCommentInputDiv = styled.div`
+  border-bottom: 1px solid gray;
+  width: 90%;
   text-align: left;
   margin-top: 40px;
   .comment-cnt {
+    font-weight: 500;
     font-size: 1.5em;
     margin-bottom: 10px;
   }
   .input-button {
-    border: 1px solid;
-    height: 100px;
+    display: flex;
+    justify-content: end;
+    height: 60px;
     input {
+      margin-top: 8px;
+      margin-right: 5px;
       border: none;
-      height: 60%;
-      width: 98%;
+      height: 30%;
+      width: 20%;
       font-size: 1em;
     }
     div {
-      border-top: 1px solid #c4c4c4;
       text-align: right;
       button {
-        border-radius: 30px;
+        border-radius: 10px;
+        border: 1px solid #b7b7b7;
         background: #92e3a9;
         height: 30px;
         margin: 3px 10px 0 0;
@@ -299,8 +322,9 @@ const StCommentInputDiv = styled.div`
   }
 `;
 const StCommentListDiv = styled.div`
+  margin-bottom: 30px;
   margin-top: 40px;
-  width: 100%;
+  width: 90%;
 `;
 const StPostHeaderDiv = styled.div`
   border-bottom: 1px solid;
@@ -369,8 +393,6 @@ const StCommentButtonDiv = styled.div`
   }
 `;
 
-
-
 export default function TradeSuggestionPost({ login, userinfo }) {
   const { id } = useParams();
   const [edit, setEdit] = useState(true);
@@ -392,14 +414,13 @@ export default function TradeSuggestionPost({ login, userinfo }) {
     content: "",
   });
   const [likeState, setLikeState] = useState(false);
-  const [cCost, setCCost] = useState(0)
+  const [cCost, setCCost] = useState(0);
 
   //판매완료 상태변경
   const [soldout, setSoldout] = useState(false);
   //상태 변경 요청할때 사용
 
   const [check, setCheck] = useState(null);
-
 
   const soldoutHandler = () => {
     setSoldout(!soldout);
@@ -421,44 +442,48 @@ export default function TradeSuggestionPost({ login, userinfo }) {
   };
 
   const like = async () => {
-    console.log("likeState;;", likeState)
+    console.log("likeState;;", likeState);
     if (likeState) {
       await axios
         .delete(`${process.env.REACT_APP_API_URL}/trade/like`, {
-          data: { tradePost_Id: id }
-        }).then((res) => {
-          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt - 1 })
+          data: { tradePost_Id: id },
+        })
+        .then((res) => {
+          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt - 1 });
           console.log("/trade/like", res.data);
           setLikeState(false);
-        }).catch((err) => {
+        })
+        .catch((err) => {
           Swal.fire({
             icon: "error",
             title: "로그인 후 이용가능합니다",
             text: "",
             footer: "",
           });
-        })
+        });
     } else {
       await axios
         .post(`${process.env.REACT_APP_API_URL}/trade/like`, {
-          tradePost_Id: id
-        }).then((res) => {
-          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt + 1 })
+          tradePost_Id: id,
+        })
+        .then((res) => {
+          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt + 1 });
           console.log("/trade/like", res.data);
           setLikeState(true);
-        }).catch((err) => {
+        })
+        .catch((err) => {
           Swal.fire({
             icon: "error",
             title: "로그인 후 이용가능합니다",
             text: "",
             footer: "",
           });
-        })
+        });
     }
-  }
+  };
   // 서버에 금액을 추가하는 함수
   const registerComment = () => {
-    console.log("inputPriceRef;;;", inputPriceRef)
+    console.log("inputPriceRef;;;", inputPriceRef);
     if (login) {
       if (inputPriceRef.current.value >= postInfo.sCost) {
         axios
@@ -468,8 +493,18 @@ export default function TradeSuggestionPost({ login, userinfo }) {
           })
           .then((res) => {
             console.log(priceList);
-            setPriceList([{ ...res.data.data.createSuggestion, user: { img: userinfo.img, nickname: userinfo.nickname, town: userinfo.town } }, ...priceList]);
-            setCCost(res.data.data.currentCost)
+            setPriceList([
+              {
+                ...res.data.data.createSuggestion,
+                user: {
+                  img: userinfo.img,
+                  nickname: userinfo.nickname,
+                  town: userinfo.town,
+                },
+              },
+              ...priceList,
+            ]);
+            setCCost(res.data.data.currentCost);
           })
           .catch();
         inputPriceRef.current.focus();
@@ -522,40 +557,69 @@ export default function TradeSuggestionPost({ login, userinfo }) {
       .then((res) => {
         setCheck(res.data.data.postInfo.state);
         console.log(res.data.data.postInfo);
-        setCCost(res.data.data.postInfo.cCost)
+        setCCost(res.data.data.postInfo.cCost);
         setPostInfo(res.data.data.postInfo);
         setPriceList(res.data.data.postInfo.suggestions.reverse());
         res.data.data.postInfo.likes.map((el) => {
           if (login) {
             if (el.user_Id === userinfo.id) {
-              setLikeState(true)
+              setLikeState(true);
             }
           }
-        }
-        )
-      }
-      )
+        });
+      });
   }, [login]);
 
-  console.log(priceList);
+  // const title = "";
+
+  // const getDDay = () => {
+  //   // D-Day 날짜 지정
+  //   const setDate = new Date(postInfo.endDate);
+  //   // D-day 날짜의 연,월,일 구하기
+  //   const setDateYear = setDate.getFullYear();
+  //   // getMonth 메서드는 0부터 세기 때문에 +1 해준다.
+  //   const setDateMonth = setDate.getMonth() + 1;
+  //   const setDateDay = setDate.getDate();
+
+  //   // 현재 날짜를 new 연산자를 사용해서 Date 객체를 생성
+  //   const now = new Date();
+
+  //   // D-Day 날짜에서 현재 날짜의 차이를 getTime 메서드를 사용해서 밀리초의 값으로 가져온다.
+  //   const distance = setDate.getTime() - now.getTime();
+
+  //   // Math.floor 함수를 이용해서 근접한 정수값을 가져온다.
+  //   // 밀리초 값이기 때문에 1000을 곱한다.
+  //   // 1000*60 => 60초(1분)*60 => 60분(1시간)*24 = 24시간(하루)
+  //   // 나머지 연산자(%)를 이용해서 시/분/초를 구한다.
+  //   const day = Math.floor(distance / (1000 * 60 * 60 * 24));
+  //   const hours = Math.floor(
+  //     (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  //   );
+  //   const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  //   const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  //   // D-Day 날짜를 가져오고,
+  //   // 삼항 연산자를 사용해서 값이 10보다 작을 경우에 대해 조건부 렌더링을 해준다.
+  //   title = `${setDateYear}년 ${setDateMonth}월 ${setDateDay}일까지
+  //      ${day}일
+  //      ${hours < 10 ? `0${hours}` : hours}시간
+  //      ${minutes < 10 ? `0${minutes}` : minutes}분
+  //      ${seconds < 10 ? `0${seconds}` : seconds}초 남았습니다.`;
+  // };
+
+  // const init = () => {
+  //   // init 함수 생성해서 getDDay함수 호출하고,
+  //   getDDay();
+  //   // setInterval 메서드에서 getDDay함수를 1초(1000밀리초)마다 호출한다.
+  //   setInterval(getDDay, 1000);
+  // };
 
   return (
     <>
       {option ? (
         <StOptionMenuDiv>
-          {edit ? (postInfo.id === userinfo.id ? (
-            <li
-              onClick={() => {
-                if (postInfo.id === userinfo.id) {
-                  setEdit(!edit);
-                }
-              }}
-            >
-              게시글 수정
-              <i class="fas fa-arrow-right"></i>
-            </li>
-          ) : null)
-            : (
+          {edit ? (
+            postInfo.id === userinfo.id ? (
               <li
                 onClick={() => {
                   if (postInfo.id === userinfo.id) {
@@ -563,10 +627,22 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                   }
                 }}
               >
-                수정 완료
+                게시글 수정
                 <i class="fas fa-arrow-right"></i>
               </li>
-            )}
+            ) : null
+          ) : (
+            <li
+              onClick={() => {
+                if (postInfo.id === userinfo.id) {
+                  setEdit(!edit);
+                }
+              }}
+            >
+              수정 완료
+              <i class="fas fa-arrow-right"></i>
+            </li>
+          )}
 
           {check === 1 ? (
             <li
@@ -618,234 +694,239 @@ export default function TradeSuggestionPost({ login, userinfo }) {
           </li>
         </StOptionMenuDiv>
       ) : null}
-      {
-        edit ? (
-          //기본 상태
-          <>
-            <StTradeBodyDiv>
-              <StTradeBoxDiv>
-                <StPictureDiv>
-                  <SimpleSlider />
-                </StPictureDiv>
-                <StContentDiv>
-                  <div className={"content-wrap"}>
-                    <div className={"content-head"}>
-                      <div className={"content-state-wrap"}>
-                        <div className={"now-state"}>
-                          {soldout
-                            ? tradeState[3]
-                            : check === 1
-                              ? tradeState[1]
-                              : tradeState[2]}
-                        </div>
+      {edit ? (
+        //기본 상태
+        <>
+          <StTradeBodyDiv>
+            <StTradeBoxDiv>
+              <StPictureDiv>
+                <SimpleSlider />
+              </StPictureDiv>
+              <StContentDiv>
+                <div className={"content-wrap"}>
+                  <div className={"content-head"}>
+                    <div className={"content-state-wrap"}>
+                      <div className={"now-state"}>
+                        {soldout
+                          ? tradeState[3]
+                          : check === 1
+                          ? tradeState[1]
+                          : tradeState[2]}
+                      </div>
 
-                        {option ? (
-                          <FontAwesomeIcon
-                            icon={faTimes}
-                            className={"option"}
-                            onClick={() => openOption()}
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            icon={faEllipsisV}
-                            className={"option"}
-                            onClick={() => openOption()}
-                          />
-                        )}
-                      </div>
-                      <div className={"trade-title"}>{postInfo.title}</div>
-                    </div>
-                    <div className={"content-body"}>
-                      <div className={"trad-price"}>제시금액</div>
-                      <div className={"price"}>{postInfo.sCost} 원</div>
-                    </div>
-                    <div className={"content-tail"}>
-                      <div className={"nickname-box"}>
-                        <div className={"profile-img"}>
-                          <img src={postInfo.user.img} className={"image"}></img>
-                        </div>
-                        <div className={"nickname"}>{postInfo.user.nickname}</div>
-                        <div className={"towninfo"}>{postInfo.user.town}</div>
-                      </div>
-                      <div className={"trade-info-box"}>
-                        <div className={"trade-cnt"}>판매 103</div>
-                        <div className={"trade-reliability"}>
-                          거래안정도 <FontAwesomeIcon icon={faWifi} />
-                        </div>
-                      </div>
-                      <div className={"like-box"}>
-                        <div className={"like-star"}>
-                          {likeState ? <FontAwesomeIcon icon={rStar} onClick={like} />
-                            : <FontAwesomeIcon icon={faStar} onClick={like} />
-                          }
-                        </div>
-                        <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={"content-body"}>
-                    <div className={"trad-price"}>현재금액</div>
-                    <div className={"c-price"}>{cCost} 원</div>
-                  </div>
-                </StContentDiv>
-              </StTradeBoxDiv>
-              <div className={"explain-wrap"}>
-                <div className={"trade-explain"}>
-                  {/* 본문 */}
-                  {postInfo.content}
-                </div>
-              </div>
-            </StTradeBodyDiv>
-            <StCommentInputDiv>
-              <div className="comment-cnt">제시 금액 {priceList.length}</div>
-              <div className="input-button">
-                <input
-                  type={"text"}
-                  placeholder={"금액 제시"}
-                  ref={inputPriceRef}
-                ></input>
-                <div>
-                  <button type={"button"} onClick={registerComment}>
-                    등 록
-                  </button>
-                </div>
-              </div>
-            </StCommentInputDiv>
-            <StCommentListDiv>
-              {priceList.map((price, index) => (
-                <StPostHeaderReUse key={index}>
-                  <StPostUserDiv>
-                    <img src={price.user.img} alt="프로필사진"></img>
-                    <div className={"info"}>
-                      <StContentInfoDiv>
-                        <span>{price.user.nickname}</span>
-                        <span>{price.user.town}</span>
-                      </StContentInfoDiv>
-                      {price.id === priceId ? (
-                        <input
-                          type={"text "}
-                          defaultValue={price.cost}
-                          ref={inputRevisedPriceRef}
+                      {option ? (
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          className={"option"}
+                          onClick={() => openOption()}
                         />
                       ) : (
-                        <div>{price.cost}</div>
+                        <FontAwesomeIcon
+                          icon={faEllipsisV}
+                          className={"option"}
+                          onClick={() => openOption()}
+                        />
                       )}
                     </div>
-                  </StPostUserDiv>
-                  {login && userinfo.id === price.user_Id ? (
-                    price.id === priceId ? (
-                      <StCommentButtonDiv>
-                        <button
-                          type={"button"}
-                          onClick={() => setPriceId(null)}
-                        >
-                          취소
-                        </button>
-                        <button onClick={() => reviseComment(price.id)}>
-                          확인
-                        </button>
-                      </StCommentButtonDiv>
-                    ) : (
-                      <div className={"icon"}>
-                        <FontAwesomeIcon
-                          icon={faPencilAlt}
-                          onClick={() => handleRevise(price.id)}
-                        />
-                        <FontAwesomeIcon
-                          icon={faTrashAlt}
-                          onClick={() => deleteComment(price.id)}
-                        />
+                    <div className={"trade-title"}>{postInfo.title}</div>
+                  </div>
+                  <div className={"content-body"}>
+                    <div className={"trad-price"}>제시금액</div>
+                    <div className={"price"}>{postInfo.sCost} 원</div>
+                  </div>
+                  <div className={"content-tail"}>
+                    <div className={"nickname-box"}>
+                      <div className={"profile-img"}>
+                        <img src={postInfo.user.img} className={"image"}></img>
                       </div>
-                    )
-                  ) : null}
-                </StPostHeaderReUse>
-              ))}
-            </StCommentListDiv>
-          </>
-
-        ) : (
-          //수정 상태
-          <>
-            <StTradeBodyDiv>
-              <StTradeBoxDiv>
-                <StPictureDiv>
-                  <SimpleSlider />
-                </StPictureDiv>
-                <StContentDiv>
-                  <div className={"content-wrap"}>
-                    <div className={"content-head"}>
-                      <div className={"content-state-wrap"}>
-                        <div className={"now-state"}>
-                          {soldout
-                            ? tradeState[3]
-                            : check === 1
-                              ? tradeState[1]
-                              : tradeState[2]}
-                        </div>
-
-                        {option ? (
-                          <FontAwesomeIcon
-                            icon={faTimes}
-                            className={"option"}
-                            onClick={() => openOption()}
-                          />
+                      <div className={"nickname"}>{postInfo.user.nickname}</div>
+                      <div className={"towninfo"}>{postInfo.user.town}</div>
+                    </div>
+                    <div className={"trade-info-box"}>
+                      <div className={"trade-cnt"}>판매 103</div>
+                      <div className={"trade-reliability"}>
+                        거래안정도 <FontAwesomeIcon icon={faWifi} />
+                      </div>
+                    </div>
+                    <div className={"like-box"}>
+                      <div className={"like-star"}>
+                        {likeState ? (
+                          <FontAwesomeIcon icon={rStar} onClick={like} />
                         ) : (
-                          <FontAwesomeIcon
-                            icon={faEllipsisV}
-                            className={"option"}
-                            onClick={() => openOption()}
-                          />
+                          <FontAwesomeIcon icon={faStar} onClick={like} />
                         )}
                       </div>
-                      <input
-                        defaultValue={postInfo.title}
-                        className={"trade-title"}
-                      ></input>
-                    </div>
-                    <div className={"content-body"}>
-                      <div className={"trad-price"}>제시금액</div>
-                      <input
-                        className={"price"}
-                        defaultValue={postInfo.sCost}
-                      ></input>
-                    </div>
-                    <div className={"content-tail"}>
-                      <div className={"nickname-box"}>
-                        <div className={"profile-img"}>
-                          <img src={postInfo.user.img} className={"image"}></img>
-                        </div>
-                        <div className={"nickname"}>{postInfo.user.nickname}</div>
-                        <div className={"towninfo"}>{postInfo.user.town}</div>
-                      </div>
-                      <div className={"trade-info-box"}>
-                        <div className={"trade-cnt"}>판매 103</div>
-                        <div className={"trade-reliability"}>
-                          거래안정도 <FontAwesomeIcon icon={faWifi} />
-                        </div>
-                      </div>
-                      <div className={"like-box"}>
-                        <div className={"like-star"}>
-                          <FontAwesomeIcon icon={faStar} />
-                        </div>
-                        <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
-                      </div>
+                      <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
                     </div>
                   </div>
-                  <div className={"StContactButton"}>
-                    <button className={"contact"}>연락하기</button>
-                  </div>
-                </StContentDiv>
-              </StTradeBoxDiv>
-              <div className={"explain-wrap"}>
-                <textarea
-                  className={"trade-explain"}
-                  defaultValue={postInfo.content}
-                ></textarea>
+                </div>
+                <div className={"content-body"}>
+                  <div className={"trad-price"}>현재금액</div>
+                  <div className={"c-price"}>{cCost} 원</div>
+                </div>
+              </StContentDiv>
+            </StTradeBoxDiv>
+            <div className={"explain-wrap"}>
+              <div className={"trade-explain"}>
+                {/* 본문 */}
+                {postInfo.content}
               </div>
-            </StTradeBodyDiv>
-          </>
-        )
-      }
+            </div>
+          </StTradeBodyDiv>
+          <StCommentWrap>
+            <div className={"comment-box"}>
+              <StCommentInputDiv>
+                <div className="comment-cnt">제시 금액 {priceList.length}</div>
+                <div className="input-button">
+                  <input
+                    type={"text"}
+                    placeholder={"금액 제시"}
+                    ref={inputPriceRef}
+                  ></input>
+                  <div>
+                    <button type={"button"} onClick={registerComment}>
+                      등 록
+                    </button>
+                  </div>
+                </div>
+              </StCommentInputDiv>
+              <StCommentListDiv>
+                {priceList.map((price, index) => (
+                  <StPostHeaderReUse key={index}>
+                    <StPostUserDiv>
+                      <img src={price.user.img} alt="프로필사진"></img>
+                      <div className={"info"}>
+                        <StContentInfoDiv>
+                          <span>{price.user.nickname}</span>
+                          <span style={{ color: "gray" }}>
+                            {price.user.town}
+                          </span>
+                        </StContentInfoDiv>
+                        {price.id === priceId ? (
+                          <input
+                            type={"text "}
+                            defaultValue={price.cost}
+                            ref={inputRevisedPriceRef}
+                          />
+                        ) : (
+                          <div>{price.cost}</div>
+                        )}
+                      </div>
+                    </StPostUserDiv>
+                    {login && userinfo.id === price.user_Id ? (
+                      price.id === priceId ? (
+                        <StCommentButtonDiv>
+                          <button
+                            type={"button"}
+                            onClick={() => setPriceId(null)}
+                          >
+                            취소
+                          </button>
+                          <button onClick={() => reviseComment(price.id)}>
+                            확인
+                          </button>
+                        </StCommentButtonDiv>
+                      ) : (
+                        <div className={"icon"}>
+                          <FontAwesomeIcon
+                            icon={faPencilAlt}
+                            onClick={() => handleRevise(price.id)}
+                          />
+                          <FontAwesomeIcon
+                            icon={faTrashAlt}
+                            onClick={() => deleteComment(price.id)}
+                          />
+                        </div>
+                      )
+                    ) : null}
+                  </StPostHeaderReUse>
+                ))}
+              </StCommentListDiv>
+            </div>
+          </StCommentWrap>
+        </>
+      ) : (
+        //수정 상태
+        <>
+          <StTradeBodyDiv>
+            <StTradeBoxDiv>
+              <StPictureDiv>
+                <SimpleSlider />
+              </StPictureDiv>
+              <StContentDiv>
+                <div className={"content-wrap"}>
+                  <div className={"content-head"}>
+                    <div className={"content-state-wrap"}>
+                      <div className={"now-state"}>
+                        {soldout
+                          ? tradeState[3]
+                          : check === 1
+                          ? tradeState[1]
+                          : tradeState[2]}
+                      </div>
+
+                      {option ? (
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          className={"option"}
+                          onClick={() => openOption()}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={faEllipsisV}
+                          className={"option"}
+                          onClick={() => openOption()}
+                        />
+                      )}
+                    </div>
+                    <input
+                      defaultValue={postInfo.title}
+                      className={"trade-title"}
+                    ></input>
+                  </div>
+                  <div className={"content-body"}>
+                    <div className={"trad-price"}>제시금액</div>
+                    <input
+                      className={"price"}
+                      defaultValue={postInfo.sCost}
+                    ></input>
+                  </div>
+                  <div className={"content-tail"}>
+                    <div className={"nickname-box"}>
+                      <div className={"profile-img"}>
+                        <img src={postInfo.user.img} className={"image"}></img>
+                      </div>
+                      <div className={"nickname"}>{postInfo.user.nickname}</div>
+                      <div className={"towninfo"}>{postInfo.user.town}</div>
+                    </div>
+                    <div className={"trade-info-box"}>
+                      <div className={"trade-cnt"}>판매 103</div>
+                      <div className={"trade-reliability"}>
+                        거래안정도 <FontAwesomeIcon icon={faWifi} />
+                      </div>
+                    </div>
+                    <div className={"like-box"}>
+                      <div className={"like-star"}>
+                        <FontAwesomeIcon icon={faStar} />
+                      </div>
+                      <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className={"StContactButton"}>
+                  <button className={"contact"}>연락하기</button>
+                </div>
+              </StContentDiv>
+            </StTradeBoxDiv>
+            <div className={"explain-wrap"}>
+              <textarea
+                className={"trade-explain"}
+                defaultValue={postInfo.content}
+              ></textarea>
+            </div>
+          </StTradeBodyDiv>
+        </>
+      )}
     </>
   );
 }
