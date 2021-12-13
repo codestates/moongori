@@ -3,7 +3,6 @@ const { comment, user, newsPost } = require("../../models");
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const commentId = req.params.id;
-  console.log(req.body);
   const commentOne = await comment.findOne({
     where: { id: commentId },
   });

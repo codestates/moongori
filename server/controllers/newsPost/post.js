@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
       },
     ],
   });
-  console.log(postInfo.view)
+
   //글을 쓴 작성자가 자신의 글을 클릭하는 경우 조회수 증가 X
   if (cookie) {
     const verified = verify(cookie, process.env.ACCESS_SECRET);

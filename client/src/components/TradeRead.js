@@ -314,88 +314,71 @@ export default function TradeRead({ login, userinfo }) {
         state: s,
       })
       .then((res) => {
-        console.log(res.data.data.state);
         setCheck(res.data.data.state);
       });
   };
 
   const like = async () => {
-    console.log("likeState;;", likeState)
     if (likeState) {
       await axios
         .delete(`${process.env.REACT_APP_API_URL}/trade/like`, {
-          data: { tradePost_Id: id }
-        }).then((res) => {
-          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt - 1 })
-          console.log("/trade/like", res.data);
+          data: { tradePost_Id: id },
+        })
+        .then((res) => {
+          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt - 1 });
           setLikeState(false);
-        }).catch((err) => {
+        })
+        .catch((err) => {
           Swal.fire({
             icon: "error",
             title: "로그인 후 이용가능합니다",
             text: "",
             footer: "",
           });
-        })
+        });
     } else {
       await axios
         .post(`${process.env.REACT_APP_API_URL}/trade/like`, {
-          tradePost_Id: 1
-        }).then((res) => {
-          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt + 1 })
-          console.log("/trade/like", res.data);
+          tradePost_Id: 1,
+        })
+        .then((res) => {
+          setPostInfo({ ...postInfo, likes_cnt: postInfo.likes_cnt + 1 });
           setLikeState(true);
-        }).catch((err) => {
+        })
+        .catch((err) => {
           Swal.fire({
             icon: "error",
             title: "로그인 후 이용가능합니다",
             text: "",
             footer: "",
           });
-        })
-
+        });
     }
-
-  }
-
+  };
 
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${id}`)
       .then((res) => {
         setCheck(res.data.data.postInfo.state);
-        setNormal(res.data.data.postInfo.normalOrNot)
-        console.log(res.data.data.postInfo);
+        setNormal(res.data.data.postInfo.normalOrNot);
         setPostInfo(res.data.data.postInfo);
 
         res.data.data.postInfo.likes.map((el) => {
           if (login) {
             if (el.user_Id === userinfo.id) {
-              setLikeState(true)
+              setLikeState(true);
             }
           }
-        }
-        )
-      }
-      )
+        });
+      });
   }, [login]);
   return (
     <>
       {option ? (
         <StOptionMenuDiv>
-          {edit ? (postInfo.id === userinfo.id ? (
-            <li
-              onClick={() => {
-                if (postInfo.id === userinfo.id) {
-                  setEdit(!edit);
-                }
-              }}
-            >
-              게시글 수정
-              <i class="fas fa-arrow-right"></i>
-            </li>
-          ) : null)
-            : (
+          {edit ? (
+            postInfo.id === userinfo.id ? (
               <li
                 onClick={() => {
                   if (postInfo.id === userinfo.id) {
@@ -403,10 +386,22 @@ export default function TradeRead({ login, userinfo }) {
                   }
                 }}
               >
-                수정 완료
+                게시글 수정
                 <i class="fas fa-arrow-right"></i>
               </li>
-            )}
+            ) : null
+          ) : (
+            <li
+              onClick={() => {
+                if (postInfo.id === userinfo.id) {
+                  setEdit(!edit);
+                }
+              }}
+            >
+              수정 완료
+              <i class="fas fa-arrow-right"></i>
+            </li>
+          )}
 
           {check === 1 ? (
             <li
@@ -460,165 +455,166 @@ export default function TradeRead({ login, userinfo }) {
           </li>
         </StOptionMenuDiv>
       ) : null}
-      {
-        edit ? (
-          //기본 상태
-          <StTradeBodyDiv>
-            <StTradeBoxDiv>
-              <StPictureDiv>
-                <SimpleSlider />
-              </StPictureDiv>
-              <StContentDiv>
-                <div className={"content-wrap"}>
-                  <div className={"content-head"}>
-                    <div className={"content-state-wrap"}>
-                      <div className={"now-state"}>
-                        {soldout
-                          ? tradeState[3]
-                          : check === 1
-                            ? tradeState[1]
-                            : tradeState[2]}
-                      </div>
+      {edit ? (
+        //기본 상태
+        <StTradeBodyDiv>
+          <StTradeBoxDiv>
+            <StPictureDiv>
+              <SimpleSlider />
+            </StPictureDiv>
+            <StContentDiv>
+              <div className={"content-wrap"}>
+                <div className={"content-head"}>
+                  <div className={"content-state-wrap"}>
+                    <div className={"now-state"}>
+                      {soldout
+                        ? tradeState[3]
+                        : check === 1
+                        ? tradeState[1]
+                        : tradeState[2]}
+                    </div>
 
-                      {option ? (
-                        <FontAwesomeIcon
-                          icon={faTimes}
-                          className={"option"}
-                          onClick={() => openOption()}
-                        />
+                    {option ? (
+                      <FontAwesomeIcon
+                        icon={faTimes}
+                        className={"option"}
+                        onClick={() => openOption()}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faEllipsisV}
+                        className={"option"}
+                        onClick={() => openOption()}
+                      />
+                    )}
+                  </div>
+                  <div className={"trade-title"}>{postInfo.title}</div>
+                </div>
+                <div className={"content-body"}>
+                  <div className={"trad-price"}>판매금액</div>
+                  <div className={"price"}>{postInfo.sCost} 원</div>
+                </div>
+                <div className={"content-tail"}>
+                  <div className={"nickname-box"}>
+                    <div className={"profile-img"}>
+                      <img src={postInfo.user.img} className={"image"}></img>
+                    </div>
+                    <div className={"nickname"}>{postInfo.user.nickname}</div>
+                    <div className={"towninfo"}>{postInfo.user.town}</div>
+                  </div>
+                  <div className={"trade-info-box"}>
+                    <div className={"trade-cnt"}>판매 103</div>
+                    <div className={"trade-reliability"}>
+                      거래안정도 <FontAwesomeIcon icon={faWifi} />
+                    </div>
+                  </div>
+                  <div className={"like-box"}>
+                    <div className={"like-star"}>
+                      {likeState ? (
+                        <FontAwesomeIcon icon={rStar} onClick={like} />
                       ) : (
-                        <FontAwesomeIcon
-                          icon={faEllipsisV}
-                          className={"option"}
-                          onClick={() => openOption()}
-                        />
+                        <FontAwesomeIcon icon={faStar} onClick={like} />
                       )}
                     </div>
-                    <div className={"trade-title"}>{postInfo.title}</div>
-                  </div>
-                  <div className={"content-body"}>
-                    <div className={"trad-price"}>판매금액</div>
-                    <div className={"price"}>{postInfo.sCost} 원</div>
-                  </div>
-                  <div className={"content-tail"}>
-                    <div className={"nickname-box"}>
-                      <div className={"profile-img"}>
-                        <img src={postInfo.user.img} className={"image"}></img>
-                      </div>
-                      <div className={"nickname"}>{postInfo.user.nickname}</div>
-                      <div className={"towninfo"}>{postInfo.user.town}</div>
-                    </div>
-                    <div className={"trade-info-box"}>
-                      <div className={"trade-cnt"}>판매 103</div>
-                      <div className={"trade-reliability"}>
-                        거래안정도 <FontAwesomeIcon icon={faWifi} />
-                      </div>
-                    </div>
-                    <div className={"like-box"}>
-                      <div className={"like-star"}>
-                        {likeState ? <FontAwesomeIcon icon={rStar} onClick={like} />
-                          : <FontAwesomeIcon icon={faStar} onClick={like} />
-                        }
-                      </div>
-                      <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
-                    </div>
+                    <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
                   </div>
                 </div>
-                <div className={"StContactButton"}>
-                  <button className={"contact"}>연락하기</button>
-                </div>
-              </StContentDiv>
-            </StTradeBoxDiv>
-            <div className={"explain-wrap"}>
-              <div className={"trade-explain"}>
-                {/* LG gram 15 노트북 팝니다.20년 6월에 구매하였습니다. 성능 os - 윈도우
+              </div>
+              <div className={"StContactButton"}>
+                <button className={"contact"}>연락하기</button>
+              </div>
+            </StContentDiv>
+          </StTradeBoxDiv>
+          <div className={"explain-wrap"}>
+            <div className={"trade-explain"}>
+              {/* LG gram 15 노트북 팝니다.20년 6월에 구매하였습니다. 성능 os - 윈도우
            (64비트) CPU - i5-1035G7 메모리 - 9GB / DDR 3200 MHz(8GBx1) + 확장
            슬롯1 SSD - 256 GB 새로운 노트북을 구매해서 팔려고 합니다. 상태
            S급입니다.{" "} */}
-                {postInfo.content}
-              </div>
+              {postInfo.content}
             </div>
-          </StTradeBodyDiv>
-        ) : (
-          //수정 상태
-          <StTradeBodyDiv>
-            <StTradeBoxDiv>
-              <StPictureDiv>
-                <SimpleSlider />
-              </StPictureDiv>
-              <StContentDiv>
-                <div className={"content-wrap"}>
-                  <div className={"content-head"}>
-                    <div className={"content-state-wrap"}>
-                      <div className={"now-state"}>
-                        {soldout
-                          ? tradeState[3]
-                          : check === 1
-                            ? tradeState[1]
-                            : tradeState[2]}
-                      </div>
+          </div>
+        </StTradeBodyDiv>
+      ) : (
+        //수정 상태
+        <StTradeBodyDiv>
+          <StTradeBoxDiv>
+            <StPictureDiv>
+              <SimpleSlider />
+            </StPictureDiv>
+            <StContentDiv>
+              <div className={"content-wrap"}>
+                <div className={"content-head"}>
+                  <div className={"content-state-wrap"}>
+                    <div className={"now-state"}>
+                      {soldout
+                        ? tradeState[3]
+                        : check === 1
+                        ? tradeState[1]
+                        : tradeState[2]}
+                    </div>
 
-                      {option ? (
-                        <FontAwesomeIcon
-                          icon={faTimes}
-                          className={"option"}
-                          onClick={() => openOption()}
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={faEllipsisV}
-                          className={"option"}
-                          onClick={() => openOption()}
-                        />
-                      )}
-                    </div>
-                    <input
-                      defaultValue={postInfo.title}
-                      className={"trade-title"}
-                    ></input>
+                    {option ? (
+                      <FontAwesomeIcon
+                        icon={faTimes}
+                        className={"option"}
+                        onClick={() => openOption()}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faEllipsisV}
+                        className={"option"}
+                        onClick={() => openOption()}
+                      />
+                    )}
                   </div>
-                  <div className={"content-body"}>
-                    <div className={"trad-price"}>판매금액</div>
-                    <input
-                      className={"price"}
-                      defaultValue={postInfo.sCost}
-                    ></input>
+                  <input
+                    defaultValue={postInfo.title}
+                    className={"trade-title"}
+                  ></input>
+                </div>
+                <div className={"content-body"}>
+                  <div className={"trad-price"}>판매금액</div>
+                  <input
+                    className={"price"}
+                    defaultValue={postInfo.sCost}
+                  ></input>
+                </div>
+                <div className={"content-tail"}>
+                  <div className={"nickname-box"}>
+                    <div className={"profile-img"}>
+                      <img src={postInfo.user.img} className={"image"}></img>
+                    </div>
+                    <div className={"nickname"}>{postInfo.user.nickname}</div>
+                    <div className={"towninfo"}>{postInfo.user.town}</div>
                   </div>
-                  <div className={"content-tail"}>
-                    <div className={"nickname-box"}>
-                      <div className={"profile-img"}>
-                        <img src={postInfo.user.img} className={"image"}></img>
-                      </div>
-                      <div className={"nickname"}>{postInfo.user.nickname}</div>
-                      <div className={"towninfo"}>{postInfo.user.town}</div>
+                  <div className={"trade-info-box"}>
+                    <div className={"trade-cnt"}>판매 103</div>
+                    <div className={"trade-reliability"}>
+                      거래안정도 <FontAwesomeIcon icon={faWifi} />
                     </div>
-                    <div className={"trade-info-box"}>
-                      <div className={"trade-cnt"}>판매 103</div>
-                      <div className={"trade-reliability"}>
-                        거래안정도 <FontAwesomeIcon icon={faWifi} />
-                      </div>
+                  </div>
+                  <div className={"like-box"}>
+                    <div className={"like-star"}>
+                      <FontAwesomeIcon icon={faStar} />
                     </div>
-                    <div className={"like-box"}>
-                      <div className={"like-star"}>
-                        <FontAwesomeIcon icon={faStar} />
-                      </div>
-                      <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
-                    </div>
+                    <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
                   </div>
                 </div>
-                <div className={"StContactButton"}>
-                  <button className={"contact"}>연락하기</button>
-                </div>
-              </StContentDiv>
-            </StTradeBoxDiv>
-            <div className={"explain-wrap"}>
-              <textarea
-                className={"trade-explain"}
-                defaultValue={postInfo.content}
-              ></textarea>
-            </div>
-          </StTradeBodyDiv>
-        )
-      } </>
+              </div>
+              <div className={"StContactButton"}>
+                <button className={"contact"}>연락하기</button>
+              </div>
+            </StContentDiv>
+          </StTradeBoxDiv>
+          <div className={"explain-wrap"}>
+            <textarea
+              className={"trade-explain"}
+              defaultValue={postInfo.content}
+            ></textarea>
+          </div>
+        </StTradeBodyDiv>
+      )}{" "}
+    </>
   );
 }

@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkedAlt, faImage, faMinusSquare, } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMapMarkedAlt,
+  faImage,
+  faMinusSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import MapContainer from "../components/MapContainer";
 import DaumPostcode from "react-daum-postcode";
 import axios from "axios";
@@ -38,7 +42,7 @@ const StWriteTitle = styled.div`
   font-weight: bold;
 `;
 const StWriteBox = styled.div`
-  height: 800px;
+  height: 900px;
   width: 60%;
   display: flex;
   align-items: center;
@@ -69,7 +73,7 @@ const StWriteBox = styled.div`
     justify-content: center;
     flex-direction: column;
     .input-area {
-      overflow-y: hidden;
+      overflow-y: auto;
       resize: none;
       width: 80%;
       height: 200px;
@@ -78,15 +82,6 @@ const StWriteBox = styled.div`
       border-radius: 2px;
       line-height: 2.5rem;
       font-size: 15px;
-      @media all and (max-width: 1024px) {
-        width: 80%;
-      }
-      @media all and (max-width: 768px) {
-        width: 80%;
-      }
-      @media all and (max-width: 557px) {
-        width: 80%;
-      }
     }
     .picture-area {
       margin-top: 20px;
@@ -100,16 +95,7 @@ const StWriteBox = styled.div`
     margin-top: 20px;
     width: 80%;
     height: 300px;
-    @media all and (max-width: 1024px) {
-      width: 80%;
-      height: 300px;
-    }
-    @media all and (max-width: 768px) {
-      width: 80%;
-      height: 300px;
-    }
     @media all and (max-width: 557px) {
-      width: 80%;
       height: 250px;
     }
   }
@@ -265,15 +251,13 @@ export default function NewsPostWrite({ searchPlace }) {
   // 이미지 삭제하는 함수
   const deleteImg = () => {
     setImage(null);
-    setShowImg(true);
-
+    setShowImg(false);
   };
 
   // 지도 삭제하는 함수
   const deleteMap = () => {
     setLocation({ ...location, address: null });
-    setShowMap(true);
-
+    setShowMap(false);
   };
   return (
     <>
@@ -343,7 +327,7 @@ export default function NewsPostWrite({ searchPlace }) {
           </div>
           {showMap ? (
             <div className={"location-wrap"}>
-              <FontAwesomeIcon icon={faMinusSquare} onClick={deleteImg} />
+              <FontAwesomeIcon icon={faMinusSquare} onClick={deleteMap} />
               <MapContainer locationInfo={locationInfo} />
             </div>
           ) : null}

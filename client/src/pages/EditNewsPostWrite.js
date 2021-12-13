@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -46,7 +47,7 @@ const StWriteTitle = styled.div`
   font-weight: bold;
 `;
 const StWriteBox = styled.div`
-  height: 800px;
+  height: 900px;
   width: 60%;
   display: flex;
   align-items: center;
@@ -77,7 +78,7 @@ const StWriteBox = styled.div`
     justify-content: center;
     flex-direction: column;
     .input-area {
-      overflow-y: hidden;
+      overflow-y: auto;
       resize: none;
       width: 80%;
       height: 200px;

@@ -100,8 +100,6 @@ const WithdrawalModalContainer = styled.div`
 export default function WithdrawalModal({ modalClose2 }) {
   const navigate = useNavigate();
   const onCloseModal = (e) => {
-    console.log("e.target: ", e.target);
-    console.log("e.tarcurrentTargetget: ", e.currentTarget);
     if (e.target === e.currentTarget) {
       modalClose2();
     }
@@ -110,7 +108,6 @@ export default function WithdrawalModal({ modalClose2 }) {
     password: "",
     checkPassword: "",
   });
-  console.log(checkWithdrawal);
   const handleInputValue = (key) => (e) => {
     setcheckWithdrawal({ ...checkWithdrawal, [key]: e.target.value });
   };

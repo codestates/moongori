@@ -16,5 +16,4 @@ module.exports = {
   cert: require("./certification"),
 
   img: require("./img"),
-  test: require("./test"),
 };

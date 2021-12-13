@@ -58,7 +58,7 @@ const StContentsHeadDiv = styled.div`
   }
 `;
 
-const StContentsDiv = styled.div`
+export const StContentsDiv = styled.div`
   display: flex;
   border-bottom: ${(props) => (props.suggestion ? null : "1px solid #b8b8b8")};
   padding: ${(props) =>
@@ -138,13 +138,13 @@ const StContentsDiv = styled.div`
   }
 `;
 
-const StPreviewDiv = styled.div`
+export const StPreviewDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
 `;
 
-const StImageDiv = styled.div`
+export const StImageDiv = styled.div`
   position: ${(props) => (props.select ? "relative" : null)};
   img {
     height: 100px;
@@ -231,7 +231,6 @@ export default function TradePostWrite() {
     date.setMinutes(59);
     const distance = date.getTime() - today.getTime();
     const day = Math.floor(distance / 1000 / 60 / 60 / 24);
-    console.log(date);
     if (day > 0 && day <= 7) {
       setEndDate(date);
     } else {
@@ -254,8 +253,13 @@ export default function TradePostWrite() {
     const contents = inputContentsRef.current.value;
     const copyImgFiles = imgFiles.slice();
     const files = [...copyImgFiles.splice(imgNum, 1), ...copyImgFiles];
-    console.log(files);
-    if (title && cost && contents && files.length && imgNum !== null) {
+    if (
+      title &&
+      cost.length <= 8 &&
+      contents &&
+      files.length &&
+      imgNum !== null
+    ) {
       const formData = new FormData();
       for (let file of files) {
         formData.append("img", file);
@@ -274,14 +278,12 @@ export default function TradePostWrite() {
         axios
           .post(`${process.env.REACT_APP_API_URL}/trade/post`, formData, config)
           .then((res) => {
-            console.log(res.data);
             navigate(`/trade=all`);
           });
       } else if (normalOrNot === 0) {
         axios
           .post(`${process.env.REACT_APP_API_URL}/trade/post`, formData, config)
           .then((res) => {
-            console.log(res.data);
             navigate(`/trade=all`);
           });
       } else {
@@ -305,7 +307,7 @@ export default function TradePostWrite() {
         icon: "error",
         title: "상품 이미지를 올려주세요.",
       });
-    } else if (!imgNum) {
+    } else if (imgNum === null) {
       Swal.fire({
         icon: "error",
         title: "대표 사진을 선택해주세요.",
@@ -313,12 +315,12 @@ export default function TradePostWrite() {
     } else if (contents === "") {
       Swal.fire({
         icon: "error",
-        title: "설명을 확인해주세요.",
+        title: "설명을 입력해주세요.",
       });
     } else {
       Swal.fire({
         icon: "error",
-        title: "모든 항목을 확인해주세요.",
+        title: "가격은 8자리까지 가능합니다.",
       });
     }
   };

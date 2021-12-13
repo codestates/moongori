@@ -3,8 +3,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
-import vegetable from "../images/vegetable.jpeg";
-import dummyMac from "../images/dummyMac.png";
 const Wrap = styled.div`
   width: 90%;
   height: 100%;
@@ -16,6 +14,10 @@ const Wrap = styled.div`
   .img-size {
     width: 100%;
     height: 400px;
+    @media all and (max-width: 768px) {
+      width: 100%;
+      height: 400px;
+    }
   }
   .slick-prev:before,
   .slick-next:before {
@@ -47,8 +49,8 @@ function SamplePrevArrow(props) {
   );
 }
 
-export default function SimpleSlider() {
-  var settings = {
+export default function SimpleSlider({ img }) {
+  const settings = {
     dots: true,
     infinite: true,
     speed: 500,
@@ -57,24 +59,18 @@ export default function SimpleSlider() {
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
+  const images = img.split(",");
+
   return (
     <Wrap>
       <Slider {...settings}>
-        <div className={"img-align"}>
-          <img src={vegetable} className={"img-size"}></img>
-        </div>
-        <div>
-          <img src={dummyMac} className={"img-size"}></img>
-        </div>
-        <div>
-          <h3>3</h3>
-        </div>
-        <div>
-          <h3>4</h3>
-        </div>
-        <div>
-          <h3>5</h3>
-        </div>
+        {images.map((image, index) => {
+          return (
+            <div key={index} className={"img-align"}>
+              <img src={image} alt={"상품이미지"} className={"img-size"}></img>
+            </div>
+          );
+        })}
       </Slider>
     </Wrap>
   );

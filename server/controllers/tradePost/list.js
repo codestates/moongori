@@ -11,6 +11,20 @@ module.exports = async (req, res) => {
     offset = 10 * (page - 1);
   }
 
+  // 제시글 중에서 endDate가 지난 게시글 상태변경
+  const suggestionPosts = await tradePost.findAll({
+    where: {
+      state: 4,
+    },
+  });
+  for (let post of suggestionPosts) {
+    const today = new Date();
+    const timeValue = new Date(post.endDate);
+    if (post.endDate !== null && today.getTime() >= timeValue.getTime()) {
+      await tradePost.update({ state: 5 }, { where: { id: post.id } });
+    }
+  }
+
   const allPostCount = await tradePost.count();
   if (offset >= allPostCount) {
     return res.status(204).json({ message: "no more data" });

@@ -63,6 +63,9 @@ const FooterBox = styled.div`
     margin-bottom: 2px;
   }
   .About-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 5px;
     font-weight: normal;
   }
