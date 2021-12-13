@@ -16,20 +16,18 @@ module.exports = async (req, res) => {
       state: 1,
       user_Id: id,
     };
-    if (req.body.normalOrNot) {
+    if (Number(req.body.normalOrNot)) {
       payload = {
         title,
         content,
         img,
         normalOrNot,
         sCost,
-        state: 1,
+        state: 4,
         endDate,
         user_Id: id,
       };
     }
-
-    console.log("!!!!", payload);
     await tradePost.create(payload);
     return res.status(201).json({ message: "create" });
   } catch (err) {

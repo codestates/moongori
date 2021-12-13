@@ -11,14 +11,12 @@ module.exports = async (req, res) => {
     const result = await axios.post(
       `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_REST_API_KEY}&redirect_uri=${process.env.KAKAO_REDIRECT_URI}&code=${code}`
     );
-    // console.log("result.;;;;", result.data.access_token);
 
     const userInfo = await axios.get(`https://kapi.kakao.com/v2/user/me`, {
       headers: {
         Authorization: `Bearer ${result.data.access_token}`,
       },
     });
-    console.log("userInfo.;;;;", userInfo.data.kakao_account);
 
     const [findUser, exist] = await user.findOrCreate({
       where: {
@@ -59,7 +57,6 @@ module.exports = async (req, res) => {
     // const realQuery = encodeURIComponent(token);
     // res.redirect(`${process.env.ORIGIN}/?access_token=${realQuery}`);
     res.redirect(`${process.env.ORIGIN}/mypage`);
-
   } catch (error) {
     console.error(error);
     return res.status(501).json({ message: "서버에러 입니다." });

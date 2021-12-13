@@ -3,7 +3,7 @@ import styled from "styled-components";
 import markericon from "../images/moongorimarker.png";
 
 const StMapstyle = styled.div`
-  width: 80%;
+  width: 100%;
   height: 400px;
   .custom {
     font-size: 12px;

@@ -4,7 +4,13 @@ import NotFound from "../pages/NotFound";
 
 export default function PrivateRoute({ userinfo, login, isAuthenticated }) {
   if (login) {
-    return <Mypage userinfo={userinfo} isAuthenticated={isAuthenticated} />;
+    return (
+      <Mypage
+        userinfo={userinfo}
+        isAuthenticated={isAuthenticated}
+        login={login}
+      />
+    );
   } else {
     return <NotFound />;
   }

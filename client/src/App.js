@@ -25,6 +25,7 @@ const Wrap = styled.div`
   height: 100%;
   position: relative;
   width: 100%;
+  font-family: "NanumSquareRound";
 `;
 
 export default function App() {

@@ -13,6 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MypageNews from "../components/MypageNews";
 import Loading from "./../components/Loading";
 import News from "./../components/News";
+import Trade from "./../components/Trade";
+
 import {
   faCheckSquare,
   faWindowClose,
@@ -46,6 +48,9 @@ const StMypageHead = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    @media all and (max-width: 768px) {
+      width: 90%;
+    }
     .content-wrap {
       width: 100%;
       height: 100%;
@@ -154,6 +159,7 @@ const StMypageHead = styled.div`
             justify-content: center;
             align-items: center;
           }
+
           .input-title {
             text-align: center;
             width: 30%;
@@ -164,6 +170,7 @@ const StMypageHead = styled.div`
               margin-bottom: 5px;
             }
           }
+
           .input-tick {
             width: 80%;
             height: 100%;
@@ -290,6 +297,9 @@ const StMypageHead = styled.div`
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    @media all and (max-width: 768px) {
+      height: 25%;
+    }
     .category-wrap {
       margin-top: 10px;
       width: 62%;
@@ -303,7 +313,7 @@ const StMypageHead = styled.div`
       }
       .category-box {
         height: 100%;
-        width: 70%;
+        width: 80%;
         border-top: solid 1px #b7b7b7;
         border-bottom: solid 1px #b7b7b7;
         display: flex;
@@ -356,6 +366,10 @@ const StMypageHead = styled.div`
       }
     }
   }
+  .nicknameNotice {
+    font-size: 10px;
+    margin-left: 110px;
+  }
 `;
 
 const StCategoryButton = styled.button.attrs((props) => ({
@@ -365,7 +379,7 @@ const StCategoryButton = styled.button.attrs((props) => ({
   font-size: 9px;
   width: 80%;
   height: 60%;
-  border-radius: 15px;
+  border-radius: 10px;
   border: 1px gray;
   cursor: pointer;
   @media all and (max-width: 768px) {
@@ -375,17 +389,20 @@ const StCategoryButton = styled.button.attrs((props) => ({
   }
 `;
 
-export default function Mypage({ userinfo, isAuthenticated }) {
+export default function Mypage({ userinfo, isAuthenticated, login }) {
   //카테고리 별 게시글 받아오기
   const [data, setData] = useState(false);
   const [loading, isLoading] = useState(true);
   const [myNews, SetMyNews] = useState([]);
   const [myComment, setMyComment] = useState([]);
+  const [myTrade, setMyTrade] = useState([]);
+  const [myLikeTrade, setMyLikeTrade] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
   const [category, setCategory] = useState({ number: null });
   const [edit, setEdit] = useState(true);
+  const [checkNickname, setCheckNickname] = useState(false);
   const [editInfo, setEditInfo] = useState({
     img: userinfo.img,
     nickname: userinfo.nickname,
@@ -393,8 +410,6 @@ export default function Mypage({ userinfo, isAuthenticated }) {
     town: userinfo.town,
   });
   //이미지 보낼때 사용
-  console.log(editInfo);
-  console.log(userinfo);
   const [image, setImage] = useState("");
 
   //이미지 보이기용
@@ -410,6 +425,11 @@ export default function Mypage({ userinfo, isAuthenticated }) {
   const [openPost, isOpenPost] = useState(false);
   const handleInputValue = (key) => (e) => {
     setEditInfo({ ...editInfo, [key]: e.target.value });
+    if (key === "nickname") {
+      if (isNickname(e.target.value)) {
+        setCheckNickname(true);
+      }
+    }
   };
 
   const modalClose = () => {
@@ -474,12 +494,6 @@ export default function Mypage({ userinfo, isAuthenticated }) {
   };
 
   //수정 요청
-  // console.log(address);
-  // console.log(town);
-  // console.log(nickname);
-  // console.log(image);
-  // console.log(checkEdit);
-
   const submitEditInfo = async () => {
     const formData = new FormData();
     if (image !== "") formData.append("img", image);
@@ -499,7 +513,6 @@ export default function Mypage({ userinfo, isAuthenticated }) {
       await axios
         .post(`${process.env.REACT_APP_API_URL}/user`, formData, config)
         .then((res) => {
-          console.log(res.data.data);
           isAuthenticated(res.data.data);
           setEditInfo(res.data.data);
           Swal.fire({
@@ -555,11 +568,15 @@ export default function Mypage({ userinfo, isAuthenticated }) {
 
   // 카테고리 변경하는 함수
   const changeCategory = (e) => {
-    setCategory({ ...category, number: Number(e.target.value) });
+    if (Number(e.target.value) === category.number) {
+      setCategory({ ...category, number: null });
+    } else {
+      setCategory({ ...category, number: Number(e.target.value) });
+    }
   };
 
-  //내 게시글 카테고리 불러오기
-  const requestMyNews = async () => {
+  //내 동네소식 불러오기
+  const requestMyNews = () => {
     isLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_URL}/news/mylist`)
@@ -570,8 +587,8 @@ export default function Mypage({ userinfo, isAuthenticated }) {
       })
       .catch();
   };
-  //댓글 단 게시글 가져오기
-  const requestMyComment = async () => {
+  //관심소식 가져오기
+  const requestMyComment = () => {
     isLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_URL}/news/comment`)
@@ -582,6 +599,31 @@ export default function Mypage({ userinfo, isAuthenticated }) {
       })
       .catch();
   };
+  //내 거래글 가져오기
+  const requestMyTrade = () => {
+    isLoading(true);
+    axios.get(`${process.env.REACT_APP_API_URL}/trade/myList`).then((res) => {
+      setMyTrade(res.data.data);
+      isLoading(false);
+      setData(true);
+    });
+  };
+  console.log(myTrade);
+
+  //찜한 판매글 가져오기
+  const requestMyLikeTrade = () => {
+    isLoading(true);
+    axios.get(`${process.env.REACT_APP_API_URL}/trade/myLike`).then((res) => {
+      setMyLikeTrade(res.data.data);
+      isLoading(false);
+      setData(true);
+    });
+  };
+
+  //내 판매내역 가져오기
+
+  //내 구매내역 가져오기
+
   // 닉네임 유효성 검사 함수
   const isNickname = (value) => {
     let regExp = /^[가-힣]{3,8}$/;
@@ -726,8 +768,9 @@ export default function Mypage({ userinfo, isAuthenticated }) {
                           type="text"
                           className={"input-area edit"}
                           defaultValue={editInfo.nickname}
-                          onChange={handleInputValue("nickname")}
+                          onChange={(e) => handleInputValue("nickname", e)}
                         ></input>
+
                         <div className={"dupicate-wrap"}>
                           <div className={"dupicate-button"}>
                             <div
@@ -740,6 +783,7 @@ export default function Mypage({ userinfo, isAuthenticated }) {
                         </div>
                       </div>
                     </div>
+
                     <div className={"mypage-input-box"}>
                       <div className={"input-title"}>이메일</div>
                       <div className={"input-tick"}>
@@ -809,10 +853,13 @@ export default function Mypage({ userinfo, isAuthenticated }) {
                     <div className={"category-tick"}>
                       <StCategoryButton
                         value={1}
-                        onClick={(e) => changeCategory(e)}
+                        onClick={(e) => {
+                          changeCategory(e);
+                          requestMyTrade();
+                        }}
                         select={category.number === 1 ? true : false}
                       >
-                        내 게시글
+                        내 거래글
                       </StCategoryButton>
                     </div>
                     <div className={"category-tick"}>
@@ -830,7 +877,9 @@ export default function Mypage({ userinfo, isAuthenticated }) {
                     <div className={"category-tick"}>
                       <StCategoryButton
                         value={3}
-                        onClick={(e) => changeCategory(e)}
+                        onClick={(e) => {
+                          changeCategory(e);
+                        }}
                         select={category.number === 3 ? true : false}
                       >
                         판매내역
@@ -850,10 +899,13 @@ export default function Mypage({ userinfo, isAuthenticated }) {
                     <div className={"category-tick"}>
                       <StCategoryButton
                         value={5}
-                        onClick={(e) => changeCategory(e)}
+                        onClick={(e) => {
+                          changeCategory(e);
+                          requestMyLikeTrade();
+                        }}
                         select={category.number === 5 ? true : false}
                       >
-                        찜한 게시글
+                        찜한 판매글
                       </StCategoryButton>
                     </div>
                     <div className={"category-tick"}>
@@ -876,13 +928,41 @@ export default function Mypage({ userinfo, isAuthenticated }) {
         </div>
         <div className={"content-head"}>
           <div className={"content-wrap"}>
-            {myNews.map((news, index) => (
-              <News mypage={true} news={news} key={index} />
-              // <MypageNews key={index} news={news} />
-            ))}
-            {myComment.map((news, index) => (
-              <News mypage={true} news={news} key={index} />
-            ))}
+            {category.number === 1
+              ? myTrade.map((trade, index) => (
+                  <Trade
+                    mypage={true}
+                    trade={trade}
+                    key={index}
+                    num={index}
+                    login={login}
+                    userinfo={userinfo}
+                  />
+                ))
+              : null}
+
+            {category.number === 2
+              ? myNews.map((news, index) => (
+                  <News mypage={true} news={news} key={index} />
+                  // <MypageNews key={index} news={news} />
+                ))
+              : null}
+
+            {category.number === 6
+              ? myComment.map((news, index) => (
+                  <News mypage={true} news={news} key={index} />
+                ))
+              : null}
+
+            {myLikeTrade.map((trade, index) => {
+              <Trade
+                trade={trade}
+                key={index}
+                num={index}
+                login={login}
+                userinfo={userinfo}
+              />;
+            })}
           </div>
         </div>
       </StMypageHead>

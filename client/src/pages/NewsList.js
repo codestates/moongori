@@ -24,6 +24,7 @@ const StBodyDiv = styled.div`
   overflow-y: auto;
   margin-bottom: 200px;
   .category {
+    width: 80%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -149,7 +150,6 @@ export default function NewsList({ userinfo, login }) {
               isLoading(false);
               setNewsList([]);
             } else {
-              console.log(res.data);
               const mergeData = [].concat(...res.data.data);
               setNewsList(mergeData);
               setPage(2);
@@ -164,12 +164,10 @@ export default function NewsList({ userinfo, login }) {
             `${process.env.REACT_APP_API_URL}/news?search=${inputSearchRef.current.value}&page=1`
           )
           .then((res) => {
-            console.log("실행");
             if (res.status === 204) {
               isLoading(false);
               setNewsList([]);
             } else {
-              console.log(res.data);
               const mergeData = [].concat(...res.data.data);
               setNewsList(mergeData);
               setPage(2);
@@ -196,7 +194,6 @@ export default function NewsList({ userinfo, login }) {
             if (res.status === 204) {
               isLoading(false);
             } else {
-              console.log(res.data);
               const mergeData = newsList.concat(...res.data.data);
               setNewsList(mergeData);
               setPage((preState) => preState + 1);
@@ -214,7 +211,6 @@ export default function NewsList({ userinfo, login }) {
             if (res.status === 204) {
               isLoading(false);
             } else {
-              console.log(res.data);
               const mergeData = newsList.concat(...res.data.data);
               setNewsList(mergeData);
               setPage((preState) => preState + 1);
@@ -235,7 +231,6 @@ export default function NewsList({ userinfo, login }) {
             if (res.status === 204) {
               isLoading(false);
             } else {
-              console.log(res.data);
               const mergeData = newsList.concat(...res.data.data);
               setNewsList(mergeData);
               setPage((preState) => preState + 1);
@@ -251,7 +246,6 @@ export default function NewsList({ userinfo, login }) {
             if (res.status === 204) {
               isLoading(false);
             } else {
-              console.log(res.data);
               const mergeData = newsList.concat(...res.data.data);
               setNewsList(mergeData);
               setPage((preState) => preState + 1);

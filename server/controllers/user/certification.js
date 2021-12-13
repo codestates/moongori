@@ -2,8 +2,6 @@ const { user } = require("../../models");
 
 module.exports = async (req, res) => {
   const { email } = req.params;
-  console.log(email);
-
   await user.update(
     { authState: 1 },
     {

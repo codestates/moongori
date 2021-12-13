@@ -4,12 +4,6 @@ const { verify, sign } = require("jsonwebtoken");
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const { nickname, address, town } = req.body;
-  console.log(req.body);
-  console.log("!!!!!!!!!!", req.file);
-  //const imgs = req.files
-  // const imgs = req.files.map((el) => el.location).join(",");
-  // console.log(`$$$$$$$$$$$$4`, imgs);
-
   try {
     if (nickname) {
       await user.update({ nickname: nickname }, { where: { id: id } });
@@ -36,12 +30,9 @@ module.exports = async (req, res) => {
         "reliability",
       ],
     });
-    console.log(userInfo);
     const token = sign(userInfo.dataValues, process.env.ACCESS_SECRET, {
       expiresIn: "1d",
     });
-    // console.log("userInfo-img;;;;", userInfo.dataValues.img.split(","));
-
     return res
       .status(200)
       .cookie("accesstoken", token, {

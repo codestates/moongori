@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logoImg from "./../images/Logo.png";
 import axios from "axios";
@@ -98,7 +97,6 @@ const ModalContainer = styled.div`
 `;
 
 export default function PasswordModal({ modalClose }) {
-  const navigate = useNavigate();
   const onCloseModal = (e) => {
     if (e.target === e.currentTarget) {
       modalClose();
@@ -112,7 +110,6 @@ export default function PasswordModal({ modalClose }) {
   const handleInputValue = (key) => (e) => {
     setPassword({ ...password, [key]: e.target.value });
   };
-  console.log(password);
   const passwordHandler = () => {
     if (password.modifyPassword !== password.checkPassword) {
       Swal.fire({
@@ -123,7 +120,7 @@ export default function PasswordModal({ modalClose }) {
       });
     } else {
       axios
-        .patch("http://localhost:80/user/password", {
+        .patch(`${process.env.REACT_APP_API_URL}/user/password`, {
           currentPassword: password.currentPassword,
           modifyPassword: password.modifyPassword,
         })
@@ -134,7 +131,7 @@ export default function PasswordModal({ modalClose }) {
             showConfirmButton: false,
             timer: 1500,
           });
-          navigate("/mypage");
+          modalClose();
         })
         .catch(() => {
           Swal.fire({
@@ -152,7 +149,7 @@ export default function PasswordModal({ modalClose }) {
       <div className={"password-modal"}>
         <div className={"password-modal-wrap"}>
           <div className={"password-modal-logo"}>
-            <img src={logoImg} alt={"logo" }></img>
+            <img src={logoImg} alt={"logo"}></img>
             <div className={"password-logoname"}>moongori</div>
           </div>
           <div className={"password-modal-input-wrap"}>

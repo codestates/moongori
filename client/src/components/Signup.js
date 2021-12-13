@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -14,7 +15,7 @@ const StPostModalDiv = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
-  background: rgba(224, 224, 224, 0.7);
+  background-color: rgba(0, 0, 0, 0.4);
 `;
 
 const StModalReUse = styled(StModalDiv)`
@@ -253,8 +254,9 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
           navigate("/");
           Swal.fire({
             icon: "success",
-            title: "회원가입이 완료되었습니다.",
-            text: "이메일 인증을 완료해주세요.",
+            title: "이메일 인증을 완료해주세요.",
+            // title: "회원가입이 완료되었습니다.",
+            // text: "이메일 인증을 완료해주세요.",
           });
         });
     } else if (!checkInfo.email || signUpInfo.email === "") {
@@ -300,7 +302,6 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
       }
       fullAddr += extraAddr;
     }
-    console.log(data.bname);
     setSignUpInfo({ ...signUpInfo, town: data.bname, address: fullAddr });
     setCheckInfo({ ...checkInfo, address: true });
     isOpenPost(false);
