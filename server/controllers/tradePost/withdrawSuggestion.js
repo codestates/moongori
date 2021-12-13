@@ -3,7 +3,6 @@ const { suggestion, tradePost, user } = require("../../models");
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const postId = req.params.id;
-  console.log(`########`, postId);
   const postOne = await suggestion.findOne({
     where: { id: postId },
   });
@@ -27,12 +26,10 @@ module.exports = async (req, res) => {
       where: { tradePost_Id: req.body.tradePost_Id },
       include: [{ model: user, attributes: ["nickname", "town", "img"] }],
     });
-    return res
-      .status(200)
-      .json({
-        data: { list, currentCost: costAll },
-        message: "successful withdrawal",
-      });
+    return res.status(200).json({
+      data: { list, currentCost: costAll },
+      message: "successful withdrawal",
+    });
   } catch (err) {
     return res.status(500).json({ message: "error" });
   }

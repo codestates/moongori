@@ -5,8 +5,8 @@ import styled from "styled-components";
 export const StNewsDiv = styled.div`
   border: 2px solid #92e3a9;
   border-radius: 10px;
-  width: ${(props) => (props.mypage ? "60%" : "100%")};
-  height: ${(props) => (props.mypage ? "120px" : "150px")};
+  width: ${(props) => (props.mypage ? "80%" : "100%")};
+  height: ${(props) => (props.mypage ? "138px" : "150px")};
   margin-bottom: 40px;
   a {
     color: black;
@@ -36,7 +36,7 @@ export const StContentInfoDiv = styled.div`
   color: ${(props) => props.color};
   height: ${(props) => (props.top && !props.mypage ? "50px" : "auto")};
   margin-bottom: ${(props) =>
-    props.top ? (props.mypage ? "15px" : "10px") : "5px"};
+    props.top ? (props.mypage ? "15px" : "10px") : "0px"};
   font-size: ${(props) =>
     props.top ? (props.mypage ? "1em" : "1.2em") : "0.8em"};
   .front {

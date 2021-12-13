@@ -10,9 +10,6 @@ module.exports = async (req, res) => {
   if (page > 1) {
     offset = 10 * (page - 1);
   }
-  console.log("!!!!", category);
-  console.log("!!!!", search);
-  console.log("!!!!", page);
   // 전체
   if (!category) {
     const allPostCount = await tradePost.count({

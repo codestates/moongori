@@ -3,7 +3,6 @@ const { verify } = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
 
 module.exports = async (req, res) => {
-  console.log(req.body);
   const cookie = req.cookies.accesstoken;
   const verified = verify(cookie, process.env.ACCESS_SECRET);
   if (!verified) {

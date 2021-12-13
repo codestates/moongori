@@ -19,8 +19,9 @@ export const StModalDiv = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
-  background: rgba(204, 255, 229, 0.7);
+  background-color: rgba(0, 0, 0, 0.4);
   .wrap {
+    border-radius: 15px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -140,8 +141,14 @@ export default function Login({
   });
   const navigate = useNavigate();
 
-  const handleInputValue = (key, e) => {
+  const handleEmailValue = (key, e) => {
     setLoginInfo({ ...loginInfo, [key]: e.target.value });
+  };
+  const handlePasswordValue = (key, e) => {
+    setLoginInfo({ ...loginInfo, [key]: e.target.value });
+    if (e.key === "Enter") {
+      handleLogin();
+    }
   };
   // 이메일과 비밀번호를 입력했는지 확인
   // 2개를 모두 입력했으면 서버에 로그인 요청하기
@@ -211,14 +218,14 @@ export default function Login({
             <div>이메일</div>
             <input
               type={"email"}
-              onChange={(e) => handleInputValue("email", e)}
+              onChange={(e) => handleEmailValue("email", e)}
             ></input>
           </StWriteDiv>
           <StWriteDiv>
             <div>비밀번호</div>
             <input
               type={"password"}
-              onChange={(e) => handleInputValue("password", e)}
+              onKeyUp={(e) => handlePasswordValue("password", e)}
             ></input>
           </StWriteDiv>
         </div>

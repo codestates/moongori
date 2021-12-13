@@ -54,6 +54,7 @@ const StPostUserDiv = styled.div`
   flex: 0.9 0 0;
   width: 200px;
   display: flex;
+  width: 100%;
   img {
     height: 35px;
     width: 35px;
@@ -64,6 +65,7 @@ const StPostUserDiv = styled.div`
     }
   }
   .info {
+    width: 100%;
     margin: 10px 10px 0 0;
     text-align: left;
     font-size: 0.8em;
@@ -119,7 +121,8 @@ const StCommentInputDiv = styled.div`
       border-top: 1px solid #c4c4c4;
       text-align: right;
       button {
-        border-radius: 30px;
+        border: 1px solid #b7b7b7;
+        border-radius: 10px;
         background: #92e3a9;
         height: 30px;
         margin: 3px 10px 0 0;
@@ -141,18 +144,26 @@ const StPostHeaderReUse = styled(StPostHeaderDiv)`
     padding-top: 10px;
   }
   input {
-    width: 300px;
+    width: 100%;
     height: 20px;
     font-size: 1em;
     outline-color: #aae8c5;
   }
+  @media all and (max-width: 1000px) {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  @media all and (min-width: 1001px) {
+    align-items: center;
+  }
 `;
 
 const StCommentButtonDiv = styled.div`
-  padding: 30px 0 0 30px;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end
+  width: 100%;
   button {
-    border-radius: 30px;
+    border-radius: 10px;
     background: #92e3a9;
     height: 30px;
     margin-right: 10px;
@@ -194,8 +205,6 @@ export default function NewsPost({ login, userinfo }) {
             comment: inputCommentRef.current.value,
           })
           .then((res) => {
-            console.log(commentList);
-            console.log(res.data);
             setCommentList([...res.data.data].reverse());
           })
           .catch();
@@ -223,8 +232,6 @@ export default function NewsPost({ login, userinfo }) {
         comment: inputRevisedCommentRef.current.value,
       })
       .then((res) => {
-        console.log(commentList);
-        console.log(res.data);
         setCommentList([...res.data.data].reverse());
         setCommentId(null);
       });

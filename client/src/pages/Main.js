@@ -77,8 +77,9 @@ const StBodyDiv = styled.div`
       font-size: 15px;
       text-align: center;
       margin-top: 5px;
-      @media all and (min-width: 769px) {
-        font-size: 20px;
+      @media all and (min-width: 831px) {
+        width: 100%;
+        font-size: 18px;
       }
     }
     .main-intro-wrap {
@@ -110,6 +111,9 @@ const StBodyDiv = styled.div`
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        @media all and (max-width: 768px) {
+          width: 90%;
+        }
       }
     }
   }
@@ -145,7 +149,7 @@ const StBodyDiv = styled.div`
     align-items: center;
     @media all and (max-width: 768px) {
       flex-direction: column;
-      width: 80%;
+      width: 90%;
     }
     .question-wrap {
       display: flex;
@@ -186,12 +190,19 @@ const StBodyDiv = styled.div`
           align-items: center;
           top: 50%;
           left: 50%;
+          @media all and (max-width: 900px) {
+            width: 90%;
+          }
           transform: translate(-50%, -50%);
           .example-img-wrap {
             height: 60%;
             display: flex;
             justify-content: center;
             align-items: center;
+            @media all and (max-width: 900px) {
+              width: 300px;
+              font-size: 30px;
+            }
           }
         }
         .second {
@@ -204,6 +215,9 @@ const StBodyDiv = styled.div`
       }
       .main-intro-title {
         font-size: 35px;
+        @media all and (max-width: 831px) {
+          font-size: 30px;
+        }
       }
     }
     .welcome {

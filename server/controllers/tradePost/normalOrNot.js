@@ -6,7 +6,6 @@ const Op = sequelize.Op;
 module.exports = async (req, res) => {
   const cookie = req.cookies.accesstoken;
   const normalOrNot = req.params.normalOrNot;
-  console.log("!!!!!!", req.params);
   const page = req.query.page;
   let offset = 0;
   if (page > 1) {

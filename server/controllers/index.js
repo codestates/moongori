@@ -23,9 +23,6 @@ router.post("/user/email", userCtrl.email);
 router.post("/email", userCtrl.sendEmail);
 router.get("/cert/:email", userCtrl.cert);
 
-// router.post("/uplod", userCtrl.img);
-// router.post("/user/test", userCtrl.test);
-
 //newsPost
 router.get("/news/list", newsPostCtrl.list);
 router.get("/news/list/:category", newsPostCtrl.category);
@@ -50,6 +47,7 @@ router.delete(
   auth.accessToken,
   newsPostCtrl.withdrawalComment
 );
+//마이페이지
 router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
 router.get("/news/comment", auth.accessToken, newsPostCtrl.myComment);
 router.get("/news", newsPostCtrl.search);
@@ -87,6 +85,7 @@ router.delete(
 );
 router.post("/trade/like", auth.accessToken, tradePostCtrl.like);
 router.delete("/trade/like", auth.accessToken, tradePostCtrl.deleteLike);
+
 router.get("/trade/myList", auth.accessToken, tradePostCtrl.myList);
 router.get("/trade/myLike", auth.accessToken, tradePostCtrl.myLike);
 router.get("/trade", tradePostCtrl.search);

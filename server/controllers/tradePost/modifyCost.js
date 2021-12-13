@@ -4,7 +4,6 @@ module.exports = async (req, res) => {
   const id = req.cookies.id;
   const suggestionId = req.params.id;
 
-  console.log(`######`, req.body.tradePost_Id);
   try {
     const suggestionInfo = await suggestion.findOne({
       where: { id: suggestionId },

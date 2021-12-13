@@ -18,11 +18,9 @@ module.exports = async (req, res) => {
         user_Id: id,
       };
       const createPost = await newsPost.create(payload);
-      console.log("!!!!!", createPost);
       const updatePost = await newsPost.findOne({
         where: { id: createPost.id },
       });
-      console.log("@@@@@@", updatePost);
       return res.status(201).json({ data: updatePost, message: "create" });
     } else {
       const { category, content, location } = req.body;

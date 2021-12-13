@@ -68,7 +68,6 @@ export default function TradeList({ login, userinfo }) {
   const [fetch, isFetch] = useState(false);
   const inputSearchRef = useRef(null);
   const navigate = useNavigate();
-
   // 카테고리 변경하는 함수
   const changeCategory = (e) => {
     if (e.target.value === category) {
@@ -98,7 +97,6 @@ export default function TradeList({ login, userinfo }) {
               isLoading(false);
               setTradeList([]);
             } else {
-              console.log(res.data);
               const mergeData = [].concat(...res.data.data);
               setTradeList(mergeData);
               setPage(2);
@@ -113,12 +111,10 @@ export default function TradeList({ login, userinfo }) {
             `${process.env.REACT_APP_API_URL}/trade?search=${inputSearchRef.current.value}&page=1`
           )
           .then((res) => {
-            console.log("실행");
             if (res.status === 204) {
               isLoading(false);
               setTradeList([]);
             } else {
-              console.log(res.data);
               const mergeData = [].concat(...res.data.data);
               setTradeList(mergeData);
               setPage(2);
@@ -145,7 +141,6 @@ export default function TradeList({ login, userinfo }) {
             if (res.status === 204) {
               isLoading(false);
             } else {
-              console.log(res.data);
               const mergeData = tradeList.concat(...res.data.data);
               setTradeList(mergeData);
               setPage((preState) => preState + 1);
@@ -163,13 +158,11 @@ export default function TradeList({ login, userinfo }) {
             if (res.status === 204) {
               isLoading(false);
             } else {
-              console.log(res.data);
               const mergeData = tradeList.concat(...res.data.data);
               setTradeList(mergeData);
               setPage((preState) => preState + 1);
               isLoading(false);
               isFetch(false);
-              // setTimeout(() => {}, 1000);
             }
           })
           .catch();
@@ -184,7 +177,6 @@ export default function TradeList({ login, userinfo }) {
             if (res.status === 204) {
               isLoading(false);
             } else {
-              console.log(res.data);
               const mergeData = tradeList.concat(...res.data.data);
               setTradeList(mergeData);
               setPage((preState) => preState + 1);
@@ -200,13 +192,11 @@ export default function TradeList({ login, userinfo }) {
             if (res.status === 204) {
               isLoading(false);
             } else {
-              console.log(res.data);
               const mergeData = tradeList.concat(...res.data.data);
               setTradeList(mergeData);
               setPage((preState) => preState + 1);
               isLoading(false);
               isFetch(false);
-              // setTimeout(() => {}, 1000);
             }
           })
           .catch();
@@ -238,6 +228,7 @@ export default function TradeList({ login, userinfo }) {
       window.removeEventListener("scroll", handleScroll);
     };
   });
+  console.log("tradeList;", tradeList);
   return (
     <StBodyDiv>
       <StContentsHeadDiv>
@@ -287,6 +278,7 @@ export default function TradeList({ login, userinfo }) {
       <StContentsBodyDiv>
         {tradeList.map((trade, index) => (
           <Trade
+            mypage={false}
             trade={trade}
             key={index}
             num={index}

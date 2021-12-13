@@ -39,7 +39,7 @@ const StContentsDiv = styled.div`
   .trade-img {
     text-align: center;
     img {
-      width: 130px;
+      width: 200px;
       height: 130px;
     }
   }
@@ -67,21 +67,24 @@ const StContentsInfoDiv = styled.div`
     font-size: 18px;
   }
   .town-day {
-    font-size: 15px;
+    margin-bottom:10
     color: #9c9c9c;
     span {
       margin-right: 5px;
+      color: #9c9c9c;
+      font-size: 12px;
     }
   }
   .cost {
+    font-weight: bold;
     font-size: 21px;
   }
 `;
 
 const StTradeStateDiv = styled.div`
   text-align: center;
-  font-size: 12px;
-  width: 40px;
+  font-size: 11px;
+  width: 60px;
   padding: 5px;
   background: ${(props) => props.background};
   border-radius: 10px;
@@ -91,7 +94,8 @@ export const tradeState = {
   1: "판매중",
   2: "예약중",
   3: "거래완료",
-  4: "마감",
+  4: "제시",
+  5: "마감",
 };
 
 export const tradeCategory = {
@@ -102,7 +106,6 @@ export const tradeCategory = {
 export function endForToday(value) {
   const today = new Date();
   const timeValue = new Date(value);
-
   const betweenTime = Math.floor(
     (timeValue.getTime() - today.getTime()) / 1000 / 60
   );
@@ -121,7 +124,7 @@ export function endForToday(value) {
   }
 }
 
-export default function Trade({ trade, num, login, userinfo }) {
+export default function Trade({ trade, num, login, userinfo, mypage }) {
   return (
     <StTradeDiv num={num % 2}>
       <Link
@@ -144,7 +147,7 @@ export default function Trade({ trade, num, login, userinfo }) {
                 <span>{timeForToday(trade.createdAt)}</span>
               </div>
               {trade.normalOrNot ? (
-                <div className={"const"}>
+                <div>
                   <div className={"cost"}>
                     제시금액 : {trade.sCost.toLocaleString()} 원
                   </div>
@@ -158,7 +161,7 @@ export default function Trade({ trade, num, login, userinfo }) {
                 <div className={"cost"}>{trade.sCost.toLocaleString()} 원</div>
               )}
               {trade.normalOrNot ? (
-                trade.state === 1 ? (
+                trade.state === 4 ? (
                   <StTradeStateDiv background={"#AAE8E1"}>
                     {endForToday(trade.endDate)}
                   </StTradeStateDiv>

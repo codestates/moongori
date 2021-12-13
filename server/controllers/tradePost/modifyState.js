@@ -3,7 +3,6 @@ const { tradePost } = require("../../models");
 module.exports = async (req, res) => {
   const id = req.cookies.id;
   const postId = req.params.id;
-  console.log(req.body);
 
   const postOne = await tradePost.findOne({
     where: { id: postId },

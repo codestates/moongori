@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
     /**
@@ -17,22 +15,28 @@ module.exports = (sequelize, DataTypes) => {
       models.user.hasMany(models.comment, { foreignKey: "user_Id" });
       models.user.hasMany(models.chat, { foreignKey: "user_Id" });
     }
-  };
-  user.init({
-    email: DataTypes.STRING,
-    nickname: DataTypes.STRING,
-    address: DataTypes.STRING,
-    password: DataTypes.STRING,
-    town: DataTypes.STRING,
-    latitude: DataTypes.DOUBLE,
-    longitude: DataTypes.DOUBLE,
-    salt: DataTypes.STRING,
-    authState: { defaultValue: 0, type: DataTypes.INTEGER },
-    img: { defaultValue: null, type: DataTypes.STRING },
-    reliability: { defaultValue: 0, type: DataTypes.INTEGER }
-  }, {
-    sequelize,
-    modelName: 'user',
-  });
+  }
+  user.init(
+    {
+      email: DataTypes.STRING,
+      nickname: DataTypes.STRING,
+      address: DataTypes.STRING,
+      password: DataTypes.STRING,
+      town: DataTypes.STRING,
+      latitude: DataTypes.DOUBLE,
+      longitude: DataTypes.DOUBLE,
+      salt: DataTypes.STRING,
+      authState: { defaultValue: 0, type: DataTypes.INTEGER },
+      img: {
+        defaultValue: `https://moongoris3.s3.ap-northeast-2.amazonaws.com/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%8C%E1%85%A1.png`,
+        type: DataTypes.STRING,
+      },
+      reliability: { defaultValue: 0, type: DataTypes.INTEGER },
+    },
+    {
+      sequelize,
+      modelName: "user",
+    }
+  );
   return user;
 };

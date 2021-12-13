@@ -2,7 +2,6 @@ const { user } = require("../../models");
 const { verify } = require("jsonwebtoken");
 
 module.exports = (req, res) => {
-  console.log(req.cookies);
   const cookie = req.cookies.accesstoken;
   if (!cookie) {
     return res.status(403).json({ message: "fail" });
