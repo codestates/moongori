@@ -5,6 +5,7 @@ const PORT = 4000;
 const cookieParser = require("cookie-parser");
 const controllers = require("./controllers");
 const cors = require("cors");
+const socketIo = require("socket.io");
 
 app.use(express.json());
 app.use(cookieParser());
