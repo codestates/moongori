@@ -32,11 +32,22 @@ font-family:S-CoreDream-6Bold;
         @media all and (max-width: 768px) {
           margin-bottom: 20px;
         }
+        .welcome {
+          margin-left: 5px;
+          color: gray;
+          @media all and (max-width: 768px) {
+            margin-left: 5px;
+            color: gray;
+          }
+        }
       }
       .logo-title {
-        text-align: center;
+        text-align: start;
         font-size: 3em;
         margin: 5px 0 5px 0;
+        @media all and (max-width: 768px) {
+          text-align:center;
+        }
       }
     }
     img {
@@ -71,7 +82,7 @@ font-family:S-CoreDream-6Bold;
       font-weight: bold;
       font-size: 25px;
       margin-bottom: 20px;
-      @media all and (max-width: 831px) {
+      @media all and (max-width: 768px) {
         text-align:center;
       }
     }
@@ -80,7 +91,7 @@ font-family:S-CoreDream-6Bold;
       font-size: 16px;
       text-align:start;
       margin-top: 5px;
-      @media all and (max-width: 831px) {
+      @media all and (max-width:768px) {
         width: 100%;
         font-size: 15px;
         text-align: center;
@@ -90,15 +101,21 @@ font-family:S-CoreDream-6Bold;
       margin-bottom: 10px;
     }
     .main-intro-subtitle {
-      text-align: center;
+      text-align: start;
       font-weight: bold;
       font-size: 20px;
       margin-bottom: 3px;
+      @media all and (max-width: 768px) {
+        text-align: center;
+      }
     }
     .main-intro-subcontents {
       color:gray;
       font-size: 15px;
-      text-align: center;
+      text-align: start;
+      @media all and (max-width: 768px) {
+        text-align: center;
+      }
     }
     .example {
       position: relative;
@@ -160,9 +177,10 @@ font-family:S-CoreDream-6Bold;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: start;
       @media all and (max-width: 768px) {
         width: 90%;
+        align-items: center;
       }
     }
   }
@@ -184,7 +202,7 @@ font-family:S-CoreDream-6Bold;
     .main {
       height: 500px;
       img {
-        width: 420px;
+        width: 400px;
         height: 380px;
       }
       .banner {
@@ -193,6 +211,7 @@ font-family:S-CoreDream-6Bold;
       .example {
         position: relative;
         .example-contents {
+          max-width:850px;
           width: 80%;
           height: 80%;
           position: absolute;
@@ -229,19 +248,11 @@ font-family:S-CoreDream-6Bold;
       .main-intro-title {
         font-size: 35px;
         text-align:start;
-        @media all and (max-width: 831px) {
+        @media all and (max-width: 768px) {
           font-size: 30px;
           text-align:center;
         }
         
-      }
-    }
-    .welcome {
-      margin-left: 5px;
-      color: gray;
-      @media all and (max-width: 768px) {
-        margin-left: 15px;
-        color: gray;
       }
     }
   }

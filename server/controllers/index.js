@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const userCtrl = require("./user/userCtrl");
 const newsPostCtrl = require("./newsPost/newsPostCtrl");
-const tradePost = require("./tradePost/tradePostCtrl");
 const auth = require("./auth/accessToken");
 const tradePostCtrl = require("./tradePost/tradePostCtrl");
 
@@ -22,6 +21,12 @@ router.post("/user/nickname", userCtrl.nickname);
 router.post("/user/email", userCtrl.email);
 router.post("/email", userCtrl.sendEmail);
 router.get("/cert/:email", userCtrl.cert);
+
+//마이페이지
+router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
+router.get("/news/comment", auth.accessToken, newsPostCtrl.myComment);
+router.get("/news", newsPostCtrl.search);
+router.get("/news/:category", newsPostCtrl.search);
 
 //newsPost
 router.get("/news/list", newsPostCtrl.list);
@@ -47,29 +52,24 @@ router.delete(
   auth.accessToken,
   newsPostCtrl.withdrawalComment
 );
-//마이페이지
-router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
-router.get("/news/comment", auth.accessToken, newsPostCtrl.myComment);
-router.get("/news", newsPostCtrl.search);
-router.get("/news/:category", newsPostCtrl.search);
 
 //tradePost
-router.get("/trade/list", tradePost.list);
-router.get("/trade/list/:normalOrNot", tradePost.normalOrNot);
-router.get("/trade/post/:id", tradePost.read);
-router.post("/trade/post", auth.accessToken, tradePost.img, tradePost.write);
+router.get("/trade/list", tradePostCtrl.list);
+router.get("/trade/list/:normalOrNot", tradePostCtrl.normalOrNot);
+router.get("/trade/post/:id", tradePostCtrl.read);
+router.post("/trade/post", auth.accessToken, tradePostCtrl.img, tradePostCtrl.write);
 router.post(
   "/trade/normal/:id",
   auth.accessToken,
-  tradePost.img,
-  tradePost.modifynormal
+  tradePostCtrl.img,
+  tradePostCtrl.modifynormal
 );
 router.delete("/trade/post/:id", auth.accessToken, tradePostCtrl.delete);
 router.patch("/trade/state/:id", auth.accessToken, tradePostCtrl.state);
 router.post(
   "/trade/post/:id",
   auth.accessToken,
-  tradePost.img,
+  tradePostCtrl.img,
   tradePostCtrl.modifyTrade
 );
 router.post("/trade/suggestion", auth.accessToken, tradePostCtrl.suggestion);
@@ -85,7 +85,6 @@ router.delete(
 );
 router.post("/trade/like", auth.accessToken, tradePostCtrl.like);
 router.delete("/trade/like", auth.accessToken, tradePostCtrl.deleteLike);
-
 router.get("/trade/myList", auth.accessToken, tradePostCtrl.myList);
 router.get("/trade/myLike", auth.accessToken, tradePostCtrl.myLike);
 router.get("/trade", tradePostCtrl.search);
