@@ -281,7 +281,6 @@ export default function TradeList({ login, userinfo }) {
             mypage={false}
             trade={trade}
             key={index}
-            num={index}
             login={login}
             userinfo={userinfo}
           />
