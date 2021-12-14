@@ -30,7 +30,6 @@ const StTradeDiv = styled(StNewsDiv)`
   @media all and (min-width: 769px) {
     display: inline-block;
     width: 45%;
-    margin-right: ${(props) => (props.num === 0 ? "40px" : null)};
   }
 `;
 
@@ -124,73 +123,142 @@ export function endForToday(value) {
   }
 }
 
-export default function Trade({ trade, num, login, userinfo, mypage }) {
+export default function Trade({ trade, login, userinfo, mypage }) {
   return (
-    <StTradeDiv num={num % 2}>
-      <Link
-        to={
-          trade.normalOrNot === 0
-            ? `/trade-normal/read=${trade.id}`
-            : `/trade-suggestion/read=${trade.id}`
-        }
-      >
-        <div className={"wrap"}>
-          <div className={"category"}>{tradeCategory[trade.normalOrNot]}</div>
-          <StContentsDiv>
-            <div className={"trade-img"}>
-              <img src={trade.img.split(",")[0]} alt={"거래 이미지"}></img>
-            </div>
-            <StContentsInfoDiv>
-              <div className={"trade-title"}>{trade.title}</div>
-              <div className={"town-day"}>
-                <span>{trade.user.town}</span>
-                <span>{timeForToday(trade.createdAt)}</span>
-              </div>
-              {trade.normalOrNot ? (
-                <div>
-                  <div className={"cost"}>
-                    제시금액 : {trade.sCost.toLocaleString()} 원
-                  </div>
-                  {trade.cCost ? (
-                    <div className={"cost"}>
-                      현재금액 : {trade.cCost.toLocaleString()} 원
-                    </div>
-                  ) : null}
+    <>{//trade로 들어올때가 있고 trade.tradePost로 들어오는 경우
+      trade.tradePost === undefined ? (
+        <StTradeDiv >
+          <Link
+            to={
+              trade.normalOrNot === 0
+                ? `/trade-normal/read=${trade.id}`
+                : `/trade-suggestion/read=${trade.id}`
+            }
+          >
+            <div className={"wrap"}>
+              <div className={"category"}>{tradeCategory[trade.normalOrNot]}</div>
+              <StContentsDiv>
+                <div className={"trade-img"}>
+                  <img src={trade.img.split(",")[0]} alt={"거래 이미지"}></img>
                 </div>
-              ) : (
-                <div className={"cost"}>{trade.sCost.toLocaleString()} 원</div>
-              )}
-              {trade.normalOrNot ? (
-                trade.state === 4 ? (
-                  <StTradeStateDiv background={"#AAE8E1"}>
-                    {endForToday(trade.endDate)}
-                  </StTradeStateDiv>
+                <StContentsInfoDiv>
+                  <div className={"trade-title"}>{trade.title}</div>
+                  <div className={"town-day"}>
+                    <span>{trade.user.town}</span>
+                    <span>{timeForToday(trade.createdAt)}</span>
+                  </div>
+                  {trade.normalOrNot ? (
+                    <div>
+                      <div className={"cost"}>
+                        제시금액 : {trade.sCost.toLocaleString()} 원
+                      </div>
+                      {trade.cCost ? (
+                        <div className={"cost"}>
+                          현재금액 : {trade.cCost.toLocaleString()} 원
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className={"cost"}>{trade.sCost.toLocaleString()} 원</div>
+                  )}
+                  {trade.normalOrNot ? (
+                    trade.state === 4 ? (
+                      <StTradeStateDiv background={"#AAE8E1"}>
+                        {endForToday(trade.endDate)}
+                      </StTradeStateDiv>
+                    ) : (
+                      <StTradeStateDiv background={"#C4C4C4"}>
+                        {tradeState[trade.state]}
+                      </StTradeStateDiv>
+                    )
+                  ) : trade.state !== 1 ? (
+                    <StTradeStateDiv
+                      background={trade.state === 2 ? "#92E3A9" : "#C4C4C4"}
+                    >
+                      {tradeState[trade.state]}
+                    </StTradeStateDiv>
+                  ) : null}
+                </StContentsInfoDiv>
+              </StContentsDiv>
+              <div className={"like"}>
+                {login &&
+                  trade.likes.filter((like) => userinfo.id === like.user_Id)
+                    .length ? (
+                  <FontAwesomeIcon icon={solidStart} />
                 ) : (
-                  <StTradeStateDiv background={"#C4C4C4"}>
-                    {tradeState[trade.state]}
+                  <FontAwesomeIcon icon={regularStart} />
+                )}
+                <div>{trade.likes_cnt}</div>
+              </div>
+            </div>
+          </Link>
+        </StTradeDiv>
+      ) : (<StTradeDiv>
+        <Link
+          to={
+            trade.tradePost.normalOrNot === 0
+              ? `/trade-normal/read=${trade.tradePost.id}`
+              : `/trade-suggestion/read=${trade.tradePost.id}`
+          }
+        >
+          <div className={"wrap"}>
+            <div className={"category"}>{tradeCategory[trade.tradePost.normalOrNot]}</div>
+            <StContentsDiv>
+              <div className={"trade-img"}>
+                <img src={trade.tradePost.img.split(",")[0]} alt={"거래 이미지"}></img>
+              </div>
+              <StContentsInfoDiv>
+                <div className={"trade-title"}>{trade.tradePost.title}</div>
+                <div className={"town-day"}>
+                  <span>{trade.user.town}</span>
+                  <span>{timeForToday(trade.tradePost.createdAt)}</span>
+                </div>
+                {trade.normalOrNot ? (
+                  <div>
+                    <div className={"cost"}>
+                      제시금액 : {trade.tradePost.sCost.toLocaleString()} 원
+                    </div>
+                    {trade.cCost ? (
+                      <div className={"cost"}>
+                        현재금액 : {trade.tradePost.cCost.toLocaleString()} 원
+                      </div>
+                    ) : null}
+                  </div>
+                ) : (
+                  <div className={"cost"}>{trade.tradePost.sCost.toLocaleString()} 원</div>
+                )}
+                {trade.tradePost.normalOrNot ? (
+                  trade.tradePost.state === 4 ? (
+                    <StTradeStateDiv background={"#AAE8E1"}>
+                      {endForToday(trade.tradePost.endDate)}
+                    </StTradeStateDiv>
+                  ) : (
+                    <StTradeStateDiv background={"#C4C4C4"}>
+                      {tradeState[trade.tradePost.state]}
+                    </StTradeStateDiv>
+                  )
+                ) : trade.tradePost.state !== 1 ? (
+                  <StTradeStateDiv
+                    background={trade.tradePost.state === 2 ? "#92E3A9" : "#C4C4C4"}
+                  >
+                    {tradeState[trade.tradePost.state]}
                   </StTradeStateDiv>
-                )
-              ) : trade.state !== 1 ? (
-                <StTradeStateDiv
-                  background={trade.state === 2 ? "#92E3A9" : "#C4C4C4"}
-                >
-                  {tradeState[trade.state]}
-                </StTradeStateDiv>
-              ) : null}
-            </StContentsInfoDiv>
-          </StContentsDiv>
-          <div className={"like"}>
-            {login &&
-            trade.likes.filter((like) => userinfo.id === like.user_Id)
-              .length ? (
-              <FontAwesomeIcon icon={solidStart} />
-            ) : (
-              <FontAwesomeIcon icon={regularStart} />
-            )}
-            <div>{trade.likes_cnt}</div>
+                ) : null}
+              </StContentsInfoDiv>
+            </StContentsDiv>
+            <div className={"like"}>
+              {login &&
+                trade.tradePost.likes.filter((like) => userinfo.id === like.user_Id)
+                  .length ? (
+                <FontAwesomeIcon icon={solidStart} />
+              ) : (
+                <FontAwesomeIcon icon={regularStart} />
+              )}
+              <div>{trade.tradePost.likes_cnt}</div>
+            </div>
           </div>
-        </div>
-      </Link>
-    </StTradeDiv>
+        </Link>
+      </StTradeDiv>)}
+    </>
   );
 }

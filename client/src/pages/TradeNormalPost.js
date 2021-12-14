@@ -629,8 +629,8 @@ export default function TradeNoramlPost({ login, userinfo }) {
                       {check === 3
                         ? tradeState[3]
                         : check === 1
-                        ? tradeState[1]
-                        : tradeState[2]}
+                          ? tradeState[1]
+                          : tradeState[2]}
                     </div>
                     {userinfo.id === postInfo.user_Id ? (
                       option ? (
@@ -767,8 +767,8 @@ export default function TradeNoramlPost({ login, userinfo }) {
                       {check === 3
                         ? tradeState[3]
                         : check === 1
-                        ? tradeState[1]
-                        : tradeState[2]}
+                          ? tradeState[1]
+                          : tradeState[2]}
                     </div>
                   </div>
                   <input
@@ -838,3 +838,4 @@ export default function TradeNoramlPost({ login, userinfo }) {
     </>
   );
 }
+

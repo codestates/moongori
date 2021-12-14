@@ -58,7 +58,6 @@ const StMypageHead = styled.div`
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: scroll;
       @media all and (max-width: 768px) {
         width: 90%;
       }
@@ -608,7 +607,6 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
       setData(true);
     });
   };
-  console.log(myTrade);
 
   //찜한 판매글 가져오기
   const requestMyLikeTrade = () => {
@@ -930,39 +928,42 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
           <div className={"content-wrap"}>
             {category.number === 1
               ? myTrade.map((trade, index) => (
-                  <Trade
-                    mypage={true}
-                    trade={trade}
-                    key={index}
-                    num={index}
-                    login={login}
-                    userinfo={userinfo}
-                  />
-                ))
+                <Trade
+                  mypage={true}
+                  trade={trade}
+                  key={index}
+                  num={index}
+                  login={login}
+                  userinfo={userinfo}
+                />
+              ))
               : null}
 
             {category.number === 2
               ? myNews.map((news, index) => (
-                  <News mypage={true} news={news} key={index} />
-                  // <MypageNews key={index} news={news} />
-                ))
+                <News mypage={true} news={news} key={index} />
+                // <MypageNews key={index} news={news} />
+              ))
               : null}
 
             {category.number === 6
               ? myComment.map((news, index) => (
-                  <News mypage={true} news={news} key={index} />
-                ))
+                <News mypage={true} news={news} key={index} />
+              ))
               : null}
 
-            {myLikeTrade.map((trade, index) => {
-              <Trade
-                trade={trade}
-                key={index}
-                num={index}
-                login={login}
-                userinfo={userinfo}
-              />;
-            })}
+            {category.number === 5
+              ? myLikeTrade.map((trade, index) => (
+                < Trade
+                  mypage={true}
+                  trade={trade}
+                  key={index}
+                  num={index}
+                  login={login}
+                  userinfo={userinfo}
+                />
+              )) : null}
+
           </div>
         </div>
       </StMypageHead>
