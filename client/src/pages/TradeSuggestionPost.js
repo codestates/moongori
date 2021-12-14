@@ -18,7 +18,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
 import SimpleSlider from "../components/Slider";
-import { tradeState } from "../components/Trade";
 import { StContentInfoDiv } from "../components/News";
 import { StContentsDiv, StPreviewDiv, StImageDiv } from "./TradePostWrite";
 axios.defaults.withCredentials = true;
@@ -494,9 +493,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
   const [likeState, setLikeState] = useState(false);
   const [cCost, setCCost] = useState(0);
 
-  //상태 변경 요청할때 사용
-  const [check, setCheck] = useState(null);
-
   const openOption = () => {
     setOption(!option);
   };
@@ -555,16 +551,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
     }
   };
 
-  // 게시글 상태변경
-  const changeState = async (s) => {
-    await axios
-      .patch(`${process.env.REACT_APP_API_URL}/trade/state/${id}`, {
-        state: s,
-      })
-      .then((res) => {
-        setCheck(res.data.data.state);
-      });
-  };
   // 찜하기
   const like = async () => {
     if (likeState) {
@@ -771,7 +757,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${id}`)
       .then((res) => {
-        setCheck(res.data.data.postInfo.state);
         setCCost(res.data.data.postInfo.cCost);
         setPostInfo(res.data.data.postInfo);
         setPriceList(res.data.data.postInfo.suggestions.reverse());

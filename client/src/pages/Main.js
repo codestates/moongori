@@ -14,6 +14,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 const StBodyDiv = styled.div`
+font-family:S-CoreDream-6Bold;
   width: 100%;
   .main {
     height: 570px;
@@ -63,23 +64,26 @@ const StBodyDiv = styled.div`
       @media all and (min-width: 769px) {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
+      
       }
     }
     .main-intro-title {
-      text-align: center;
       font-weight: bold;
       font-size: 25px;
       margin-bottom: 20px;
+      @media all and (max-width: 831px) {
+        text-align:center;
+      }
     }
     .main-intro-contents {
-      font-size: 15px;
-      text-align: center;
+      color:gray;
+      font-size: 16px;
+      text-align:start;
       margin-top: 5px;
-      @media all and (min-width: 831px) {
+      @media all and (max-width: 831px) {
         width: 100%;
-        font-size: 18px;
+        font-size: 15px;
+        text-align: center;
       }
     }
     .main-intro-wrap {
@@ -92,6 +96,7 @@ const StBodyDiv = styled.div`
       margin-bottom: 3px;
     }
     .main-intro-subcontents {
+      color:gray;
       font-size: 15px;
       text-align: center;
     }
@@ -101,7 +106,7 @@ const StBodyDiv = styled.div`
       height: 100%;
       background-color: #f5f5f5;
       .example-contents {
-        width: 60%;
+        width: 80%;
         flex-direction: column;
         justify-content: center;
         position: absolute;
@@ -142,7 +147,7 @@ const StBodyDiv = styled.div`
     }
   }
   .question-contents {
-    width: 70%;
+    width: 80%;
     display: flex;
     margin-top: 20px;
     justify-content: center;
@@ -167,6 +172,13 @@ const StBodyDiv = styled.div`
     justify-content: center;
     align-items: start;
   }
+  .question-img-first{
+    margin-left:40px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+  }
   //web
   @media all and (min-width: 769px) {
     .main {
@@ -181,7 +193,7 @@ const StBodyDiv = styled.div`
       .example {
         position: relative;
         .example-contents {
-          width: 70%;
+          width: 80%;
           height: 80%;
           position: absolute;
           display: flex;
@@ -195,6 +207,7 @@ const StBodyDiv = styled.div`
           }
           transform: translate(-50%, -50%);
           .example-img-wrap {
+            width:50%;
             height: 60%;
             display: flex;
             justify-content: center;
@@ -215,9 +228,12 @@ const StBodyDiv = styled.div`
       }
       .main-intro-title {
         font-size: 35px;
+        text-align:start;
         @media all and (max-width: 831px) {
           font-size: 30px;
+          text-align:center;
         }
+        
       }
     }
     .welcome {
@@ -385,7 +401,7 @@ export default function Main() {
               </Link>
             </div>
 
-            <div className={"question-img"}>
+            <div className={"question-img-first"}>
               <img src={trade} alt={"이미지"} />
             </div>
           </div>
