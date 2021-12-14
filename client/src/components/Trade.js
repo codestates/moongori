@@ -11,6 +11,7 @@ const StTradeDiv = styled(StNewsDiv)`
   .wrap {
     margin: 20px;
     .category {
+      
       text-align: center;
       width: 35px;
       padding: 5px;
@@ -55,6 +56,27 @@ const StContentsDiv = styled.div`
       }
     }
   }
+  @media all and (min-width: 1400px) {
+   
+    .trade-img {
+      margin-right: 40px;
+      img {
+        width: 220px;
+        height: 150px;
+      }
+    }
+  }
+  @media all and (min-width: 1920px) {
+    margin-left:50px;
+   
+    .trade-img {
+      margin-right: 40px;
+      img {
+        width: 220px;
+        height: 150px;
+      }
+    }
+  }
 `;
 
 const StContentsInfoDiv = styled.div`
@@ -64,7 +86,6 @@ const StContentsInfoDiv = styled.div`
   justify-content: space-around;
   align-items: flex-start;
   margin: 20px 0 20px 0;
-  font-weight: bold;
   .trade-title {
     font-size: 18px;
   }
@@ -79,7 +100,7 @@ const StContentsInfoDiv = styled.div`
   }
   .cost {
     font-weight: bold;
-    font-size: 21px;
+    font-size: 15px;
   }
 `;
 
@@ -194,8 +215,8 @@ export default function Trade({ trade, login, userinfo, mypage }) {
                 </StContentsDiv>
                 <div className={"like"}>
                   {login &&
-                  trade.likes.filter((like) => userinfo.id === like.user_Id)
-                    .length ? (
+                    trade.likes.filter((like) => userinfo.id === like.user_Id)
+                      .length ? (
                     <FontAwesomeIcon icon={solidStart} />
                   ) : (
                     <FontAwesomeIcon icon={regularStart} />
@@ -271,9 +292,9 @@ export default function Trade({ trade, login, userinfo, mypage }) {
                 </StContentsDiv>
                 <div className={"like"}>
                   {login &&
-                  trade.tradePost.likes.filter(
-                    (like) => userinfo.id === like.user_Id
-                  ).length ? (
+                    trade.tradePost.likes.filter(
+                      (like) => userinfo.id === like.user_Id
+                    ).length ? (
                     <FontAwesomeIcon icon={solidStart} />
                   ) : (
                     <FontAwesomeIcon icon={regularStart} />

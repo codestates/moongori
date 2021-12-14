@@ -63,6 +63,7 @@ const FooterBox = styled.div`
     margin-bottom: 2px;
   }
   .About-content {
+    text-align:start;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -83,7 +84,7 @@ const FooterBox = styled.div`
   }
   .Copyright {
     width: 100%;
-    height: 15%;
+    height: 20%;
     font-size: 5px;
     font-weight: normal;
     display: flex;
@@ -142,12 +143,14 @@ const FooterBox = styled.div`
 
   .content-wrap {
     width: 60%;
+    height:90%;
     display: flex;
     flex-direction: row;
   }
 
   .About-us {
     width: 50%;
+    height:90%;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -158,12 +161,15 @@ const FooterBox = styled.div`
     flex-direction: row;
   }
   .Contact-us {
+    margin-bottom:10px;
     width: 50%;
+    height:90%;
     display: flex;
     flex-direction: row;
     justify-content: center;
   }
   .Contact-wrap {
+    margin-left:50px;
     margin-top: 20px;
     width: 60%;
     font-size: 9px;
@@ -174,6 +180,9 @@ const FooterBox = styled.div`
     text-align: start;
     justify-content: flex-start;
     flex-direction: column;
+    @media all and (max-width: 769px) {
+      margin-left:5px;
+    }
   }
 
   .Contact-content {
@@ -209,6 +218,10 @@ const FooterBox = styled.div`
     .name {
       font-size: 5px;
     }
+    .reposit{
+      font-size: 5px;
+      margin-right:6px;
+    }
     .copyright-content {
       font-size: 4px;
     }
@@ -232,12 +245,12 @@ export default function Footer() {
                 <div className={"About-title"}>About us</div>
                 <div className={"About-content"}>
                   <p className={"name"}>
-                    <a href="https://github.com/codestates/moongori/wiki">
+                    <a href="github.com/codestates/moongori/wiki">
                       Moongori Wiki
                     </a>
                   </p>
-                  <p>
-                    <a href="https://github.com/codestates/moongori">
+                  <p className={"reposit"}>
+                    <a href="github.com/codestates/moongori">
                       Repository
                     </a>
                   </p>
@@ -249,16 +262,16 @@ export default function Footer() {
                 <div className={"Contact-comment"}>Contact us</div>
                 <div className={"Contact-content"}>
                   <p className={"name"}>
-                    <a href="https://github.com/Lawen-s">사범기</a>
+                    <a href="github.com/Lawen-s">사범기</a>
                   </p>
                   <p className={"name"}>
-                    <a href="https://github.com/rmfhsep">김정훈</a>
+                    <a href="github.com/rmfhsep">김정훈</a>
                   </p>
                   <p className={"name"}>
-                    <a href="https://github.com/lsm6627">이성민</a>
+                    <a href="github.com/lsm6627">이성민</a>
                   </p>
                   <p className={"name"}>
-                    <a href="https://github.com/lsj135779">이승준</a>
+                    <a href="github.com/lsj135779">이승준</a>
                   </p>
                 </div>
               </div>

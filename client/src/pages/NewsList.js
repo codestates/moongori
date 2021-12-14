@@ -270,10 +270,10 @@ export default function NewsList({ userinfo, login }) {
   };
 
   useEffect(() => {
+    console.log("news")
     if (userinfo.address === null) {
       navigate("/mypage");
-    }
-    else {
+    } else {
       navigate(`/news=${category.number}`);
       requestNews();
     }
