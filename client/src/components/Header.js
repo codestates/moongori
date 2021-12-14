@@ -9,6 +9,8 @@ import Login from "./Login";
 import Signup from "./Signup";
 
 const StHeadBoxDiv = styled.div`
+font-family:Cafe24Ssurround;
+
   background: white;
   display: flex;
   flex-direction: column;
@@ -63,10 +65,11 @@ const StHeadBoxDiv = styled.div`
       justify-content: space-between;
       width: 100%;
       .navMenu {
+
         display: flex;
         a,
         div {
-          color: black;
+          color: gray;
           text-decoration: none;
           padding: 20px 10px 0 10px;
           font-size: 1em;

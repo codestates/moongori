@@ -213,14 +213,14 @@ export default function TradeList({ login, userinfo }) {
       requestTrade();
     }
   };
-
   useEffect(() => {
     if (userinfo.address === null) {
       navigate("/mypage");
+    } else {
+      navigate(`/trade=${category}`);
+      requestTrade();
     }
-    navigate(`/trade=${category}`);
-    requestTrade();
-  }, [category]);
+  }, [userinfo, category]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -228,7 +228,7 @@ export default function TradeList({ login, userinfo }) {
       window.removeEventListener("scroll", handleScroll);
     };
   });
-  console.log("tradeList;", tradeList);
+
   return (
     <StBodyDiv>
       <StContentsHeadDiv>

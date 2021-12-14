@@ -216,7 +216,6 @@ export default function NewsList({ userinfo, login }) {
               setPage((preState) => preState + 1);
               isLoading(false);
               isFetch(false);
-              // setTimeout(() => {}, 1000);
             }
           })
           .catch();
@@ -251,7 +250,6 @@ export default function NewsList({ userinfo, login }) {
               setPage((preState) => preState + 1);
               isLoading(false);
               isFetch(false);
-              // setTimeout(() => {}, 1000);
             }
           })
           .catch();
@@ -272,10 +270,11 @@ export default function NewsList({ userinfo, login }) {
   useEffect(() => {
     if (userinfo.address === null) {
       navigate("/mypage");
+    } else {
+      navigate(`/news=${category.number}`);
+      requestNews();
     }
-    navigate(`/news=${category.number}`);
-    requestNews();
-  }, [category]);
+  }, [userinfo, category]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
