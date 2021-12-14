@@ -886,7 +886,7 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                 </div>
                 <div className={"content-body"}>
                   <div className={"trad-price"}>현재금액</div>
-                  <div className={"c-price"}>{cCost.toLocaleString()} 원</div>
+                  <div className={"c-price"}>{Number(cCost).toLocaleString()} 원</div>
                 </div>
               </StContentDiv>
             </StTradeBoxDiv>

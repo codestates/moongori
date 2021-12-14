@@ -322,10 +322,6 @@ export default function TradeNoramlPost({ login, userinfo }) {
 
   //상태 변경 요청할때 사용(예약중, 판매중, 판매완료);
   const [check, setCheck] = useState(null);
-  // 수정 할때 입력받은 값을 사용
-  const modifyContent = useRef(null);
-  const modifyTitle = useRef(null);
-  const modifyCost = useRef(null);
 
   //게시글 수정을 위한 변수
   const modifyTitle = useRef(null);
