@@ -15,6 +15,7 @@ import EditNewsPostWrite from "./pages/EditNewsPostWrite";
 import TradeNormalPost from "./pages/TradeNormalPost";
 import TradeSuggestionPost from "./pages/TradeSuggestionPost";
 import TradePostWrite from "./pages/TradePostWrite";
+import Chat from "./pages/Chat";
 import axios from "axios";
 
 // import Swal from "sweetalert2";
@@ -109,7 +110,7 @@ export default function App() {
           <Route path="/news/edit=:id" element={<EditNewsPostWrite />} />
           <Route path="/news/write" element={<NewsPostWrite />} />
 
-          {/* <Route path="/chat" element={<Chat />} /> */}
+          <Route path="/chat=:id" element={<Chat userinfo={userinfo} />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

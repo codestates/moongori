@@ -417,6 +417,14 @@ const StPostUserDiv = styled.div`
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+  button {
+    border-radius: 30px;
+    background: #92e3a9;
+    height: 30px;
+    margin-right: 10px;
+    width: 70px;
+    cursor: pointer;
+  }
 `;
 const StCommentButtonDiv = styled.div`
   padding: 30px 0 0 30px;
@@ -767,6 +775,11 @@ export default function TradeSuggestionPost({ login, userinfo }) {
       });
   };
 
+  //채팅
+  const handleChat = (price_id) => {
+    navigate(`/chat=${price_id}`);
+  };
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${id}`)
@@ -945,6 +958,14 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                           <div>{Number(price.cost).toLocaleString()}원</div>
                         )}
                       </div>
+                      <button
+                        type={"button"}
+                        onClick={() => {
+                          handleChat(price.id);
+                        }}
+                      >
+                        연락하기
+                      </button>
                     </StPostUserDiv>
                     {login && userinfo.id === price.user_Id ? (
                       price.id === priceId ? (

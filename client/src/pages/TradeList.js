@@ -217,10 +217,11 @@ export default function TradeList({ login, userinfo }) {
   useEffect(() => {
     if (userinfo.address === null) {
       navigate("/mypage");
+    } else {
+      navigate(`/trade=${category}`);
+      requestTrade();
     }
-    navigate(`/trade=${category}`);
-    requestTrade();
-  }, [category]);
+  }, [category, userinfo]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);

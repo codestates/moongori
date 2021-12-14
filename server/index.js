@@ -5,7 +5,11 @@ const PORT = 4000;
 const cookieParser = require("cookie-parser");
 const controllers = require("./controllers");
 const cors = require("cors");
+const http = require("http");
 const socketIo = require("socket.io");
+const server = http.createServer(app);
+const io = socketIo(server, { cors: { origin: "*", credentials: true } });
+const chatController = require("./controllers/chatController")(io);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -21,6 +25,6 @@ app.get("/", (req, res) => {
   res.status(200).send("Hello sever World!");
 });
 
-module.exports = app.listen(PORT, () => {
+module.exports = server.listen(PORT, () => {
   console.log(`this server listening on: ${PORT}/`);
 });
