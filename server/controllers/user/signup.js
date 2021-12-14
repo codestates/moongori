@@ -11,20 +11,23 @@ module.exports = async (req, res) => {
     iterations: 1000,
   });
   const encryptedPW = encrypted.toString(CryptoJS.enc.Base64);
-
-  await user
-    .create({
-      email,
-      nickname,
-      address,
-      town,
-      password: encryptedPW,
-      salt,
-    })
-    .then((data) => {
-      sendEmail(res, email);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  try {
+    await user
+      .create({
+        email,
+        nickname,
+        address,
+        town,
+        password: encryptedPW,
+        salt,
+      })
+      .then((data) => {
+        sendEmail(res, email);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    return res.status(500).json({ data: err, message: 'error' });
+  }
 };
