@@ -5,7 +5,8 @@ import styled from "styled-components";
 export const StNewsDiv = styled.div`
   border: 2px solid #92e3a9;
   border-radius: 10px;
-  width: ${(props) => (props.mypage ? "80%" : "100%")};
+  max-width: ${(props) => (props.mypage ? "800px" : null)};
+  width: ${(props) => (props.mypage ? "70%" : "100%")};
   height: ${(props) => (props.mypage ? "138px" : "150px")};
   margin-bottom: 40px;
   a {

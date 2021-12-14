@@ -29,8 +29,10 @@ const StTradeDiv = styled(StNewsDiv)`
   }
   @media all and (min-width: 769px) {
     display: inline-block;
-    width: 45%;
-    margin-right: ${(props) => (props.num === 0 ? "40px" : null)};
+    width: ${(props) => (props.mypage ? "50%" : "45%")};
+  }
+  @media all and (max-width: 769px) {
+    width: ${(props) => (props.mypage ? "90%" : "100%")};
   }
 `;
 
@@ -67,7 +69,7 @@ const StContentsInfoDiv = styled.div`
     font-size: 18px;
   }
   .town-day {
-    margin-bottom:10
+    margin-bottom: 10;
     color: #9c9c9c;
     span {
       margin-right: 5px;
@@ -126,7 +128,7 @@ export function endForToday(value) {
 
 export default function Trade({ trade, num, login, userinfo, mypage }) {
   return (
-    <StTradeDiv num={num % 2}>
+    <StTradeDiv num={num % 2} mypage={mypage}>
       <Link
         to={
           trade.normalOrNot === 0
