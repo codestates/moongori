@@ -216,7 +216,6 @@ export default function NewsList({ userinfo, login }) {
               setPage((preState) => preState + 1);
               isLoading(false);
               isFetch(false);
-              // setTimeout(() => {}, 1000);
             }
           })
           .catch();
@@ -251,7 +250,6 @@ export default function NewsList({ userinfo, login }) {
               setPage((preState) => preState + 1);
               isLoading(false);
               isFetch(false);
-              // setTimeout(() => {}, 1000);
             }
           })
           .catch();
@@ -272,8 +270,7 @@ export default function NewsList({ userinfo, login }) {
   useEffect(() => {
     if (userinfo.address === null) {
       navigate("/mypage");
-    }
-    else {
+    } else {
       navigate(`/news=${category.number}`);
       requestNews();
     }

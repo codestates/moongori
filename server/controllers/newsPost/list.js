@@ -8,7 +8,6 @@ module.exports = async (req, res) => {
   const page = req.query.page;
   let offset = 0;
   try {
-
     if (page > 1) {
       offset = 10 * (page - 1);
     }
@@ -46,6 +45,6 @@ module.exports = async (req, res) => {
       });
     }
   } catch (err) {
-    return res.status(500).json({ data: err, message: 'error' });
+    return res.status(500).json({ data: err, message: "error" });
   }
 };

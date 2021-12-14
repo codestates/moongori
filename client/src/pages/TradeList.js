@@ -228,7 +228,7 @@ export default function TradeList({ login, userinfo }) {
       window.removeEventListener("scroll", handleScroll);
     };
   });
-  console.log("tradeList;", tradeList);
+
   return (
     <StBodyDiv>
       <StContentsHeadDiv>
