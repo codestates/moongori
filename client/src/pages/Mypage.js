@@ -10,8 +10,6 @@ import editImg from "../images/edit.png";
 import Swal from "sweetalert2";
 import DaumPostcode from "react-daum-postcode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MypageNews from "../components/MypageNews";
-import Loading from "./../components/Loading";
 import News from "./../components/News";
 import Trade from "./../components/Trade";
 
@@ -158,11 +156,13 @@ const StMypageHead = styled.div`
             justify-content: center;
             align-items: center;
           }
-
+            .nicknameNotice{
+              font-size:10px;
+            }
           .input-title {
             text-align: center;
             width: 30%;
-            font-size: 16px;
+            font-size: 20px;
             @media all and (max-width: 768px) {
               text-align: center;
               font-size: 12px;
@@ -388,20 +388,18 @@ const StCategoryButton = styled.button.attrs((props) => ({
   }
 `;
 
-export default function Mypage({ userinfo, isAuthenticated, login }) {
+export default function Mypage({ userinfo, isAuthenticated, login, handleWithdrawl }) {
   //카테고리 별 게시글 받아오기
-  const [data, setData] = useState(false);
-  const [loading, isLoading] = useState(true);
   const [myNews, SetMyNews] = useState([]);
   const [myComment, setMyComment] = useState([]);
   const [myTrade, setMyTrade] = useState([]);
   const [myLikeTrade, setMyLikeTrade] = useState([]);
 
+  const [checkNickname, setCheckNickname] = useState(false)
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
   const [category, setCategory] = useState({ number: null });
   const [edit, setEdit] = useState(true);
-  const [checkNickname, setCheckNickname] = useState(false);
   const [editInfo, setEditInfo] = useState({
     img: userinfo.img,
     nickname: userinfo.nickname,
@@ -422,14 +420,17 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
 
   const [duplicate, setDuplicate] = useState(false);
   const [openPost, isOpenPost] = useState(false);
-  const handleInputValue = (key) => (e) => {
-    setEditInfo({ ...editInfo, [key]: e.target.value });
-    if (key === "nickname") {
-      if (isNickname(e.target.value)) {
-        setCheckNickname(true);
-      }
+  const handleInputValue = (key, e) => {
+    setEditInfo({ ...editInfo, [key]: e.target.value })
+
+    if (isNickname(e.target.value)) {
+      setCheckNickname(true)
+    } else {
+      setCheckNickname(false)
     }
-  };
+  }
+  console.log(checkNickname)
+
 
   const modalClose = () => {
     setModalOpen(!modalOpen);
@@ -448,7 +449,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
   };
 
   const checkDuplicate = () => {
-    if (userinfo.nickname === nickname) {
+    if (nickname !== "" && userinfo.nickname === nickname) {
       Swal.fire({
         icon: "success",
         title: "기존 닉네임과 동일한 닉네임입니다",
@@ -576,45 +577,37 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
 
   //내 동네소식 불러오기
   const requestMyNews = () => {
-    isLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_URL}/news/mylist`)
       .then((res) => {
         SetMyNews(res.data.data);
-        isLoading(false);
-        setData(true);
+
       })
       .catch();
   };
   //관심소식 가져오기
   const requestMyComment = () => {
-    isLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_URL}/news/comment`)
       .then((res) => {
         setMyComment(res.data.data);
-        isLoading(false);
-        setData(true);
+
       })
       .catch();
   };
   //내 거래글 가져오기
   const requestMyTrade = () => {
-    isLoading(true);
     axios.get(`${process.env.REACT_APP_API_URL}/trade/myList`).then((res) => {
       setMyTrade(res.data.data);
-      isLoading(false);
-      setData(true);
+
     });
   };
 
   //찜한 판매글 가져오기
   const requestMyLikeTrade = () => {
-    isLoading(true);
     axios.get(`${process.env.REACT_APP_API_URL}/trade/myLike`).then((res) => {
       setMyLikeTrade(res.data.data);
-      isLoading(false);
-      setData(true);
+
     });
   };
 
@@ -627,6 +620,18 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
     let regExp = /^[가-힣]{3,8}$/;
     return regExp.test(value);
   };
+
+  useEffect(() => {
+    if (userinfo.address === null) {
+      Swal.fire({
+        icon: "warning",
+        title: "주소 등록을 해주세요.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  }, [userinfo])
+
 
   return (
     <Body>
@@ -763,11 +768,13 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                       <div className={"input-title"}>닉네임</div>
                       <div className={"input-tick"}>
                         <input
+                          maxLength={"8"}
                           type="text"
                           className={"input-area edit"}
                           defaultValue={editInfo.nickname}
                           onChange={(e) => handleInputValue("nickname", e)}
                         ></input>
+
 
                         <div className={"dupicate-wrap"}>
                           <div className={"dupicate-button"}>
@@ -780,8 +787,9 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                           </div>
                         </div>
                       </div>
-                    </div>
 
+                    </div>
+                    {checkNickname ? (<div className={"nicknameNotice"}>닉네임 중복 확인을 해주세요</div>) : (<div className={"nicknameNotice"}>닉네임은 3~8자만 사용가능합니다</div>)}
                     <div className={"mypage-input-box"}>
                       <div className={"input-title"}>이메일</div>
                       <div className={"input-tick"}>
@@ -837,6 +845,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                   {modalOpen2 && (
                     <WithdrawalModal
                       modalClose2={modalClose2}
+                      handleWithdrawl={handleWithdrawl}
                     ></WithdrawalModal>
                   )}
                 </div>
@@ -967,6 +976,6 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
           </div>
         </div>
       </StMypageHead>
-    </Body>
+    </Body >
   );
 }

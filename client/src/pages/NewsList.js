@@ -273,9 +273,11 @@ export default function NewsList({ userinfo, login }) {
     if (userinfo.address === null) {
       navigate("/mypage");
     }
-    navigate(`/news=${category.number}`);
-    requestNews();
-  }, [category]);
+    else {
+      navigate(`/news=${category.number}`);
+      requestNews();
+    }
+  }, [userinfo, category]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);

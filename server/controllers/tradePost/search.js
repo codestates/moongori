@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
               ],
             },
             include: [
-              { model: user, attributes: ["nickname", "town"] },
+              { model: user, attributes: ["nickname", "town"], where: { town: { [Op.like]: `${town}%` } } },
               { model: like, attributes: ["user_Id"] },
             ],
             order: [["createdAt", "DESC"]],
@@ -84,7 +84,16 @@ module.exports = async (req, res) => {
     // 카테고리 있는 경우
     else {
       const allPostCount = await tradePost.count({
-        where: { category: category, content: { [Op.like]: `%${search}%` } },
+        where: {
+          normalOrNot: category, [Op.or]: [
+            {
+              content: { [Op.like]: `%${search}%` },
+            },
+            {
+              title: { [Op.like]: `%${search}%` },
+            },
+          ],
+        },
       });
       if (offset >= allPostCount) {
         return res.status(204).json({ message: "no more data" });
@@ -92,7 +101,7 @@ module.exports = async (req, res) => {
 
       let searchTrade = await tradePost.findAll({
         where: {
-          category: category,
+          normalOrNot: category,
           [Op.or]: [
             {
               content: { [Op.like]: `%${search}%` },
@@ -106,7 +115,6 @@ module.exports = async (req, res) => {
           {
             model: user,
             attributes: ["nickname", "town"],
-            where: { town: { [Op.like]: `${town}%` } },
           },
           { model: like, attributes: ["user_Id"] },
         ],
@@ -129,7 +137,7 @@ module.exports = async (req, res) => {
           const town = data.town;
           searchTrade = await tradePost.findAll({
             where: {
-              category: category,
+              normalOrNot: category,
               [Op.or]: [
                 {
                   content: { [Op.like]: `%${search}%` },
@@ -159,6 +167,7 @@ module.exports = async (req, res) => {
       }
     }
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ data: err, message: 'error' });
   }
 };

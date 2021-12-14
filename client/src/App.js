@@ -25,7 +25,7 @@ const Wrap = styled.div`
   height: 100%;
   position: relative;
   width: 100%;
-  font-family: "NanumSquareRound";
+  font-family: "S-CoreDream-4Regular";
 `;
 
 export default function App() {
@@ -47,12 +47,23 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    axios.post(`${process.env.REACT_APP_API_URL}/user/signout`).then(() => {
-      window.location.href = "/";
-      isLogin(false);
-      setUserinfo(null);
-    });
+    axios.post(`${process.env.REACT_APP_API_URL}/user/signout`)
+      .then(() => {
+        window.location.href = "/";
+        isLogin(false);
+        setUserinfo(null);
+      });
   };
+
+  const handleWithdrawl = () => {
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/user`)
+      .then(() => {
+        window.location.href = "/";
+        isLogin(false);
+        setUserinfo(null);
+      })
+  }
 
   useEffect(() => {
     isAuthenticated();
@@ -86,6 +97,7 @@ export default function App() {
                 login={login}
                 userinfo={userinfo}
                 isAuthenticated={isAuthenticated}
+                handleWithdrawl={handleWithdrawl}
               />
             }
           />

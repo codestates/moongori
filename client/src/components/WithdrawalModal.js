@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styled from "styled-components";
 import logoImg from "./../images/Logo.png";
@@ -97,8 +96,7 @@ const WithdrawalModalContainer = styled.div`
   }
 `;
 
-export default function WithdrawalModal({ modalClose2 }) {
-  const navigate = useNavigate();
+export default function WithdrawalModal({ modalClose2, handleWithdrawl }) {
   const onCloseModal = (e) => {
     if (e.target === e.currentTarget) {
       modalClose2();
@@ -120,25 +118,13 @@ export default function WithdrawalModal({ modalClose2 }) {
         footer: "",
       });
     } else {
-      axios
-        .delete(`${process.env.REACT_APP_API_URL}/user`)
-        .then((res) => {
-          Swal.fire({
-            icon: "success",
-            title: "회원탈퇴 완료",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          navigate("/");
-        })
-        .catch(() => {
-          Swal.fire({
-            icon: "error",
-            title: "잘못된정보입니다",
-            text: "",
-            footer: "",
-          });
-        });
+      handleWithdrawl();
+      Swal.fire({
+        icon: "success",
+        title: "회원탈퇴 완료",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
   return (
