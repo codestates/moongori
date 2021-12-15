@@ -117,6 +117,7 @@ export default function NewsList({ userinfo, login }) {
   const [loading, isLoading] = useState(true);
   const [fetch, isFetch] = useState(false);
   const inputSearchRef = useRef(null);
+  const [search, setSearch] = useState(null);
   const navigate = useNavigate();
 
   // 카테고리 변경하는 함수
@@ -216,7 +217,6 @@ export default function NewsList({ userinfo, login }) {
               setPage((preState) => preState + 1);
               isLoading(false);
               isFetch(false);
-              // setTimeout(() => {}, 1000);
             }
           })
           .catch();
@@ -251,7 +251,6 @@ export default function NewsList({ userinfo, login }) {
               setPage((preState) => preState + 1);
               isLoading(false);
               isFetch(false);
-              // setTimeout(() => {}, 1000);
             }
           })
           .catch();
@@ -272,8 +271,7 @@ export default function NewsList({ userinfo, login }) {
   useEffect(() => {
     if (userinfo.address === null) {
       navigate("/mypage");
-    }
-    else {
+    } else {
       navigate(`/news=${category.number}`);
       requestNews();
     }
