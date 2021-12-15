@@ -250,11 +250,13 @@ export default function TradePostWrite() {
   const handleRegister = () => {
     const title = inputTitleRef.current.value;
     const cost = inputCostRef.current.value;
+    console.log(cost);
     const contents = inputContentsRef.current.value;
     const copyImgFiles = imgFiles.slice();
     const files = [...copyImgFiles.splice(imgNum, 1), ...copyImgFiles];
     if (
       title &&
+      cost &&
       cost.length <= 8 &&
       contents &&
       files.length &&

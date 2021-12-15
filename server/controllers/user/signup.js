@@ -3,7 +3,8 @@ const CryptoJS = require("crypto-js");
 const sendEmail = require("./sendEmail");
 
 module.exports = async (req, res) => {
-  const { email, nickname, address, town, password } = req.body;
+  const { email, nickname, address, town, password, latitude, longitude } =
+    req.body;
   const saltIssue = CryptoJS.lib.WordArray.random(128 / 8);
   const salt = saltIssue.toString(CryptoJS.enc.Base64);
   const encrypted = CryptoJS.PBKDF2(password, salt, {
@@ -18,6 +19,8 @@ module.exports = async (req, res) => {
         nickname,
         address,
         town,
+        latitude,
+        longitude,
         password: encryptedPW,
         salt,
       })
@@ -28,6 +31,6 @@ module.exports = async (req, res) => {
         console.log(err);
       });
   } catch (err) {
-    return res.status(500).json({ data: err, message: 'error' });
+    return res.status(500).json({ data: err, message: "error" });
   }
 };

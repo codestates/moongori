@@ -2,8 +2,8 @@ const { newsPost, user } = require("../../models");
 
 module.exports = async (req, res) => {
   const id = req.cookies.id;
+  console.log("~~~~~~~~~myList");
   try {
-
     const list = await newsPost.findAll({
       where: { user_Id: id },
       attributes: [
@@ -19,6 +19,6 @@ module.exports = async (req, res) => {
     });
     return res.status(200).json({ data: list, message: "ok" });
   } catch (err) {
-    return res.status(500).json({ data: err, message: 'error' });
+    return res.status(500).json({ data: err, message: "error" });
   }
 };
