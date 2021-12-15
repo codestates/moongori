@@ -117,17 +117,17 @@ export default function NewsList({ userinfo, login }) {
   const [loading, isLoading] = useState(true);
   const [fetch, isFetch] = useState(false);
   const inputSearchRef = useRef(null);
-  const [search, setSearch] = useState(null);
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
   // 카테고리 변경하는 함수
   const changeCategory = (e) => {
     if (Number(e.target.value) === category.number) {
-      inputSearchRef.current.value = "";
+      setSearch("");
       setCategory({ ...category, number: 0 });
       navigate("/news=0");
     } else {
-      inputSearchRef.current.value = "";
+      setSearch("");
       setCategory({ ...category, number: Number(e.target.value) });
       navigate(`/news=${e.target.value}`);
     }
@@ -141,6 +141,7 @@ export default function NewsList({ userinfo, login }) {
       inputSearchRef.current.value !== "" &&
       (e.key === "Enter" || e.type === "click")
     ) {
+      setSearch(inputSearchRef.current.value);
       if (category.number) {
         axios
           .get(
@@ -156,6 +157,7 @@ export default function NewsList({ userinfo, login }) {
               setPage(2);
               isLoading(false);
               isFetch(false);
+              inputSearchRef.current.value = "";
             }
           })
           .catch();
@@ -174,6 +176,7 @@ export default function NewsList({ userinfo, login }) {
               setPage(2);
               isLoading(false);
               isFetch(false);
+              inputSearchRef.current.value = "";
             }
           })
           .catch();
@@ -186,10 +189,10 @@ export default function NewsList({ userinfo, login }) {
     isLoading(true);
     isFetch(true);
     if (category.number) {
-      if (inputSearchRef.current.value !== "") {
+      if (search !== "") {
         axios
           .get(
-            `${process.env.REACT_APP_API_URL}/news/${category.number}?search=${inputSearchRef.current.value}&page=${page}`
+            `${process.env.REACT_APP_API_URL}/news/${category.number}?search=${search}&page=${page}`
           )
           .then((res) => {
             if (res.status === 204) {
@@ -222,10 +225,10 @@ export default function NewsList({ userinfo, login }) {
           .catch();
       }
     } else {
-      if (inputSearchRef.current.value !== "") {
+      if (search !== "") {
         axios
           .get(
-            `${process.env.REACT_APP_API_URL}/news?search=${inputSearchRef.current.value}&page=${page}`
+            `${process.env.REACT_APP_API_URL}/news?search=${search}&page=${page}`
           )
           .then((res) => {
             if (res.status === 204) {
@@ -263,19 +266,25 @@ export default function NewsList({ userinfo, login }) {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight && !fetch) {
+    if (scrollTop + clientHeight + 100 > scrollHeight && !fetch) {
       requestNews();
     }
   };
 
   useEffect(() => {
-    if (userinfo.address === null) {
-      navigate("/mypage");
-    } else {
-      navigate(`/news=${category.number}`);
-      requestNews();
+    if (login) {
+      axios.get(`${process.env.REACT_APP_API_URL}/user/info`).then((res) => {
+        if (res.data.data.address === null) {
+          navigate("/mypage");
+        }
+      });
     }
-  }, [userinfo, category]);
+    window.onbeforeunload = function scrolltop() {
+      window.scrollTo(0, 0);
+    };
+    navigate(`/news=${category.number}`);
+    requestNews();
+  }, [category]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);

@@ -148,7 +148,7 @@ const StButtonBox = styled.div`
     }
   }
 `;
-export default function NewsPostWrite({ searchPlace }) {
+export default function EidtNewsPostWrite({ userinfo }) {
   const navigate = useNavigate();
   const [defaultContents, setDefaultContents] = useState({
     category: "",
