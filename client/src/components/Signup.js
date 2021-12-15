@@ -58,6 +58,27 @@ const StAddressModalDiv = styled.div`
   font-size: 0.9em;
 `;
 
+export function getDistance(lat1, lon1, lat2, lon2) {
+  if (lat1 == lat2 && lon1 == lon2) return 0;
+
+  var radLat1 = (Math.PI * lat1) / 180;
+  var radLat2 = (Math.PI * lat2) / 180;
+  var theta = lon1 - lon2;
+  var radTheta = (Math.PI * theta) / 180;
+  var dist =
+    Math.sin(radLat1) * Math.sin(radLat2) +
+    Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+  if (dist > 1) dist = 1;
+
+  dist = Math.acos(dist);
+  dist = (dist * 180) / Math.PI;
+  dist = dist * 60 * 1.1515 * 1.609344 * 1000;
+  if (dist < 100) dist = Math.round(dist / 10) * 10;
+  else dist = Math.round(dist / 100) * 100;
+
+  return dist;
+}
+
 export default function Signup({ isSingUpModal, showLoginModal }) {
   const [signUpInfo, setSignUpInfo] = useState({
     email: "",
@@ -77,7 +98,18 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
     passwordCheck: false, // 패스워드 일치
   });
   const [openPost, isOpenPost] = useState(false);
+  // 구글에서 받아온 위치정보
+  const [googleCoordinate, setGoogleCoordinate] = useState({
+    lat: null,
+    log: null,
+  });
+  // 입력한 위치 정보
+  const [kakaoCoordinate, setKakaoCoordinate] = useState({
+    lat: null,
+    log: null,
+  });
   const navigate = useNavigate();
+
   const handleInputValue = (key, e) => {
     setSignUpInfo({ ...signUpInfo, [key]: e.target.value });
     // 이메일 검사
@@ -248,6 +280,8 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
           address: signUpInfo.address,
           town: signUpInfo.town,
           password: signUpInfo.password,
+          latitude: kakaoCoordinate.lat,
+          longitude: kakaoCoordinate.log,
         })
         .then((res) => {
           isSingUpModal(false);
@@ -292,19 +326,80 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
     }
   };
 
+  // 주소 넣는 함수 (위도, 경도로 위치 인증 포함)
   const onCompletePost = (data) => {
     let fullAddr = data.address;
     let extraAddr = "";
+    const { kakao } = window;
+    const geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch(fullAddr, (results, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const lat = results[0].y;
+        const log = results[0].x;
+        // console.log("나의주소", lat, " ", log);
+        // console.log(
+        //   "받은 위치정보",
+        //   googleCoordinate.lat + " " + googleCoordinate.log
+        // );
+        // console.log(
+        //   "거리",
+        //   getDistance(googleCoordinate.lat, googleCoordinate.log, lat, log)
+        // );
 
-    if (data.addressType === "R") {
-      if (data.buildingName !== "") {
-        extraAddr += data.buildingName;
+        if (
+          getDistance(googleCoordinate.lat, googleCoordinate.log, lat, log) <=
+          3000
+        ) {
+          setKakaoCoordinate({ ...kakaoCoordinate, lat: lat, log: log });
+          if (data.addressType === "R") {
+            if (data.buildingName !== "") {
+              extraAddr += data.buildingName;
+            }
+            fullAddr += extraAddr;
+          }
+
+          setSignUpInfo({ ...signUpInfo, town: data.bname, address: fullAddr });
+          setCheckInfo({ ...checkInfo, address: true });
+          isOpenPost(false);
+        } else {
+          setSignUpInfo({ ...signUpInfo, address: "", town: "" });
+          setCheckInfo({ ...checkInfo, address: false });
+          isOpenPost(false);
+          Swal.fire({
+            icon: "error",
+            title: "입력하신 위치와 현재 위치가 일치하지 않습니다.",
+          });
+        }
       }
-      fullAddr += extraAddr;
+    });
+  };
+
+  const handleAddressFocus = () => {
+    if (!openPost) {
+      window.navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setGoogleCoordinate({
+            ...googleCoordinate,
+            lat: position.coords.latitude,
+            log: position.coords.longitude,
+          });
+          isOpenPost(true);
+        },
+        (error) => {
+          Swal.fire({
+            icon: "error",
+            title: "서비스를 이용하기 위해서 위치정보가 필요합니다.",
+            text: "브라우저 설정에서 위치권한을 허용하세요.",
+          });
+          isSingUpModal(false);
+        },
+        {
+          enableHighAccuracy: false,
+          maximumAge: 0,
+          timeout: Infinity,
+        }
+      );
     }
-    setSignUpInfo({ ...signUpInfo, town: data.bname, address: fullAddr });
-    setCheckInfo({ ...checkInfo, address: true });
-    isOpenPost(false);
   };
 
   const postCodeStyle = {
@@ -407,7 +502,7 @@ export default function Signup({ isSingUpModal, showLoginModal }) {
               <input
                 type={"text"}
                 value={signUpInfo.address}
-                onFocus={() => isOpenPost(true)}
+                onFocus={handleAddressFocus}
               ></input>
             </StWriteReUse>
             <StWriteReUse>

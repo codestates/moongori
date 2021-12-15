@@ -39,10 +39,10 @@ const StTradeBodyDiv = styled.div`
     display: flex;
     align-items: center;
     @media all and (max-width: 768px) {
-      width: 90%;
+      width: 85%;
     }
     .trade-explain {
-      border: none;
+      border: 1px solid #b7b7b7;
       resize: none;
       width: 100%;
       height: 200px;
@@ -78,12 +78,14 @@ const StTradeBoxDiv = styled.div`
   }
 `;
 const StPictureDiv = styled.div`
-  width: 60%;
+  margin-right: 20px;
+  width: 55%;
   height: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
   @media all and (max-width: 768px) {
+    margin-right: 0px;
     width: 90%;
     height: 50%;
   }
@@ -137,7 +139,7 @@ const StContentDiv = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 12px;
+        font-size: 10px;
         border-radius: 10px;
         text-align: center;
         width: 53px;
@@ -163,6 +165,9 @@ const StContentDiv = styled.div`
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid #b7b7b7;
+    @media all and (max-width: 768px) {
+      width: 90%;
+    }
     .trad-price {
       color: #b7b7b7;
       height: 30%;
@@ -569,6 +574,7 @@ export default function TradeNoramlPost({ login, userinfo }) {
                                 value={2}
                                 onClick={() => {
                                   changeState(2);
+                                  setOption(false);
                                 }}
                               >
                                 {tradeState[2]}으로 변경
@@ -579,6 +585,7 @@ export default function TradeNoramlPost({ login, userinfo }) {
                                 value={1}
                                 onClick={() => {
                                   changeState(1);
+                                  setOption(false);
                                 }}
                               >
                                 {tradeState[1]}으로 변경
@@ -598,6 +605,7 @@ export default function TradeNoramlPost({ login, userinfo }) {
                                 }).then((result) => {
                                   if (result.isConfirmed) {
                                     changeState(3);
+                                    setOption(false);
                                     Swal.fire("변경완료!", "");
                                   }
                                 });
@@ -629,8 +637,8 @@ export default function TradeNoramlPost({ login, userinfo }) {
                       {check === 3
                         ? tradeState[3]
                         : check === 1
-                          ? tradeState[1]
-                          : tradeState[2]}
+                        ? tradeState[1]
+                        : tradeState[2]}
                     </div>
                     {userinfo.id === postInfo.user_Id ? (
                       option ? (
@@ -767,8 +775,8 @@ export default function TradeNoramlPost({ login, userinfo }) {
                       {check === 3
                         ? tradeState[3]
                         : check === 1
-                          ? tradeState[1]
-                          : tradeState[2]}
+                        ? tradeState[1]
+                        : tradeState[2]}
                     </div>
                   </div>
                   <input
@@ -838,4 +846,3 @@ export default function TradeNoramlPost({ login, userinfo }) {
     </>
   );
 }
-

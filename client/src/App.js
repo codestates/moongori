@@ -47,23 +47,20 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    axios.post(`${process.env.REACT_APP_API_URL}/user/signout`)
-      .then(() => {
-        window.location.href = "/";
-        isLogin(false);
-        setUserinfo(null);
-      });
+    axios.post(`${process.env.REACT_APP_API_URL}/user/signout`).then(() => {
+      window.location.href = "/";
+      isLogin(false);
+      setUserinfo(null);
+    });
   };
 
   const handleWithdrawl = () => {
-    axios
-      .delete(`${process.env.REACT_APP_API_URL}/user`)
-      .then(() => {
-        window.location.href = "/";
-        isLogin(false);
-        setUserinfo(null);
-      })
-  }
+    axios.delete(`${process.env.REACT_APP_API_URL}/user`).then(() => {
+      window.location.href = "/";
+      isLogin(false);
+      setUserinfo(null);
+    });
+  };
 
   useEffect(() => {
     isAuthenticated();
@@ -118,8 +115,14 @@ export default function App() {
             path="/news/read=:id"
             element={<NewsPost login={login} userinfo={userinfo} />}
           />
-          <Route path="/news/edit=:id" element={<EditNewsPostWrite />} />
-          <Route path="/news/write" element={<NewsPostWrite />} />
+          <Route
+            path="/news/edit=:id"
+            element={<EditNewsPostWrite userinfo={userinfo} />}
+          />
+          <Route
+            path="/news/write"
+            element={<NewsPostWrite userinfo={userinfo} />}
+          />
 
           {/* <Route path="/chat" element={<Chat />} /> */}
 

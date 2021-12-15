@@ -13,12 +13,15 @@ module.exports = async (req, res) => {
     if (!userInfo) {
       return res.status(403).json({ message: "no exist user" });
     }
+
     const {
       id,
       email,
       nickname,
       address,
       town,
+      latitude,
+      longitude,
       salt,
       img,
       reliability,
@@ -45,10 +48,14 @@ module.exports = async (req, res) => {
         address,
         town,
         nickname,
+        latitude,
+        longitude,
         reliability,
         authState,
       };
-      const token = sign(payload, process.env.ACCESS_SECRET, { expiresIn: "3d" });
+      const token = sign(payload, process.env.ACCESS_SECRET, {
+        expiresIn: "3d",
+      });
       return res
         .status(200)
         .cookie("accesstoken", token, {
@@ -61,7 +68,6 @@ module.exports = async (req, res) => {
       return res.status(403).json({ message: "fail" });
     }
   } catch (err) {
-    return res.status(500).json({ data: err, massage: "error" })
+    return res.status(500).json({ data: err, massage: "error" });
   }
-
 };

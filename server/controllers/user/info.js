@@ -22,6 +22,8 @@ module.exports = async (req, res) => {
             "nickname",
             "img",
             "address",
+            "latitude",
+            "longitude",
             "reliability",
             "createdAt",
             "updatedAt",
@@ -30,7 +32,7 @@ module.exports = async (req, res) => {
         });
         return res.status(200).json({ data: userInfo });
       } catch (err) {
-        return res.status(500).json({ data: err, massage: "error" })
+        return res.status(500).json({ data: err, massage: "error" });
       }
     }
   }

@@ -3,14 +3,14 @@ const { verify, sign } = require("jsonwebtoken");
 
 module.exports = async (req, res) => {
   const id = req.cookies.id;
-  const { nickname, address, town } = req.body;
+  const { nickname, address, town, latitude, longitude } = req.body;
   try {
     if (nickname) {
       await user.update({ nickname: nickname }, { where: { id: id } });
     }
     if (address) {
       await user.update(
-        { address: address, town: town },
+        { address: address, town: town, latitude, longitude },
         { where: { id: id } }
       );
     }
@@ -26,6 +26,8 @@ module.exports = async (req, res) => {
         "address",
         "town",
         "img",
+        "latitude",
+        "longitude",
         "authState",
         "reliability",
       ],
