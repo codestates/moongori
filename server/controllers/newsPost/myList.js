@@ -2,7 +2,7 @@ const { newsPost, user } = require("../../models");
 
 module.exports = async (req, res) => {
   const id = req.cookies.id;
-  console.log("~~~~~~~~~myList");
+  console.log(id);
   try {
     const list = await newsPost.findAll({
       where: { user_Id: id },

@@ -708,6 +708,7 @@ export default function Mypage({
       .get(`${process.env.REACT_APP_API_URL}/news/mylist`)
       .then((res) => {
         SetMyNews(res.data.data);
+        console.log(res.data.data);
       })
       .catch();
   };
@@ -1075,7 +1076,6 @@ export default function Mypage({
                     mypage={true}
                     trade={trade}
                     key={index}
-                    num={index}
                     login={login}
                     userinfo={userinfo}
                   />
@@ -1085,7 +1085,6 @@ export default function Mypage({
             {category.number === 2
               ? myNews.map((news, index) => (
                   <News mypage={true} news={news} key={index} />
-                  // <MypageNews key={index} news={news} />
                 ))
               : null}
 
@@ -1101,7 +1100,6 @@ export default function Mypage({
                     mypage={true}
                     trade={trade}
                     key={index}
-                    num={index}
                     login={login}
                     userinfo={userinfo}
                   />
