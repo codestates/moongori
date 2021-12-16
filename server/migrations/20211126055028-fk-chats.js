@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -8,6 +8,10 @@ module.exports = {
     await queryInterface.addColumn("chats", "tradePost_Id", {
       type: Sequelize.INTEGER,
     });
+    await queryInterface.addColumn("chats", "suggestion_Id", {
+      type: Sequelize.INTEGER,
+    });
+
     await queryInterface.addConstraint("chats", {
       fields: ["user_Id"],
       type: "foreign key",
@@ -29,13 +33,26 @@ module.exports = {
       },
       onDelete: "cascade",
       onUpdate: "cascade",
-    })
+    });
+    await queryInterface.addConstraint("chats", {
+      fields: ["suggestion_Id"],
+      type: "foreign key",
+      name: "suggestion_chat_id_fk",
+      references: {
+        table: "suggestions",
+        field: "id",
+      },
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeConstraint('chats', 'user_chat_id_fk');
-    await queryInterface.removeConstraint('chats', 'tradePost_chat_id_fk');
+    await queryInterface.removeConstraint("chats", "user_chat_id_fk");
+    await queryInterface.removeConstraint("chats", "tradePost_chat_id_fk");
+    await queryInterface.removeConstraint("chats", "suggestion_chat_id_fk");
+    await queryInterface.removeColumn("chats", "suggestion_Id");
     await queryInterface.removeColumn("chats", "tradePost_Id");
     await queryInterface.removeColumn("chats", "user_Id");
-  }
+  },
 };

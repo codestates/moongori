@@ -577,46 +577,34 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
 
   //내 동네소식 불러오기
   const requestMyNews = () => {
-    isLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_URL}/news/mylist`)
       .then((res) => {
         SetMyNews(res.data.data);
-        isLoading(false);
-        setData(true);
       })
       .catch();
   };
   //관심소식 가져오기
   const requestMyComment = () => {
-    isLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_URL}/news/comment`)
       .then((res) => {
         setMyComment(res.data.data);
-        isLoading(false);
-        setData(true);
       })
       .catch();
   };
   //내 거래글 가져오기
   const requestMyTrade = () => {
-    isLoading(true);
     axios.get(`${process.env.REACT_APP_API_URL}/trade/myList`).then((res) => {
       setMyTrade(res.data.data);
-      isLoading(false);
-      setData(true);
     });
   };
   console.log(myTrade);
 
   //찜한 판매글 가져오기
   const requestMyLikeTrade = () => {
-    isLoading(true);
     axios.get(`${process.env.REACT_APP_API_URL}/trade/myLike`).then((res) => {
       setMyLikeTrade(res.data.data);
-      isLoading(false);
-      setData(true);
     });
   };
 
@@ -629,6 +617,17 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
     let regExp = /^[가-힣]{3,8}$/;
     return regExp.test(value);
   };
+
+  useEffect(() => {
+    if (userinfo.address === null) {
+      Swal.fire({
+        icon: "warning",
+        title: "주소 등록을 해주세요.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  }, [userinfo]);
 
   return (
     <Body>

@@ -30,6 +30,12 @@ export default function Chat({ userinfo }) {
     });
   };
 
+  socket.on("welcome", (user) => {
+    // console.log("welcome!!!", user);
+    let text = { message: `${user}님이 입장했습니다.` };
+    setChat([...chat, text]);
+  });
+
   useEffect(() => {
     if (userinfo.id) {
       setChatInfo({
@@ -37,19 +43,23 @@ export default function Chat({ userinfo }) {
         nickname: userinfo.nickname,
         userId: userinfo.id,
       });
-      socket.emit("get_room", id, userinfo.nickname, userinfo.id);
-      // 현재 게시물에 저장된 대화들을 불러오는 곳
-      socket.on("load all messages", (data) => {
-        let loadData = [];
-        data.forEach((message) => {
-          loadData.push(message);
-        });
-        setChat(loadData);
+      socket.emit("get_room", Number(id), userinfo.nickname, userinfo.id);
+      // 저장된 대화들을 불러오는 곳
+      socket.on("messagesAll", (data) => {
+        // console.log("messagesAll;;", data);
+        setChat(data);
       });
     }
   }, [userinfo]);
+
+  useEffect(() => {
+    socket.on("message", ({ nickname, message }) => {
+      setChat([...chat, { name: nickname, message }]);
+    });
+  });
+
   console.log("chatInfo;;;", chatInfo);
-  // console.log("chat;;;", chat);
+  console.log("chat;;;", chat);
   return (
     <div>
       채팅페이지
