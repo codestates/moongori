@@ -705,7 +705,7 @@ export default function Mypage({
   //내 동네소식 불러오기
   const requestMyNews = () => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/news/mylist`)
+      .get(`${process.env.REACT_APP_API_URL}/mypage/newslist`)
       .then((res) => {
         SetMyNews(res.data.data);
       })
@@ -714,7 +714,7 @@ export default function Mypage({
   //관심소식 가져오기
   const requestMyComment = () => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/news/comment`)
+      .get(`${process.env.REACT_APP_API_URL}/mypage/comment`)
       .then((res) => {
         setMyComment(res.data.data);
       })
@@ -722,14 +722,14 @@ export default function Mypage({
   };
   //내 거래글 가져오기
   const requestMyTrade = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/trade/myList`).then((res) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/mypage/tradeList`).then((res) => {
       setMyTrade(res.data.data);
     });
   };
 
   //찜한 판매글 가져오기
   const requestMyLikeTrade = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/trade/myLike`).then((res) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/mypage/myLike`).then((res) => {
       setMyLikeTrade(res.data.data);
     });
   };
@@ -1071,41 +1071,41 @@ export default function Mypage({
           <div className={"content-wrap"}>
             {category.number === 1
               ? myTrade.map((trade, index) => (
-                  <Trade
-                    mypage={true}
-                    trade={trade}
-                    key={index}
-                    num={index}
-                    login={login}
-                    userinfo={userinfo}
-                  />
-                ))
+                <Trade
+                  mypage={true}
+                  trade={trade}
+                  key={index}
+                  num={index}
+                  login={login}
+                  userinfo={userinfo}
+                />
+              ))
               : null}
 
             {category.number === 2
               ? myNews.map((news, index) => (
-                  <News mypage={true} news={news} key={index} />
-                  // <MypageNews key={index} news={news} />
-                ))
+                <News mypage={true} news={news} key={index} />
+                // <MypageNews key={index} news={news} />
+              ))
               : null}
 
             {category.number === 6
               ? myComment.map((news, index) => (
-                  <News mypage={true} news={news} key={index} />
-                ))
+                <News mypage={true} news={news} key={index} />
+              ))
               : null}
 
             {category.number === 5
               ? myLikeTrade.map((trade, index) => (
-                  <Trade
-                    mypage={true}
-                    trade={trade}
-                    key={index}
-                    num={index}
-                    login={login}
-                    userinfo={userinfo}
-                  />
-                ))
+                <Trade
+                  mypage={true}
+                  trade={trade}
+                  key={index}
+                  num={index}
+                  login={login}
+                  userinfo={userinfo}
+                />
+              ))
               : null}
           </div>
         </div>

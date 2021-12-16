@@ -50,11 +50,12 @@ router.delete(
 router.get("/news", newsPostCtrl.search);
 router.get("/news/:category", newsPostCtrl.search);
 
+
 //마이페이지
-router.get("/news/mylist", auth.accessToken, newsPostCtrl.myList);
-router.get("/news/comment", auth.accessToken, newsPostCtrl.myComment);
-router.get("/trade/myList", auth.accessToken, tradePostCtrl.myList);
-router.get("/trade/myLike", auth.accessToken, tradePostCtrl.myLike);
+router.get("/mypage/newsList", auth.accessToken, newsPostCtrl.myList);
+router.get("/mypage/comment", auth.accessToken, newsPostCtrl.myComment);
+router.get("/mypage/tradeList", auth.accessToken, tradePostCtrl.myList);
+router.get("/mypage/myLike", auth.accessToken, tradePostCtrl.myLike);
 
 //tradePost
 router.get("/trade/list", tradePost.list);
