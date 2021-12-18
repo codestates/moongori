@@ -16,6 +16,7 @@ import TradeNormalPost from "./pages/TradeNormalPost";
 import TradeSuggestionPost from "./pages/TradeSuggestionPost";
 import TradePostWrite from "./pages/TradePostWrite";
 import Chat from "./pages/Chat";
+import ChatList from "./pages/ChatList";
 import axios from "axios";
 
 // import Swal from "sweetalert2";
@@ -26,7 +27,7 @@ const Wrap = styled.div`
   height: 100%;
   position: relative;
   width: 100%;
-  font-family: "NanumSquareRound";
+  font-family: "S-CoreDream-4Regular";
 `;
 
 export default function App() {
@@ -49,6 +50,14 @@ export default function App() {
 
   const handleLogout = () => {
     axios.post(`${process.env.REACT_APP_API_URL}/user/signout`).then(() => {
+      window.location.href = "/";
+      isLogin(false);
+      setUserinfo(null);
+    });
+  };
+
+  const handleWithdrawl = () => {
+    axios.delete(`${process.env.REACT_APP_API_URL}/user`).then(() => {
       window.location.href = "/";
       isLogin(false);
       setUserinfo(null);
@@ -87,6 +96,7 @@ export default function App() {
                 login={login}
                 userinfo={userinfo}
                 isAuthenticated={isAuthenticated}
+                handleWithdrawl={handleWithdrawl}
               />
             }
           />
@@ -107,10 +117,18 @@ export default function App() {
             path="/news/read=:id"
             element={<NewsPost login={login} userinfo={userinfo} />}
           />
-          <Route path="/news/edit=:id" element={<EditNewsPostWrite />} />
-          <Route path="/news/write" element={<NewsPostWrite />} />
-
-          <Route path="/chat=:id" element={<Chat userinfo={userinfo} />} />
+          <Route
+            path="/news/edit=:id"
+            element={<EditNewsPostWrite userinfo={userinfo} />}
+          />
+          <Route
+            path="/news/write"
+            element={<NewsPostWrite userinfo={userinfo} />}
+          />
+          {/* 채팅방리스트페이지 */}
+          <Route path="/chat/list" element={<ChatList userinfo={userinfo} />} />
+          {/* 채팅페이지 */}
+          <Route path="/chat/=:id" element={<Chat userinfo={userinfo} />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

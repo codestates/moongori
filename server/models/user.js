@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       models.user.hasMany(models.newsPost, { foreignKey: "user_Id" });
       models.user.hasMany(models.comment, { foreignKey: "user_Id" });
       models.user.hasMany(models.chat, { foreignKey: "user_Id" });
+      models.user.hasMany(models.roomJoin, { foreignKey: "user_Id" });
     }
   }
   user.init(

@@ -22,8 +22,11 @@ const StBodyDiv = styled.div`
 
 const StContentsDiv = styled(StBodyDiv)`
   width: 55%;
-  margin-top: 100px;ory
+  margin-top: 100px;
   margin-bottom: 40px;
+  @media all and (max-width: 768px) {
+    width: 80%;
+  }
   .category {
     font-size: 2em;
     font-weight: bold;
@@ -135,6 +138,9 @@ const StCommentInputDiv = styled.div`
 const StCommentListDiv = styled.div`
   margin-top: 40px;
   width: 100%;
+  @media all and (max-width: 768px) {
+    margin-right: 20px;
+  }
 `;
 
 const StPostHeaderReUse = styled(StPostHeaderDiv)`
@@ -160,7 +166,7 @@ const StPostHeaderReUse = styled(StPostHeaderDiv)`
 
 const StCommentButtonDiv = styled.div`
   display: flex;
-  justify-content: flex-end
+  justify-content: flex-end;
   width: 100%;
   button {
     border-radius: 10px;

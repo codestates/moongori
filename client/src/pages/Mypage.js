@@ -1,5 +1,5 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PasswordModal from "../components/PasswordModal";
 import WithdrawalModal from "../components/WithdrawalModal";
@@ -10,10 +10,9 @@ import editImg from "../images/edit.png";
 import Swal from "sweetalert2";
 import DaumPostcode from "react-daum-postcode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MypageNews from "../components/MypageNews";
-import Loading from "./../components/Loading";
 import News from "./../components/News";
 import Trade from "./../components/Trade";
+import { getDistance } from "./../components/Signup";
 
 import {
   faCheckSquare,
@@ -58,7 +57,6 @@ const StMypageHead = styled.div`
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: scroll;
       @media all and (max-width: 768px) {
         width: 90%;
       }
@@ -159,11 +157,13 @@ const StMypageHead = styled.div`
             justify-content: center;
             align-items: center;
           }
-
+          .nicknameNotice {
+            font-size: 10px;
+          }
           .input-title {
             text-align: center;
             width: 30%;
-            font-size: 16px;
+            font-size: 20px;
             @media all and (max-width: 768px) {
               text-align: center;
               font-size: 12px;
@@ -195,6 +195,7 @@ const StMypageHead = styled.div`
                 height: 50%;
               }
               .userinfo-contents {
+                text-align: center;
                 font-size: 12px;
                 @media all and (max-width: 768px) {
                   font-size: 9px;
@@ -389,25 +390,34 @@ const StCategoryButton = styled.button.attrs((props) => ({
   }
 `;
 
-export default function Mypage({ userinfo, isAuthenticated, login }) {
+export default function Mypage({
+  userinfo,
+  isAuthenticated,
+  login,
+  handleWithdrawl,
+}) {
+  const navigate = useNavigate();
   //카테고리 별 게시글 받아오기
-  const [data, setData] = useState(false);
-  const [loading, isLoading] = useState(true);
   const [myNews, SetMyNews] = useState([]);
   const [myComment, setMyComment] = useState([]);
   const [myTrade, setMyTrade] = useState([]);
   const [myLikeTrade, setMyLikeTrade] = useState([]);
 
+  const [checkNickname, setCheckNickname] = useState({
+    nickname: false,
+    duplicate: false,
+  });
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
   const [category, setCategory] = useState({ number: null });
   const [edit, setEdit] = useState(true);
-  const [checkNickname, setCheckNickname] = useState(false);
   const [editInfo, setEditInfo] = useState({
     img: userinfo.img,
     nickname: userinfo.nickname,
     address: userinfo.address,
     town: userinfo.town,
+    latitude: userinfo.latitude,
+    longitude: userinfo.longitude,
   });
   //이미지 보낼때 사용
   const [image, setImage] = useState("");
@@ -417,17 +427,45 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
 
   //번경 유무
   const [checkEdit, setCheckEdit] = useState(false);
+  //주소 변경유무
+  const [checkEditAddress, setCheckEditAddress] = useState(false);
   const nickname = editInfo.nickname;
   const address = editInfo.address;
   const town = editInfo.town;
 
   const [duplicate, setDuplicate] = useState(false);
   const [openPost, isOpenPost] = useState(false);
-  const handleInputValue = (key) => (e) => {
+
+  // 구글에서 받아온 위치정보
+  const [googleCoordinate, setGoogleCoordinate] = useState({
+    lat: null,
+    log: null,
+  });
+  // 입력한 위치 정보
+  const [kakaoCoordinate, setKakaoCoordinate] = useState({
+    lat: null,
+    log: null,
+  });
+  const [nicknameChange, setNicknameChange] = useState(true);
+  const handleInputValue = (key, e) => {
+    setNicknameChange(false);
     setEditInfo({ ...editInfo, [key]: e.target.value });
-    if (key === "nickname") {
+    if (e.target.value === userinfo.nickname) {
+      console.log(e.target.value);
+      setNicknameChange(true);
+    } else {
       if (isNickname(e.target.value)) {
-        setCheckNickname(true);
+        setCheckNickname({
+          ...checkNickname,
+          nickname: true,
+          duplicate: false,
+        });
+      } else {
+        setCheckNickname({
+          ...checkNickname,
+          nickname: false,
+          duplicate: false,
+        });
       }
     }
   };
@@ -445,10 +483,15 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
     setEdit(!edit);
   };
   const cancelEdit = () => {
-    setEdit(true);
+    setImage("");
+    setImgFile(null);
+    setCheckEdit(false);
+    setCheckNickname({ ...checkNickname, nickname: false, duplicate: false });
+    setEdit(!edit);
   };
 
   const checkDuplicate = () => {
+    console.log(nickname, userinfo.nickname);
     if (userinfo.nickname === nickname) {
       Swal.fire({
         icon: "success",
@@ -456,7 +499,13 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
         showConfirmButton: false,
         timer: 1500,
       });
-      setDuplicate(true);
+    } else if (checkNickname.nickname !== true) {
+      Swal.fire({
+        icon: "error",
+        title: "유효하지 않은 닉네임입니다",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } else {
       axios
         .post(`${process.env.REACT_APP_API_URL}/user/nickname`, {
@@ -469,8 +518,8 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
             showConfirmButton: false,
             timer: 1500,
           });
-          setDuplicate(true);
-          setCheckEdit(true);
+          setCheckNickname({ ...checkNickname, duplicate: true });
+          setNicknameChange(true);
         })
         .catch(() => {
           Swal.fire({
@@ -482,7 +531,6 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
         });
     }
   };
-
   const photoChange = (e) => {
     const imageFile = e.target.files[0];
     const imageUrl = URL.createObjectURL(imageFile);
@@ -497,23 +545,37 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
   const submitEditInfo = async () => {
     const formData = new FormData();
     if (image !== "") formData.append("img", image);
-    if (nickname !== userinfo.nickname && nickname !== "") {
+    if (
+      nickname !== userinfo.nickname &&
+      checkNickname.nickname &&
+      checkNickname.duplicate
+    ) {
       formData.append("nickname", nickname);
     }
     formData.append("address", address);
     formData.append("town", town);
+    if (checkEditAddress) {
+      formData.append("latitude", kakaoCoordinate.lat);
+    }
+    if (checkEditAddress) {
+      formData.append("longitude", kakaoCoordinate.log);
+    }
 
     const config = {
       Headers: {
         "content-type": "multipart/form-data",
       },
     };
-
-    if (checkEdit === true || duplicate === true) {
+    console.log("!!!", checkNickname);
+    if (
+      checkEdit === true ||
+      checkEditAddress === true ||
+      (checkNickname.nickname && checkNickname.duplicate)
+    ) {
       await axios
         .post(`${process.env.REACT_APP_API_URL}/user`, formData, config)
         .then((res) => {
-          isAuthenticated(res.data.data);
+          isAuthenticated();
           setEditInfo(res.data.data);
           Swal.fire({
             icon: "success",
@@ -524,12 +586,18 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
 
           setEdit(true);
         });
+    } else if (
+      userinfo.nickname !== nickname &&
+      checkNickname.duplicate !== true
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "닉네임 중복검사를 해주세요",
+      });
     } else {
       Swal.fire({
         icon: "error",
         title: "변경된 사항이 없습니다",
-        text: "",
-        footer: "",
       });
     }
   };
@@ -537,17 +605,48 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
   const onCompletePost = (data) => {
     let fullAddr = data.address;
     let extraAddr = "";
+    const { kakao } = window;
+    const geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch(fullAddr, (results, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const lat = results[0].y;
+        const log = results[0].x;
+        // console.log("나의주소", lat, " ", log);
+        // console.log(
+        //   "받은 위치정보",
+        //   googleCoordinate.lat + " " + googleCoordinate.log
+        // );
+        // console.log(
+        //   "거리",
+        //   getDistance(googleCoordinate.lat, googleCoordinate.log, lat, log)
+        // );
 
-    if (data.addressType === "R") {
-      if (data.buildingName !== "") {
-        extraAddr += data.buildingName;
+        if (
+          getDistance(googleCoordinate.lat, googleCoordinate.log, lat, log) <=
+          3000
+        ) {
+          setKakaoCoordinate({ ...kakaoCoordinate, lat: lat, log: log });
+          if (data.addressType === "R") {
+            if (data.buildingName !== "") {
+              extraAddr += data.buildingName;
+            }
+            fullAddr += extraAddr;
+          }
+          setCheckEditAddress(true);
+          setEditInfo({ ...editInfo, town: data.bname, address: fullAddr });
+          setCheckEdit(true);
+          isOpenPost(false);
+        } else {
+          setEditInfo({ ...editInfo, town: "", address: "" });
+          setCheckEdit(false);
+          isOpenPost(false);
+          Swal.fire({
+            icon: "error",
+            title: "입력하신 위치와 현재 위치가 일치하지 않습니다.",
+          });
+        }
       }
-      fullAddr += extraAddr;
-    }
-
-    setEditInfo({ ...editInfo, town: data.bname, address: fullAddr });
-    isOpenPost(false);
-    setCheckEdit(true);
+    });
   };
 
   const postCodeStyle = {
@@ -559,6 +658,34 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
     height: "400px",
     transform: "translate(-50%, -50%)",
     padding: "7px",
+  };
+
+  const handleAddressFocus = () => {
+    if (!openPost) {
+      window.navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setGoogleCoordinate({
+            ...googleCoordinate,
+            lat: position.coords.latitude,
+            log: position.coords.longitude,
+          });
+          isOpenPost(true);
+        },
+        (error) => {
+          Swal.fire({
+            icon: "error",
+            title: "서비스를 이용하기 위해서 위치정보가 필요합니다.",
+            text: "브라우저 설정에서 위치권한을 허용하세요.",
+          });
+          setEdit(true);
+        },
+        {
+          enableHighAccuracy: false,
+          maximumAge: 0,
+          timeout: Infinity,
+        }
+      );
+    }
   };
 
   const postThemeStyle = {
@@ -578,7 +705,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
   //내 동네소식 불러오기
   const requestMyNews = () => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/news/mylist`)
+      .get(`${process.env.REACT_APP_API_URL}/mypage/newslist`)
       .then((res) => {
         SetMyNews(res.data.data);
       })
@@ -587,7 +714,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
   //관심소식 가져오기
   const requestMyComment = () => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/news/comment`)
+      .get(`${process.env.REACT_APP_API_URL}/mypage/comment`)
       .then((res) => {
         setMyComment(res.data.data);
       })
@@ -595,15 +722,16 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
   };
   //내 거래글 가져오기
   const requestMyTrade = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/trade/myList`).then((res) => {
-      setMyTrade(res.data.data);
-    });
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/mypage/tradeList`)
+      .then((res) => {
+        setMyTrade(res.data.data);
+      });
   };
-  console.log(myTrade);
 
   //찜한 판매글 가져오기
   const requestMyLikeTrade = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/trade/myLike`).then((res) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/mypage/myLike`).then((res) => {
       setMyLikeTrade(res.data.data);
     });
   };
@@ -638,7 +766,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
               //기존 상태
               <div className={"mypage-wrap"}>
                 <div className={"mypage-profile-box"}>
-                  {checkEdit ? (
+                  {/* {checkEdit ? (
                     <img
                       src={`${editInfo.img}`}
                       alt=""
@@ -650,7 +778,12 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                       alt=""
                       className={"profile-img"}
                     ></img>
-                  )}
+                  )} */}
+                  <img
+                    src={userinfo.img}
+                    alt=""
+                    className={"profile-img"}
+                  ></img>
                 </div>
                 <div className={"mypage-userinfo-box"}>
                   <div className={"edit-wrap"}>
@@ -676,7 +809,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                   ></input> */}
                         <div className={"input-area"}>
                           <div className={"userinfo-contents"}>
-                            {editInfo.nickname}
+                            {userinfo.nickname}
                           </div>
                         </div>
                       </div>
@@ -706,7 +839,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                   ></input> */}
                         <div className={"input-area"}>
                           <div className={"userinfo-contents"}>
-                            {editInfo.address}
+                            {userinfo.address}
                           </div>
                         </div>
                       </div>
@@ -722,7 +855,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                     <img src={imgFile} alt="" className={"profile-img"}></img>
                   ) : (
                     <img
-                      src={editInfo.img}
+                      src={userinfo.img}
                       alt=""
                       className={"profile-img"}
                     ></img>
@@ -764,9 +897,10 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                       <div className={"input-title"}>닉네임</div>
                       <div className={"input-tick"}>
                         <input
+                          maxLength={"8"}
                           type="text"
                           className={"input-area edit"}
-                          defaultValue={editInfo.nickname}
+                          defaultValue={userinfo.nickname}
                           onChange={(e) => handleInputValue("nickname", e)}
                         ></input>
 
@@ -783,6 +917,15 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                       </div>
                     </div>
 
+                    {nicknameChange ? null : checkNickname.nickname === true ? (
+                      <div className={"nicknameNotice"}>
+                        닉네임 중복 확인을 해주세요
+                      </div>
+                    ) : (
+                      <div className={"nicknameNotice"}>
+                        닉네임은 3~8자만 사용가능합니다
+                      </div>
+                    )}
                     <div className={"mypage-input-box"}>
                       <div className={"input-title"}>이메일</div>
                       <div className={"input-tick"}>
@@ -799,7 +942,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                         <input
                           className={"input-area"}
                           value={editInfo.address}
-                          onFocus={() => isOpenPost(true)}
+                          onFocus={handleAddressFocus}
                         ></input>
                         {openPost && (
                           <ModalBackground onClick={() => modalClose3()}>
@@ -838,6 +981,7 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                   {modalOpen2 && (
                     <WithdrawalModal
                       modalClose2={modalClose2}
+                      handleWithdrawl={handleWithdrawl}
                     ></WithdrawalModal>
                   )}
                 </div>
@@ -953,15 +1097,18 @@ export default function Mypage({ userinfo, isAuthenticated, login }) {
                 ))
               : null}
 
-            {myLikeTrade.map((trade, index) => {
-              <Trade
-                trade={trade}
-                key={index}
-                num={index}
-                login={login}
-                userinfo={userinfo}
-              />;
-            })}
+            {category.number === 5
+              ? myLikeTrade.map((trade, index) => (
+                  <Trade
+                    mypage={true}
+                    trade={trade}
+                    key={index}
+                    num={index}
+                    login={login}
+                    userinfo={userinfo}
+                  />
+                ))
+              : null}
           </div>
         </div>
       </StMypageHead>

@@ -11,10 +11,13 @@ import exampleImg2 from "./../images/example2.png";
 import dongne from "./../images/dongne.png";
 import trade from "./../images/trade.png";
 import axios from "axios";
+
 axios.defaults.withCredentials = true;
 
 const StBodyDiv = styled.div`
+  font-family: S-CoreDream-6Bold;
   width: 100%;
+  overflow: hidden;
   .main {
     height: 570px;
     width: 100%;
@@ -31,11 +34,14 @@ const StBodyDiv = styled.div`
         @media all and (max-width: 768px) {
           margin-bottom: 20px;
         }
-      }
-      .logo-title {
-        text-align: center;
-        font-size: 3em;
-        margin: 5px 0 5px 0;
+        .welcome {
+          margin-left: 5px;
+          color: gray;
+          @media all and (max-width: 768px) {
+            margin-left: 6px;
+            color: gray;
+          }
+        }
       }
     }
     img {
@@ -63,35 +69,47 @@ const StBodyDiv = styled.div`
       @media all and (min-width: 769px) {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
+      }
+    }
+    .main-intro-title-banner {
+      font-size: 35px;
+      text-align: center;
+      @media all and (max-width: 831px) {
+        font-size: 28px;
+        text-align: center;
       }
     }
     .main-intro-title {
-      text-align: center;
       font-weight: bold;
       font-size: 25px;
       margin-bottom: 20px;
+      @media all and (max-width: 768px) {
+        text-align: center;
+      }
     }
     .main-intro-contents {
-      font-size: 15px;
-      text-align: center;
+      color: gray;
+      font-size: 16px;
+      text-align: start;
       margin-top: 5px;
-      @media all and (min-width: 831px) {
+      @media all and (max-width: 831px) {
         width: 100%;
-        font-size: 18px;
+        font-size: 15px;
+        text-align: center;
       }
     }
     .main-intro-wrap {
       margin-bottom: 10px;
     }
     .main-intro-subtitle {
+      margin-top: 30px;
       text-align: center;
       font-weight: bold;
       font-size: 20px;
       margin-bottom: 3px;
     }
     .main-intro-subcontents {
+      color: gray;
       font-size: 15px;
       text-align: center;
     }
@@ -101,7 +119,7 @@ const StBodyDiv = styled.div`
       height: 100%;
       background-color: #f5f5f5;
       .example-contents {
-        width: 60%;
+        width: 80%;
         flex-direction: column;
         justify-content: center;
         position: absolute;
@@ -142,7 +160,7 @@ const StBodyDiv = styled.div`
     }
   }
   .question-contents {
-    width: 70%;
+    width: 80%;
     display: flex;
     margin-top: 20px;
     justify-content: center;
@@ -155,9 +173,10 @@ const StBodyDiv = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: start;
       @media all and (max-width: 768px) {
         width: 90%;
+        align-items: center;
       }
     }
   }
@@ -166,6 +185,16 @@ const StBodyDiv = styled.div`
     display: flex;
     justify-content: center;
     align-items: start;
+  }
+  .question-img-first {
+    margin-left: 60px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    @media all and (max-width: 768px) {
+      margin-left: 0px;
+    }
   }
   //web
   @media all and (min-width: 769px) {
@@ -181,7 +210,7 @@ const StBodyDiv = styled.div`
       .example {
         position: relative;
         .example-contents {
-          width: 70%;
+          width: 1000px;
           height: 80%;
           position: absolute;
           display: flex;
@@ -194,53 +223,59 @@ const StBodyDiv = styled.div`
             width: 90%;
           }
           transform: translate(-50%, -50%);
-          .example-img-wrap {
-            height: 60%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            @media all and (max-width: 900px) {
-              width: 300px;
-              font-size: 30px;
-            }
-          }
         }
         .second {
           flex-direction: row-reverse;
         }
       }
       .main-intro {
-        margin-left: 20px;
-        margin-right: 20px;
       }
       .main-intro-title {
         font-size: 35px;
-        @media all and (max-width: 831px) {
+        text-align: start;
+        @media all and (max-width: 768px) {
           font-size: 30px;
+          text-align: center;
         }
-      }
-    }
-    .welcome {
-      margin-left: 5px;
-      color: gray;
-      @media all and (max-width: 768px) {
-        margin-left: 15px;
-        color: gray;
       }
     }
   }
 `;
-
+const StLogoTitle = styled.div`
+  font-family: Cafe24Ssurround;
+  margin-top: 30px;
+  text-align: center;
+  font-size: 3em;
+`;
+const StExampleImg = styled.div`
+  width: 400px;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: ${(props) => (props.top ? "50px" : null)};
+  margin-left: ${(props) => (props.top ? null : "50px")};
+  @media all and (max-width: 900px) {
+    margin-right: 0px;
+    margin-left: 0px;
+    width: 300px;
+    font-size: 30px;
+  }
+`;
 const StBackgroundTextDiv = styled.div`
   @media all and (max-width: 768px) {
     display: none;
   }
   @media all and (min-width: 769px) {
     position: absolute;
-    z-index: 1;
+    /* z-index: 1; */
     font-size: 10em;
     opacity: 0.1;
-    margin-left: ${(props) => (props.second ? "1000px" : null)};
+    top: 0;
+    /* left: 0; */
+    /* margin-left: ${(props) => (props.second ? "1000px" : null)}; */
+    right: ${(props) => (props.second ? "-30%" : null)};
+    left: ${(props) => (props.second ? null : "0")};
   }
 `;
 
@@ -300,17 +335,17 @@ export default function Main() {
           {select ? (
             <div className={"banner-intro"}>
               <div className={"welcome"}>Welcome</div>
-              <div className={"main-intro-title"}>
+              <div className={"main-intro-title-banner"}>
                 {`사람과 사람을 이어주는\n우리동네 플래폼`}
               </div>
-              <div className={"logo-title"}>문고리</div>
+              <StLogoTitle>문고리</StLogoTitle>
               <div className={"main-intro-subcontents"}>
                 지금 바로 문고리를 잡아보세요.
               </div>
             </div>
           ) : (
             <div className={"banner-intro"}>
-              <div className={"main-intro-title"}>
+              <div className={"main-intro-title-banner"}>
                 우리들의 문고리를 소개합니다.
               </div>
               <div className={"main-intro-wrap"}>
@@ -357,10 +392,10 @@ export default function Main() {
             Suggestion
           </StBackgroundTextDiv>
           <div className={"example-contents"}>
-            <div className={"example-img-wrap"}>
+            <StExampleImg top>
               {" "}
               <img src={exampleImg1} alt={"움짤예시1 이미지"} />
-            </div>
+            </StExampleImg>
             <div className={"main-intro"}>
               <div className={"main-intro-title"}>
                 {`판매자가\n구매자를 선택하세요`}
@@ -385,7 +420,7 @@ export default function Main() {
               </Link>
             </div>
 
-            <div className={"question-img"}>
+            <div className={"question-img-first"}>
               <img src={trade} alt={"이미지"} />
             </div>
           </div>
@@ -400,10 +435,10 @@ export default function Main() {
             Community
           </StBackgroundTextDiv>
           <div className={"example-contents second"}>
-            <div className={"example-img-wrap"}>
+            <StExampleImg bottom>
               {" "}
               <img src={exampleImg2} alt={"움짤예시1 이미지"} />
-            </div>
+            </StExampleImg>
 
             <div className={"main-intro"}>
               <div className={"main-intro-title"}>

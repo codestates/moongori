@@ -13,7 +13,6 @@ import {
 import { category } from "./../components/News";
 import MapContainer from "../components/MapContainer";
 import DaumPostcode from "react-daum-postcode";
-import photoicon from "../images/photoicon.png";
 import Loading from "../components/Loading";
 import axios from "axios";
 
@@ -149,7 +148,7 @@ const StButtonBox = styled.div`
     }
   }
 `;
-export default function NewsPostWrite({ searchPlace }) {
+export default function EidtNewsPostWrite({ userinfo }) {
   const navigate = useNavigate();
   const [defaultContents, setDefaultContents] = useState({
     category: "",
@@ -348,7 +347,7 @@ export default function NewsPostWrite({ searchPlace }) {
             </div>
             <div className={"addition-wrap"}>
               <div>
-                <label for="input-file" src={photoicon} className={"add-icon"}>
+                <label for="input-file" className={"add-icon"}>
                   <FontAwesomeIcon icon={faImage} />
                 </label>
                 <input

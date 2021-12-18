@@ -18,7 +18,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
 import SimpleSlider from "../components/Slider";
-import { tradeState } from "../components/Trade";
 import { StContentInfoDiv } from "../components/News";
 import { StContentsDiv, StPreviewDiv, StImageDiv } from "./TradePostWrite";
 axios.defaults.withCredentials = true;
@@ -43,10 +42,14 @@ const StTradeBodyDiv = styled.div`
       width: 90%;
     }
     .trade-explain {
-      border: none;
+      border-radius: 5px;
+      border: 1px solid #b7b7b7;
       resize: none;
       width: 100%;
       height: 200px;
+      @media all and (max-width: 768px) {
+        margin-left: 20px;
+      }
     }
   }
   .cancle-check {
@@ -79,7 +82,8 @@ const StTradeBoxDiv = styled.div`
   }
 `;
 const StPictureDiv = styled.div`
-  width: 60%;
+  margin-right: 20px;
+  width: 55%;
   height: 70%;
   display: flex;
   align-items: center;
@@ -87,6 +91,7 @@ const StPictureDiv = styled.div`
   @media all and (max-width: 768px) {
     width: 90%;
     height: 50%;
+    margin-right: 0px;
   }
   .tradeImg {
     width: 80%;
@@ -94,7 +99,6 @@ const StPictureDiv = styled.div`
   }
 `;
 const StContentDiv = styled.div`
-  margin-left: 20px;
   width: 40%;
   height: 70%;
   display: flex;
@@ -153,6 +157,8 @@ const StContentDiv = styled.div`
       font-weight: 700;
     }
     .edit-trade-title {
+      border: 1px solid #b7b7b7;
+      border-radius: 5px;
       width: 200px;
       height: 50%;
     }
@@ -163,6 +169,9 @@ const StContentDiv = styled.div`
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    @media all and (max-width: 768px) {
+      width: 90%;
+    }
     .trad-price {
       color: #b7b7b7;
       height: 30%;
@@ -321,6 +330,9 @@ const StCommentInputDiv = styled.div`
     .comment-warning {
       font-size: 0.8em;
       color: red;
+      @media all and (max-width: 768px) {
+        font-size: 0.6em;
+      }
     }
     @media all and (max-width: 768px) {
       font-size: 1.2em;
@@ -359,6 +371,16 @@ const StCommentListDiv = styled.div`
   margin-bottom: 30px;
   margin-top: 40px;
   width: 90%;
+  .contect {
+    margin-top: 20px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid #b7b7b7;
+    background: #aae8c5;
+    height: 30px;
+    margin: 3px 10px 0 0;
+    width: 70px;
+  }
 `;
 const StPostHeaderDiv = styled.div`
   border-bottom: 1px solid;
@@ -373,6 +395,7 @@ const StPostHeaderDiv = styled.div`
     @media all and (max-width: 540px) {
       font-size: 15px;
     }
+
     svg {
       cursor: pointer;
       margin-right: 10px;
@@ -400,7 +423,7 @@ const StPostUserDiv = styled.div`
   img {
     height: 35px;
     width: 35px;
-    margin: 10px 10px 0 0;
+    margin-right: 10px;
     @media all and (max-width: 540px) {
       height: 30px;
       width: 30px;
@@ -417,14 +440,6 @@ const StPostUserDiv = styled.div`
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-  button {
-    border-radius: 30px;
-    background: #92e3a9;
-    height: 30px;
-    margin-right: 10px;
-    width: 70px;
-    cursor: pointer;
-  }
 `;
 const StCommentButtonDiv = styled.div`
   padding: 30px 0 0 30px;
@@ -440,22 +455,21 @@ const StCommentButtonDiv = styled.div`
 `;
 
 const SthandleButton = styled.div`
-  display:flex;
-  justify-content:center;
-  align-items:center;
-      background: #aae8c5;
-      border: 1px solid #b7b7b7;
-      border-radius: 10px;
-      width: ${(props) => (props.modify ? "80px" : "100%")};
-      height: ${(props) => (props.modify ? "30px" : "40px")};
-      margin-right: ${(props) => (props.modify ? "10px" : "none")};
-      margin-top:${(props) => (props.modify ? "10px" : "none")};
-      cursor: pointer;
-      @media all and (max-width: 768px) {
-        width: 90%;
-        height: 50px;
-      }
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #aae8c5;
+  border: 1px solid #b7b7b7;
+  border-radius: 10px;
+  width: ${(props) => (props.modify ? "80px" : "100%")};
+  height: ${(props) => (props.modify ? "30px" : "40px")};
+  margin-right: ${(props) => (props.modify ? "10px" : "none")};
+  margin-top: ${(props) => (props.modify ? "10px" : "none")};
+  cursor: pointer;
+  @media all and (max-width: 768px) {
+    width: 90%;
+    height: 50px;
+  }
 `;
 
 export function endForToday(value) {
@@ -501,9 +515,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
   });
   const [likeState, setLikeState] = useState(false);
   const [cCost, setCCost] = useState(0);
-
-  //상태 변경 요청할때 사용
-  const [check, setCheck] = useState(null);
 
   const openOption = () => {
     setOption(!option);
@@ -563,16 +574,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
     }
   };
 
-  // 게시글 상태변경
-  const changeState = async (s) => {
-    await axios
-      .patch(`${process.env.REACT_APP_API_URL}/trade/state/${id}`, {
-        state: s,
-      })
-      .then((res) => {
-        setCheck(res.data.data.state);
-      });
-  };
   // 찜하기
   const like = async () => {
     if (likeState) {
@@ -689,46 +690,53 @@ export default function TradeSuggestionPost({ login, userinfo }) {
   // 서버에 금액을 추가하는 함수
   const registerComment = () => {
     if (login) {
-      if (inputPriceRef.current.value >= postInfo.sCost) {
-        if (inputPriceRef.current.value.length <= 8) {
-          axios
-            .post(`${process.env.REACT_APP_API_URL}/trade/suggestion`, {
-              tradePost_Id: id,
-              cost: inputPriceRef.current.value,
-            })
-            .then((res) => {
-              setPriceList([
-                {
-                  ...res.data.data.createSuggestion,
-                  user: {
-                    img: userinfo.img,
-                    nickname: userinfo.nickname,
-                    town: userinfo.town,
+      if (postInfo.user_Id !== userinfo.id) {
+        if (inputPriceRef.current.value >= postInfo.sCost) {
+          if (inputPriceRef.current.value.length <= 8) {
+            axios
+              .post(`${process.env.REACT_APP_API_URL}/trade/suggestion`, {
+                tradePost_Id: id,
+                cost: inputPriceRef.current.value,
+              })
+              .then((res) => {
+                setPriceList([
+                  {
+                    ...res.data.data.createSuggestion,
+                    user: {
+                      img: userinfo.img,
+                      nickname: userinfo.nickname,
+                      town: userinfo.town,
+                    },
                   },
-                },
-                ...priceList,
-              ]);
-              setCCost(res.data.data.currentCost);
-            })
-            .catch();
-          inputPriceRef.current.focus();
-          inputPriceRef.current.value = "";
+                  ...priceList,
+                ]);
+                setCCost(res.data.data.currentCost);
+              })
+              .catch();
+            inputPriceRef.current.focus();
+            inputPriceRef.current.value = "";
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "최대 8자리까지 가능합니다.",
+            });
+          }
         } else {
           Swal.fire({
             icon: "error",
-            title: "최대 8자리까지 가능합니다.",
+            title: `${postInfo.sCost.toLocaleString()}원 보다 높게 제시해주세요.`,
           });
         }
       } else {
         Swal.fire({
-          icon: "error",
-          title: "현재금액보다 높게 제시해주세요.",
+          icon: "warning",
+          title: "작성자는 제시 하실 수 없습니다.",
         });
       }
     } else {
       Swal.fire({
         icon: "error",
-        title: "로그인이 필요한 기능입니다.",
+        title: "로그인 필요한 기능입니다.",
       });
     }
   };
@@ -739,27 +747,31 @@ export default function TradeSuggestionPost({ login, userinfo }) {
 
   // 금액 수정하는 함수
   const reviseComment = (price_id) => {
-    if (
-      inputRevisedPriceRef.current.value >= postInfo.sCost &&
-      inputRevisedPriceRef.current.value.length <= 8
-    ) {
-      axios
-        .patch(
-          `${process.env.REACT_APP_API_URL}/trade/suggestion/${price_id}`,
-          {
-            tradePost_Id: id,
-            cost: inputRevisedPriceRef.current.value,
-          }
-        )
-        .then((res) => {
-          setPriceList([...res.data.data.updateSuggestion].reverse());
-          setCCost(res.data.data.currentCost);
-          setPriceId(null);
+    if (inputRevisedPriceRef.current.value >= postInfo.sCost) {
+      if (inputRevisedPriceRef.current.value.length <= 8) {
+        axios
+          .patch(
+            `${process.env.REACT_APP_API_URL}/trade/suggestion/${price_id}`,
+            {
+              tradePost_Id: id,
+              cost: inputRevisedPriceRef.current.value,
+            }
+          )
+          .then((res) => {
+            setPriceList([...res.data.data.updateSuggestion].reverse());
+            setCCost(res.data.data.currentCost);
+            setPriceId(null);
+          });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "최대 8자리까지 가능합니다.",
         });
+      }
     } else {
       Swal.fire({
         icon: "error",
-        title: "제시 금액을 확인해주세요.",
+        title: `${postInfo.sCost.toLocaleString()}원 보다 높게 제시해주세요.`,
       });
     }
   };
@@ -775,18 +787,24 @@ export default function TradeSuggestionPost({ login, userinfo }) {
       });
   };
 
-  //채팅
-  const handleChat = (price_id) => {
-    navigate(`/chat=${price_id}`);
+  //채팅방 만들고 => 채팅방 목록으로 가자
+  const handleRoom = (price_userId, postId, normalOrNot) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/room`, {
+        price_userId,
+        postId,
+        normalOrNot,
+      })
+      .then((res) => navigate(`/chat/list`));
   };
-
+  console.log(postInfo.normalOrNot);
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${id}`)
       .then((res) => {
-        setCheck(res.data.data.postInfo.state);
         setCCost(res.data.data.postInfo.cCost);
         setPostInfo(res.data.data.postInfo);
+        console.log("~~~~~~~PostInfo;", res.data.data.postInfo);
         setPriceList(res.data.data.postInfo.suggestions.reverse());
         // 이미지파일과 미리보기이미지는 배열의 길이를 같게 유지해야함
         setImages([...res.data.data.postInfo.img.split(",")]);
@@ -802,7 +820,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
         });
       });
   }, [login]);
-
   return (
     <>
       {edit ? (
@@ -899,12 +916,14 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                 </div>
                 <div className={"content-body"}>
                   <div className={"trad-price"}>현재금액</div>
-                  <div className={"c-price"}>{cCost.toLocaleString()} 원</div>
+                  <div className={"c-price"}>
+                    {Number(cCost).toLocaleString()} 원
+                  </div>
                 </div>
               </StContentDiv>
             </StTradeBoxDiv>
             <div className={"explain-wrap"}>
-              <div className={"trade-explain"}>
+              <div>
                 {/* 본문 */}
                 {postInfo.content}
               </div>
@@ -958,14 +977,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                           <div>{Number(price.cost).toLocaleString()}원</div>
                         )}
                       </div>
-                      <button
-                        type={"button"}
-                        onClick={() => {
-                          handleChat(price.id);
-                        }}
-                      >
-                        연락하기
-                      </button>
                     </StPostUserDiv>
                     {login && userinfo.id === price.user_Id ? (
                       price.id === priceId ? (
@@ -992,6 +1003,22 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                           />
                         </div>
                       )
+                    ) : null}
+                    {login &&
+                    postInfo.user_Id === userinfo.id &&
+                    userinfo.id !== price.user_Id ? (
+                      <button
+                        className="contect"
+                        onClick={() => {
+                          handleRoom(
+                            price.user_Id,
+                            postInfo.id,
+                            postInfo.normalOrNot
+                          );
+                        }}
+                      >
+                        연락하기
+                      </button>
                     ) : null}
                   </StPostHeaderReUse>
                 ))}
@@ -1064,7 +1091,7 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                     </div>
                     <input
                       defaultValue={postInfo.title}
-                      className={"edit-trade-title "}
+                      className={"edit-trade-title"}
                       ref={modifyTitle}
                     ></input>
                   </div>
@@ -1099,9 +1126,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                       <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
                     </div>
                   </div>
-                </div>
-                <div className={"StContactButton"}>
-                  <button className={"contact"}>연락하기</button>
                 </div>
               </StContentDiv>
             </StTradeBoxDiv>

@@ -9,6 +9,8 @@ import Login from "./Login";
 import Signup from "./Signup";
 
 const StHeadBoxDiv = styled.div`
+  font-family: Cafe24Ssurround;
+
   background: white;
   display: flex;
   flex-direction: column;
@@ -38,7 +40,7 @@ const StHeadBoxDiv = styled.div`
     position: fixed;
     overflow: hidden;
   }
-  @media all and (max-width: 768px) {
+  @media all and (max-width: 813px) {
     height: 100%;
     width: auto;
     .wrap {
@@ -57,7 +59,7 @@ const StHeadBoxDiv = styled.div`
       }
     }
   }
-  @media all and (min-width: 769px) {
+  @media all and (min-width: 813px) {
     .nav {
       display: flex;
       justify-content: space-between;
@@ -66,7 +68,7 @@ const StHeadBoxDiv = styled.div`
         display: flex;
         a,
         div {
-          color: black;
+          color: gray;
           text-decoration: none;
           padding: 20px 10px 0 10px;
           font-size: 1em;
@@ -162,6 +164,7 @@ export default function Header({ login, handleLoginSuccess, handleLogout }) {
               <Link to="/news=0">동네소식</Link>
             </div>
             <div className={"navMenu"}>
+              {login ? <Link to={"/chat/list"}>채팅</Link> : null}
               {login ? (
                 <Link to={"/mypage"}>마이페이지</Link>
               ) : (

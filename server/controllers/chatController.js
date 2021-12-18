@@ -3,13 +3,13 @@ const { tradePost, user, chat } = require("../models");
 module.exports = async (io) => {
   io.on("connection", (socket) => {
     socket.on("get_room", (roomNum, userName, userId) => {
+      console.log(`#######room`, roomNum);
       socket["nickname"] = userName;
-      console.log(";;;;;;;;;;;", typeof roomNum);
       socket.join(roomNum);
 
       chat
         .findAll({
-          include: [{ model: user, attributes: ["nickname"] }],
+          include: [{ model: user, attributes: ["nickname", "img"] }],
           order: [["createdAt"]],
           where: { suggestion_Id: roomNum },
         })
@@ -26,8 +26,15 @@ module.exports = async (io) => {
           user_Id: userId,
           suggestion_Id: roomNum,
         })
-        .then(() => {
-          io.to(roomNum).emit("message", { nickname, message });
+        .then((res) => {
+          user
+            .findOne({
+              attributes: ["img"],
+              where: { id: res.user_Id },
+            })
+            .then((res) => {
+              io.to(roomNum).emit("message", { nickname, message, img: res });
+            });
         });
     });
   });

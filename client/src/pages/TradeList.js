@@ -67,13 +67,16 @@ export default function TradeList({ login, userinfo }) {
   const [loading, isLoading] = useState(true);
   const [fetch, isFetch] = useState(false);
   const inputSearchRef = useRef(null);
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
   // 카테고리 변경하는 함수
   const changeCategory = (e) => {
     if (e.target.value === category) {
+      setSearch("");
       setCategory("all");
       navigate("/trade=all");
     } else {
+      setSearch("");
       setCategory(e.target.value);
       navigate(`/trade=${e.target.value}`);
     }
@@ -87,6 +90,7 @@ export default function TradeList({ login, userinfo }) {
       inputSearchRef.current.value !== "" &&
       (e.key === "Enter" || e.type === "click")
     ) {
+      setSearch(inputSearchRef.current.value);
       if (category !== "all") {
         axios
           .get(
@@ -102,6 +106,7 @@ export default function TradeList({ login, userinfo }) {
               setPage(2);
               isLoading(false);
               isFetch(false);
+              inputSearchRef.current.value = "";
             }
           })
           .catch();
@@ -120,6 +125,7 @@ export default function TradeList({ login, userinfo }) {
               setPage(2);
               isLoading(false);
               isFetch(false);
+              inputSearchRef.current.value = "";
             }
           })
           .catch();
@@ -132,10 +138,10 @@ export default function TradeList({ login, userinfo }) {
     isLoading(true);
     isFetch(true);
     if (category !== "all") {
-      if (inputSearchRef.current.value !== "") {
+      if (search !== "") {
         axios
           .get(
-            `${process.env.REACT_APP_API_URL}/trade/${category}?search=${inputSearchRef.current.value}&page=${page}`
+            `${process.env.REACT_APP_API_URL}/trade/${category}?search=${search}&page=${page}`
           )
           .then((res) => {
             if (res.status === 204) {
@@ -168,10 +174,10 @@ export default function TradeList({ login, userinfo }) {
           .catch();
       }
     } else {
-      if (inputSearchRef.current.value !== "") {
+      if (search !== "") {
         axios
           .get(
-            `${process.env.REACT_APP_API_URL}/trade?search=${inputSearchRef.current.value}&page=${page}`
+            `${process.env.REACT_APP_API_URL}/trade?search=${search}&page=${page}`
           )
           .then((res) => {
             if (res.status === 204) {
@@ -213,15 +219,20 @@ export default function TradeList({ login, userinfo }) {
       requestTrade();
     }
   };
-
   useEffect(() => {
-    if (userinfo.address === null) {
-      navigate("/mypage");
-    } else {
-      navigate(`/trade=${category}`);
-      requestTrade();
+    if (login) {
+      axios.get(`${process.env.REACT_APP_API_URL}/user/info`).then((res) => {
+        if (res.data.data.address === null) {
+          navigate("/mypage");
+        }
+      });
     }
-  }, [category, userinfo]);
+    window.onbeforeunload = function scrolltop() {
+      window.scrollTo(0, 0);
+    };
+    navigate(`/trade=${category}`);
+    requestTrade();
+  }, [category]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -229,7 +240,7 @@ export default function TradeList({ login, userinfo }) {
       window.removeEventListener("scroll", handleScroll);
     };
   });
-  console.log("tradeList;", tradeList);
+
   return (
     <StBodyDiv>
       <StContentsHeadDiv>
@@ -282,7 +293,6 @@ export default function TradeList({ login, userinfo }) {
             mypage={false}
             trade={trade}
             key={index}
-            num={index}
             login={login}
             userinfo={userinfo}
           />

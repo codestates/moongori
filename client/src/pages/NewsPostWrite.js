@@ -125,7 +125,7 @@ const StButtonBox = styled.div`
     }
   }
 `;
-export default function NewsPostWrite({ searchPlace }) {
+export default function NewsPostWrite({ userinfo }) {
   const navigate = useNavigate();
   const [selected, setSelected] = useState("");
   const [postWrite, setPostWrite] = useState({
@@ -228,13 +228,15 @@ export default function NewsPostWrite({ searchPlace }) {
   };
 
   const creatNewsPost = async () => {
+    console.log(userinfo);
     if (selected !== "" && postWrite.contents !== "") {
       const formData = new FormData();
       formData.append("img", image);
       formData.append("content", contents);
       formData.append("category", category);
       formData.append("location", locationInfo);
-
+      formData.append("latitude", userinfo.latitude);
+      formData.append("longitude", userinfo.longitude);
       const config = {
         Headers: {
           "content-type": "multipart/form-data",

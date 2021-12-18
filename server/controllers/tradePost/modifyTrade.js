@@ -31,11 +31,13 @@ module.exports = async (req, res) => {
         .status(200)
         .json({ data: modification, message: "successful modification" });
     } else {
-      const { title, content, mainIdx, modifyIdx } = req.body;
+      const { title, content, mainIdx } = req.body;
 
       const preImg = postOne.img.split(",");
-      for (let idx of modifyIdx) {
-        preImg.splice(Number(idx), 1);
+      if (req.body.modifyIdx) {
+        for (let idx of req.body.modifyIdx) {
+          preImg.splice(Number(idx), 1);
+        }
       }
       let img = [...preImg, ...req.files.map((el) => el.location)];
       img = [...img.splice(Number(mainIdx), 1), ...img].join(",");

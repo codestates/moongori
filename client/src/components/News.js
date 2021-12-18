@@ -5,7 +5,8 @@ import styled from "styled-components";
 export const StNewsDiv = styled.div`
   border: 2px solid #92e3a9;
   border-radius: 10px;
-  width: ${(props) => (props.mypage ? "80%" : "100%")};
+  max-width: ${(props) => (props.mypage ? "800px" : null)};
+  width: ${(props) => (props.mypage ? "70%" : "100%")};
   height: ${(props) => (props.mypage ? "138px" : "150px")};
   margin-bottom: 40px;
   a {
@@ -38,7 +39,7 @@ export const StContentInfoDiv = styled.div`
   margin-bottom: ${(props) =>
     props.top ? (props.mypage ? "15px" : "10px") : "0px"};
   font-size: ${(props) =>
-    props.top ? (props.mypage ? "1em" : "1.2em") : "0.8em"};
+    props.top ? (props.mypage ? "1em" : "1em") : "0.8em"};
   .front {
     margin-right: 20px;
   }
@@ -57,6 +58,7 @@ const StCategoryDiv = styled.div`
   height: 25px;
   text-align: center;
   margin-bottom: 10px;
+  font-size: 0.8em;
 `;
 
 export const category = {

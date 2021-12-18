@@ -39,10 +39,11 @@ const StTradeBodyDiv = styled.div`
     display: flex;
     align-items: center;
     @media all and (max-width: 768px) {
-      width: 90%;
+      width: 85%;
     }
     .trade-explain {
-      border: none;
+      border-radius: 5px;
+      border: 1px solid #b7b7b7;
       resize: none;
       width: 100%;
       height: 200px;
@@ -78,12 +79,14 @@ const StTradeBoxDiv = styled.div`
   }
 `;
 const StPictureDiv = styled.div`
-  width: 60%;
+  margin-right: 20px;
+  width: 55%;
   height: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
   @media all and (max-width: 768px) {
+    margin-right: 0px;
     width: 90%;
     height: 50%;
   }
@@ -137,7 +140,7 @@ const StContentDiv = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 12px;
+        font-size: 10px;
         border-radius: 10px;
         text-align: center;
         width: 53px;
@@ -152,6 +155,8 @@ const StContentDiv = styled.div`
       font-weight: 700;
     }
     .edit-trade-title {
+      border: 1px solid #b7b7b7;
+      border-radius: 5px;
       width: 200px;
       height: 50%;
     }
@@ -163,6 +168,9 @@ const StContentDiv = styled.div`
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid #b7b7b7;
+    @media all and (max-width: 768px) {
+      width: 90%;
+    }
     .trad-price {
       color: #b7b7b7;
       height: 30%;
@@ -173,6 +181,8 @@ const StContentDiv = styled.div`
       font-weight: bold;
     }
     .edit-price {
+      border-radius: 5px;
+      border: 1px solid #b7b7b7;
       width: 200px;
     }
     input::-webkit-inner-spin-button {
@@ -241,23 +251,21 @@ const StContentDiv = styled.div`
 `;
 
 const SthandleButton = styled.div`
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
-      background: #aae8c5;
-      border: 1px solid #b7b7b7;
-      border-radius: 10px;
-      width: ${(props) => (props.modify ? "80px" : "100%")};
-      height: ${(props) => (props.modify ? "30px" : "40px")};
-      margin-right: ${(props) => (props.modify ? "10px" : "none")};
-      margin-top:${(props) => (props.modify ? "10px" : "none")};
-      cursor: pointer;
-      @media all and (max-width: 768px) {
-        width: 90%;
-        height: 50px;
-      }
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #aae8c5;
+  border: 1px solid #b7b7b7;
+  border-radius: 10px;
+  width: ${(props) => (props.modify ? "80px" : "100%")};
+  height: ${(props) => (props.modify ? "30px" : "40px")};
+  margin-right: ${(props) => (props.modify ? "10px" : "none")};
+  margin-top: ${(props) => (props.modify ? "10px" : "none")};
+  cursor: pointer;
+  @media all and (max-width: 768px) {
+    width: 90%;
+    height: 50px;
+  }
 `;
 
 //옵션 메뉴
@@ -537,6 +545,17 @@ export default function TradeNoramlPost({ login, userinfo }) {
         });
       });
   }, [login]);
+
+  const handleRoom = (tradePost_userId, postId, normalOrNot) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/room`, {
+        tradePost_userId,
+        postId,
+        normalOrNot,
+      })
+      .then(() => navigate(`/chat/list`));
+  };
+
   return (
     <>
       {edit ? (
@@ -569,6 +588,7 @@ export default function TradeNoramlPost({ login, userinfo }) {
                                 value={2}
                                 onClick={() => {
                                   changeState(2);
+                                  setOption(false);
                                 }}
                               >
                                 {tradeState[2]}으로 변경
@@ -579,6 +599,7 @@ export default function TradeNoramlPost({ login, userinfo }) {
                                 value={1}
                                 onClick={() => {
                                   changeState(1);
+                                  setOption(false);
                                 }}
                               >
                                 {tradeState[1]}으로 변경
@@ -598,6 +619,7 @@ export default function TradeNoramlPost({ login, userinfo }) {
                                 }).then((result) => {
                                   if (result.isConfirmed) {
                                     changeState(3);
+                                    setOption(false);
                                     Swal.fire("변경완료!", "");
                                   }
                                 });
@@ -686,11 +708,21 @@ export default function TradeNoramlPost({ login, userinfo }) {
                   </div>
                 </div>
               </div>
-              <div className={"StContactButton"}>
-                <SthandleButton>
-                  <div>연락하기</div>
-                </SthandleButton>
-              </div>
+              {login && postInfo.user_Id === userinfo.id ? null : (
+                <div className={"StContactButton"}>
+                  <SthandleButton
+                    onClick={() =>
+                      handleRoom(
+                        postInfo.user_Id,
+                        postInfo.id,
+                        postInfo.normalOrNot
+                      )
+                    }
+                  >
+                    연락하기
+                  </SthandleButton>
+                </div>
+              )}
             </StContentDiv>
           </StTradeBoxDiv>
           <div className={"explain-wrap"}>
@@ -812,9 +844,6 @@ export default function TradeNoramlPost({ login, userinfo }) {
                     <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
                   </div>
                 </div>
-              </div>
-              <div className={"StContactButton"}>
-                <SthandleButton>연락하기</SthandleButton>
               </div>
             </StContentDiv>
           </StTradeBoxDiv>
