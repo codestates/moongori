@@ -5,6 +5,7 @@ const newsPostCtrl = require("./newsPost/newsPostCtrl");
 const tradePost = require("./tradePost/tradePostCtrl");
 const auth = require("./auth/accessToken");
 const tradePostCtrl = require("./tradePost/tradePostCtrl");
+const chatCtrl = require("./chat/chatCtrl");
 
 //user
 router.get("/user/info", auth.accessToken, userCtrl.info);
@@ -50,7 +51,6 @@ router.delete(
 router.get("/news", newsPostCtrl.search);
 router.get("/news/:category", newsPostCtrl.search);
 
-
 //마이페이지
 router.get("/mypage/newsList", auth.accessToken, newsPostCtrl.myList);
 router.get("/mypage/comment", auth.accessToken, newsPostCtrl.myComment);
@@ -91,5 +91,9 @@ router.post("/trade/like", auth.accessToken, tradePostCtrl.like);
 router.delete("/trade/like", auth.accessToken, tradePostCtrl.deleteLike);
 router.get("/trade", tradePostCtrl.search);
 router.get("/trade/:normalOrNot", tradePostCtrl.search);
+
+//  chatRoom
+router.post("/room", auth.accessToken, chatCtrl.create);
+router.get("/room", auth.accessToken, chatCtrl.list);
 
 module.exports = router;

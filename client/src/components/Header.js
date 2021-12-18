@@ -9,7 +9,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 
 const StHeadBoxDiv = styled.div`
-font-family:Cafe24Ssurround;
+  font-family: Cafe24Ssurround;
 
   background: white;
   display: flex;
@@ -40,7 +40,7 @@ font-family:Cafe24Ssurround;
     position: fixed;
     overflow: hidden;
   }
-  @media all and (max-width: 768px) {
+  @media all and (max-width: 813px) {
     height: 100%;
     width: auto;
     .wrap {
@@ -59,13 +59,12 @@ font-family:Cafe24Ssurround;
       }
     }
   }
-  @media all and (min-width: 769px) {
+  @media all and (min-width: 813px) {
     .nav {
       display: flex;
       justify-content: space-between;
       width: 100%;
       .navMenu {
-
         display: flex;
         a,
         div {
@@ -165,6 +164,7 @@ export default function Header({ login, handleLoginSuccess, handleLogout }) {
               <Link to="/news=0">동네소식</Link>
             </div>
             <div className={"navMenu"}>
+              {login ? <Link to={"/chat/list"}>채팅</Link> : null}
               {login ? (
                 <Link to={"/mypage"}>마이페이지</Link>
               ) : (
