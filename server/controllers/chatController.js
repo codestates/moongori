@@ -2,29 +2,28 @@ const { tradePost, user, chat } = require("../models");
 
 module.exports = async (io) => {
   io.on("connection", (socket) => {
-    socket.on("get_room", (roomNum, userName, userId) => {
+    let roomId;
+    socket.on("get_room", async (roomNum, userName, userId) => {
+      roomId = roomNum;
       console.log(`#######room`, roomNum);
       socket["nickname"] = userName;
       socket.join(roomNum);
 
-      chat
-        .findAll({
-          include: [{ model: user, attributes: ["nickname", "img"] }],
-          order: [["createdAt"]],
-          where: { suggestion_Id: roomNum },
-        })
-        .then((res) => {
-          socket.emit("messagesAll", res);
-        });
-      socket.to(roomNum).emit("welcome", socket.nickname);
+      const allChat = await chat.findAll({
+        include: [{ model: user, attributes: ["nickname", "img"] }],
+        order: [["createdAt"]],
+        where: { room_Id: roomNum },
+      });
+      socket.emit("messagesAll", allChat);
+      socket.to(roomNum).emit("welcome", [allChat, socket.nickname]);
     });
 
     socket.on("message", ({ nickname, userId, message, roomNum }) => {
       chat
         .create({
-          content: message,
+          message: message,
           user_Id: userId,
-          suggestion_Id: roomNum,
+          room_Id: roomNum,
         })
         .then((res) => {
           user
@@ -33,9 +32,19 @@ module.exports = async (io) => {
               where: { id: res.user_Id },
             })
             .then((res) => {
-              io.to(roomNum).emit("message", { nickname, message, img: res });
+              io.to(roomNum).emit("message", {
+                userId,
+                nickname,
+                message,
+                img: res,
+              });
             });
         });
     });
+    socket.on("disconnect", async () => {
+      socket.to(roomId).emit("bye", socket.nickname);
+    });
+
+    //
   });
 };

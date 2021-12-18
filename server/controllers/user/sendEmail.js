@@ -21,14 +21,30 @@ module.exports = (res, data) => {
       to: data,
       subject: `동네문의 방문을 환영합니다.`,
       html: `<div style='
+      display:flex;
+      flex-direction:column;
+      align-items: center;
+      justify-content: center;
+      border-radius:10px;
+      border:none;
+      background:#aae8c5;
       text-align: center; 
-      width: 50%; 
-      height: 60%;
-      margin: 15%;
+      width: 500px; 
+      height: 200px;
+     margin-left:30px;
+     margin-top:30px;
       padding: 20px;
       box-shadow: 1px 1px 3px 0px #999;
-      '><h2>동네문을 찾아주셔서 감사합니다.</h2>
-      <a href="${process.env.PORT}/cert/${data}" ><button>이메일 인증</button></a></div>
+      '>
+      <h1>문고리에 방문해주셔서 감사합니다:)</h1>
+      <div>아래 이메일 인증 버튼을 클릭하여 회원가입을 완료해 주세요.</div>
+      <a href="${process.env.PORT}/cert/${data}" ><button style='
+      margin-top:20px;
+      background:white;
+      border-radius:5px;
+      border:1px solid #b7b7b7;
+      '>이메일 인증</button></a>
+      </div>
       `,
     };
     transporter.sendMail(message, (err, info) => {

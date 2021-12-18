@@ -1,20 +1,27 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import lock from "../images/locked.png";
 import axios from "axios";
+import Loading from "./../components/Loading";
+import { Link } from "react-router-dom";
+import noData from "./../images/noData.png";
+
 const StChatBody = styled.div`
-  width: 100%;
-  height: 100%;
+  min-height: 700px;
+  margin-bottom: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 200px;
+  a {
+    width: 100%;
+    height: 100%;
+    color: black;
+    text-decoration: none;
+  }
 `;
 
 const StChatBox = styled.div`
   border-radius: 15px;
-  border: 1px solid #b7b7b7;
+  border: 1px solid #aae8c5;
   max-width: 800px;
   height: 120px;
   width: 60%;
@@ -22,63 +29,114 @@ const StChatBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 30px;
   cursor: pointer;
   :hover {
     box-shadow: #b7b7b7 5px 5px 5px;
-    border: 1px solid #aae8c5;
   }
   :active {
     box-shadow: none;
   }
-  @media all and (max-width: 768px) {
-    width: 85%;
-  }
 `;
 const StChatInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  width: 90%;
-  height: 100%;
-`;
-const StChatUser = styled.div`
   width: 100%;
-  heigth: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
-  .userImg {
-    width: 10%;
-    .profile {
-      width: 30px;
-      height: 30px;
-    }
+  justify-content: space-between;
+`;
+
+const StChatUser = styled.div`
+  width: 50%;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    object-fit: cover;
+    margin-right: 15px;
   }
-  .usernickname {
-    margin-left: 10px;
-    width: 90%;
-    font-size: 13px;
+  div {
+    font-weight: bold;
+  }
+  @media all and (max-width: 500px) {
+    width: 100%;
+  }
+`;
+
+const StChatPost = styled.div`
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  img {
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
+  }
+  @media all and (max-width: 500px) {
+    display: none;
   }
 `;
 
 export default function ChatList({ userinfo }) {
+  const [chatListInfo, setChatListInfo] = useState(null);
+  const [loading, isLoading] = useState(true);
+
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/room`).then((res) => {
-      console.log(res.data);
+      const info = [];
+      for (let i = 0; i < res.data.chatList.length; i++) {
+        const obj = {
+          roomId: res.data.chatList[i].room_Id,
+          tradePost: res.data.chatList[i].room.tradePost,
+          user: res.data.opponentInfo[i].user,
+        };
+        info.push(obj);
+      }
+      setChatListInfo(info);
+      isLoading(false);
     });
   }, []);
 
   return (
     <StChatBody>
-      <StChatBox>
-        <StChatInfo>
-          <StChatUser>
-            <div className={"userImg"}>
-              <img src={lock} className={"profile"} />
-            </div>
-            <div className={"usernickname"}>김코딩</div>
-          </StChatUser>
-        </StChatInfo>
-      </StChatBox>
+      {chatListInfo ? (
+        chatListInfo.map((chat, index) => (
+          <StChatBox key={index}>
+            <Link to={`/chat/=${chat.roomId}`}>
+              <StChatInfo>
+                <StChatUser>
+                  <img
+                    src={chat.user.img}
+                    className={"profile"}
+                    alt={"유저 프로필"}
+                  />
+                  <div className={"usernickname"}>{chat.user.nickname}</div>
+                </StChatUser>
+                <StChatPost>
+                  <img
+                    src={chat.tradePost.img.split(",")[0]}
+                    alt={"포스트 이미지"}
+                  />
+                  <div>{chat.tradePost.title}</div>
+                </StChatPost>
+              </StChatInfo>
+            </Link>
+          </StChatBox>
+        ))
+      ) : (
+        <Loading />
+      )}
+      {!loading && chatListInfo.length === 0 ? (
+        <img
+          style={{ height: "500px", width: "500px" }}
+          src={noData}
+          alt="데이터없음"
+        ></img>
+      ) : null}
     </StChatBody>
   );
 }

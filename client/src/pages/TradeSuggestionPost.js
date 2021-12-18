@@ -380,6 +380,7 @@ const StCommentListDiv = styled.div`
     height: 30px;
     margin: 3px 10px 0 0;
     width: 70px;
+    cursor: pointer;
   }
 `;
 const StPostHeaderDiv = styled.div`
@@ -1006,7 +1007,8 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                     ) : null}
                     {login &&
                     postInfo.user_Id === userinfo.id &&
-                    userinfo.id !== price.user_Id ? (
+                    userinfo.id !== price.user_Id &&
+                    postInfo.state === 5 ? (
                       <button
                         className="contect"
                         onClick={() => {

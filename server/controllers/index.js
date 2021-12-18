@@ -56,6 +56,7 @@ router.get("/mypage/newsList", auth.accessToken, newsPostCtrl.myList);
 router.get("/mypage/comment", auth.accessToken, newsPostCtrl.myComment);
 router.get("/mypage/tradeList", auth.accessToken, tradePostCtrl.myList);
 router.get("/mypage/myLike", auth.accessToken, tradePostCtrl.myLike);
+router.get("/mypage/mySale", auth.accessToken, tradePostCtrl.mySale);
 
 //tradePost
 router.get("/trade/list", tradePost.list);
@@ -95,5 +96,6 @@ router.get("/trade/:normalOrNot", tradePostCtrl.search);
 //  chatRoom
 router.post("/room", auth.accessToken, chatCtrl.create);
 router.get("/room", auth.accessToken, chatCtrl.list);
+router.get("/room/:roomId", auth.accessToken, chatCtrl.room);
 
 module.exports = router;
