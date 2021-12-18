@@ -2,17 +2,17 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn("chats", "user_Id", {
+    await queryInterface.addColumn("roomJoins", "user_Id", {
       type: Sequelize.INTEGER,
     });
-    await queryInterface.addColumn("chats", "room_Id", {
+    await queryInterface.addColumn("roomJoins", "room_Id", {
       type: Sequelize.INTEGER,
     });
 
-    await queryInterface.addConstraint("chats", {
+    await queryInterface.addConstraint("roomJoins", {
       fields: ["user_Id"],
       type: "foreign key",
-      name: "user_chat_id_fk",
+      name: "roomJoins_user_id_fk",
       references: {
         table: "users",
         field: "id",
@@ -20,11 +20,10 @@ module.exports = {
       onDelete: "cascade",
       onUpdate: "cascade",
     });
-
-    await queryInterface.addConstraint("chats", {
+    await queryInterface.addConstraint("roomJoins", {
       fields: ["room_Id"],
       type: "foreign key",
-      name: "room_chat_id_fk",
+      name: "roomJoins_room_id_fk",
       references: {
         table: "rooms",
         field: "id",
@@ -35,9 +34,9 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeConstraint("chats", "user_chat_id_fk");
-    await queryInterface.removeConstraint("chats", "room_chat_id_fk");
-    await queryInterface.removeColumn("chats", "room_Id");
-    await queryInterface.removeColumn("chats", "user_Id");
+    await queryInterface.removeConstraint("roomJoins", "roomJoins_user_id_fk");
+    await queryInterface.removeConstraint("roomJoins", "roomJoins_room_id_fk");
+    await queryInterface.removeColumn("roomJoins", "user_Id");
+    await queryInterface.removeColumn("roomJoins", "room_Id");
   },
 };

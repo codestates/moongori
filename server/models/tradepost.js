@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "tradePost_Id",
       });
       models.tradePost.hasMany(models.chat, { foreignKey: "tradePost_Id" });
+      models.tradePost.hasMany(models.room, { foreignKey: "tradePost_Id" });
     }
   }
   tradePost.init(

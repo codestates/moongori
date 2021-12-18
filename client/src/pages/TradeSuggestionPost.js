@@ -42,7 +42,8 @@ const StTradeBodyDiv = styled.div`
       width: 90%;
     }
     .trade-explain {
-      border: none;
+      border-radius: 5px;
+      border: 1px solid #b7b7b7;
       resize: none;
       width: 100%;
       height: 200px;
@@ -156,6 +157,8 @@ const StContentDiv = styled.div`
       font-weight: 700;
     }
     .edit-trade-title {
+      border: 1px solid #b7b7b7;
+      border-radius: 5px;
       width: 200px;
       height: 50%;
     }
@@ -452,22 +455,21 @@ const StCommentButtonDiv = styled.div`
 `;
 
 const SthandleButton = styled.div`
-  display:flex;
-  justify-content:center;
-  align-items:center;
-      background: #aae8c5;
-      border: 1px solid #b7b7b7;
-      border-radius: 10px;
-      width: ${(props) => (props.modify ? "80px" : "100%")};
-      height: ${(props) => (props.modify ? "30px" : "40px")};
-      margin-right: ${(props) => (props.modify ? "10px" : "none")};
-      margin-top:${(props) => (props.modify ? "10px" : "none")};
-      cursor: pointer;
-      @media all and (max-width: 768px) {
-        width: 90%;
-        height: 50px;
-      }
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #aae8c5;
+  border: 1px solid #b7b7b7;
+  border-radius: 10px;
+  width: ${(props) => (props.modify ? "80px" : "100%")};
+  height: ${(props) => (props.modify ? "30px" : "40px")};
+  margin-right: ${(props) => (props.modify ? "10px" : "none")};
+  margin-top: ${(props) => (props.modify ? "10px" : "none")};
+  cursor: pointer;
+  @media all and (max-width: 768px) {
+    width: 90%;
+    height: 50px;
+  }
 `;
 
 export function endForToday(value) {
@@ -785,12 +787,24 @@ export default function TradeSuggestionPost({ login, userinfo }) {
       });
   };
 
+  //채팅방 만들고 => 채팅방 목록으로 가자
+  const handleRoom = (price_userId, postId, normalOrNot) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/room`, {
+        price_userId,
+        postId,
+        normalOrNot,
+      })
+      .then((res) => navigate(`/chat/list`));
+  };
+  console.log(postInfo.normalOrNot);
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/trade/post/${id}`)
       .then((res) => {
         setCCost(res.data.data.postInfo.cCost);
         setPostInfo(res.data.data.postInfo);
+        console.log("~~~~~~~PostInfo;", res.data.data.postInfo);
         setPriceList(res.data.data.postInfo.suggestions.reverse());
         // 이미지파일과 미리보기이미지는 배열의 길이를 같게 유지해야함
         setImages([...res.data.data.postInfo.img.split(",")]);
@@ -909,7 +923,7 @@ export default function TradeSuggestionPost({ login, userinfo }) {
               </StContentDiv>
             </StTradeBoxDiv>
             <div className={"explain-wrap"}>
-              <div className={"trade-explain"}>
+              <div>
                 {/* 본문 */}
                 {postInfo.content}
               </div>
@@ -993,7 +1007,18 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                     {login &&
                     postInfo.user_Id === userinfo.id &&
                     userinfo.id !== price.user_Id ? (
-                      <button className="contect">연락하기</button>
+                      <button
+                        className="contect"
+                        onClick={() => {
+                          handleRoom(
+                            price.user_Id,
+                            postInfo.id,
+                            postInfo.normalOrNot
+                          );
+                        }}
+                      >
+                        연락하기
+                      </button>
                     ) : null}
                   </StPostHeaderReUse>
                 ))}
@@ -1066,7 +1091,7 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                     </div>
                     <input
                       defaultValue={postInfo.title}
-                      className={"edit-trade-title "}
+                      className={"edit-trade-title"}
                       ref={modifyTitle}
                     ></input>
                   </div>
@@ -1101,9 +1126,6 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                       <div className={"like-cnt"}>찜 {postInfo.likes_cnt}</div>
                     </div>
                   </div>
-                </div>
-                <div className={"StContactButton"}>
-                  <button className={"contact"}>연락하기</button>
                 </div>
               </StContentDiv>
             </StTradeBoxDiv>
