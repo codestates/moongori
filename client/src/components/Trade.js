@@ -38,6 +38,12 @@ const StTradeDiv = styled(StNewsDiv)`
 
 const StContentsDiv = styled.div`
   margin-top: 20px;
+  @media all and (min-width: 1700px) {
+    margin-left: 50px;
+  }
+  @media all and (min-width: 2000px) {
+    margin-left: 70px;
+  }
   .trade-img {
     text-align: center;
     img {

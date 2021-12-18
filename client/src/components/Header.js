@@ -203,11 +203,15 @@ export default function Header({ login, handleLoginSuccess, handleLogout }) {
                   동네소식
                   <i class="fas fa-arrow-right"></i>
                 </Link>
+
                 {login ? (
-                  <Link to={"/mypage"} onClick={showMenubar}>
-                    마이페이지
-                    <i class="fas fa-arrow-right"></i>
-                  </Link>
+                  <div>
+                    <Link to={"/chat/list"}>채팅</Link>
+                    <Link to={"/mypage"} onClick={showMenubar}>
+                      마이페이지
+                      <i class="fas fa-arrow-right"></i>
+                    </Link>
+                  </div>
                 ) : (
                   <li onClick={showLoginModal}>
                     로그인

@@ -56,7 +56,7 @@ export default function App() {
     });
   };
 
-  const handleWithdrawl = () => {
+  const handleWithdrawal = () => {
     axios.delete(`${process.env.REACT_APP_API_URL}/user`).then(() => {
       window.location.href = "/";
       isLogin(false);
@@ -96,7 +96,7 @@ export default function App() {
                 login={login}
                 userinfo={userinfo}
                 isAuthenticated={isAuthenticated}
-                handleWithdrawl={handleWithdrawl}
+                handleWithdrawal={handleWithdrawal}
               />
             }
           />

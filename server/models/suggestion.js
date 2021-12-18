@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       models.suggestion.belongsTo(models.tradePost, {
         foreignKey: "tradePost_Id",
       });
-      models.suggestion.hasMany(models.chat, { foreignKey: "suggestion_Id" });
     }
   }
   suggestion.init(

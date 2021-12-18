@@ -3,7 +3,6 @@ const { user } = require("../../models");
 
 exports.accessToken = async (req, res, next) => {
   const cookie = req.cookies.accesstoken;
-  console.log("!!!!!!!!!!!!!accesstoken");
   try {
     if (!cookie) {
       return res.status(403).json({ message: "no exist cookie" });

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PasswordModal from "../components/PasswordModal";
 import WithdrawalModal from "../components/WithdrawalModal";
@@ -42,6 +41,7 @@ const StMypageHead = styled.div`
   justify-content: center;
 
   .content-head {
+    margin-bottom: 100px;
     width: 65%;
     height: 30%;
     display: flex;
@@ -126,6 +126,9 @@ const StMypageHead = styled.div`
             width: 20px;
             height: 20px;
             cursor: pointer;
+            @media all and (min-width: 1700px) {
+              margin-right: 20px;
+            }
           }
           .edit-back-img {
             width: 20px;
@@ -219,13 +222,13 @@ const StMypageHead = styled.div`
                 }
               }
             }
-            .dupicate-wrap {
+            .duplicate-wrap {
               width: 30%;
               height: 32%;
               @media all and (max-width: 768px) {
                 height: 55%;
               }
-              .dupicate-button {
+              .duplicate-button {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -235,7 +238,7 @@ const StMypageHead = styled.div`
                 border-bottom-right-radius: 5px;
                 width: 100%;
                 height: 100%;
-                .dupicate-check {
+                .duplicate-check {
                   font-weight: bold;
                   font-size: 10px;
                   cursor: pointer;
@@ -329,19 +332,6 @@ const StMypageHead = styled.div`
           display: flex;
           justify-content: center;
           align-items: center;
-          @media all and (max-width: 768px) {
-            flex-direction: column;
-          }
-          .category-half {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            width: 60%;
-            @media all and (max-width: 768px) {
-              width: 70%;
-            }
-          }
           .category-tick {
             height: 100%;
             width: 33.3%;
@@ -394,14 +384,14 @@ export default function Mypage({
   userinfo,
   isAuthenticated,
   login,
-  handleWithdrawl,
+  handleWithdrawal,
 }) {
-  const navigate = useNavigate();
   //카테고리 별 게시글 받아오기
   const [myNews, SetMyNews] = useState([]);
   const [myComment, setMyComment] = useState([]);
   const [myTrade, setMyTrade] = useState([]);
   const [myLikeTrade, setMyLikeTrade] = useState([]);
+  const [mySaleTrade, setMySaleTrade] = useState([]);
 
   const [checkNickname, setCheckNickname] = useState({
     nickname: false,
@@ -433,7 +423,6 @@ export default function Mypage({
   const address = editInfo.address;
   const town = editInfo.town;
 
-  const [duplicate, setDuplicate] = useState(false);
   const [openPost, isOpenPost] = useState(false);
 
   // 구글에서 받아온 위치정보
@@ -451,7 +440,6 @@ export default function Mypage({
     setNicknameChange(false);
     setEditInfo({ ...editInfo, [key]: e.target.value });
     if (e.target.value === userinfo.nickname) {
-      console.log(e.target.value);
       setNicknameChange(true);
     } else {
       if (isNickname(e.target.value)) {
@@ -491,7 +479,6 @@ export default function Mypage({
   };
 
   const checkDuplicate = () => {
-    console.log(nickname, userinfo.nickname);
     if (userinfo.nickname === nickname) {
       Swal.fire({
         icon: "success",
@@ -566,7 +553,7 @@ export default function Mypage({
         "content-type": "multipart/form-data",
       },
     };
-    console.log("!!!", checkNickname);
+
     if (
       checkEdit === true ||
       checkEditAddress === true ||
@@ -611,15 +598,6 @@ export default function Mypage({
       if (status === kakao.maps.services.Status.OK) {
         const lat = results[0].y;
         const log = results[0].x;
-        // console.log("나의주소", lat, " ", log);
-        // console.log(
-        //   "받은 위치정보",
-        //   googleCoordinate.lat + " " + googleCoordinate.log
-        // );
-        // console.log(
-        //   "거리",
-        //   getDistance(googleCoordinate.lat, googleCoordinate.log, lat, log)
-        // );
 
         if (
           getDistance(googleCoordinate.lat, googleCoordinate.log, lat, log) <=
@@ -737,6 +715,12 @@ export default function Mypage({
   };
 
   //내 판매내역 가져오기
+  // /mypage/mySale
+  const requestMySaleTrade = () => {
+    axios.get(`${process.env.REACT_APP_API_URL}/mypage/mySale`).then((res) => {
+      setMySaleTrade(res.data.data);
+    });
+  };
 
   //내 구매내역 가져오기
 
@@ -904,10 +888,10 @@ export default function Mypage({
                           onChange={(e) => handleInputValue("nickname", e)}
                         ></input>
 
-                        <div className={"dupicate-wrap"}>
-                          <div className={"dupicate-button"}>
+                        <div className={"duplicate-wrap"}>
+                          <div className={"duplicate-button"}>
                             <div
-                              className={"dupicate-check"}
+                              className={"duplicate-check"}
                               onClick={() => checkDuplicate()}
                             >
                               중복 확인
@@ -981,7 +965,7 @@ export default function Mypage({
                   {modalOpen2 && (
                     <WithdrawalModal
                       modalClose2={modalClose2}
-                      handleWithdrawl={handleWithdrawl}
+                      handleWithdrawal={handleWithdrawal}
                     ></WithdrawalModal>
                   )}
                 </div>
@@ -992,77 +976,65 @@ export default function Mypage({
             <div className={"category-wrap"}>
               <div className={"category-box"}>
                 <div className={"category-align"}>
-                  <div className={"category-half"}>
-                    <div className={"category-tick"}>
-                      <StCategoryButton
-                        value={1}
-                        onClick={(e) => {
-                          changeCategory(e);
-                          requestMyTrade();
-                        }}
-                        select={category.number === 1 ? true : false}
-                      >
-                        내 거래글
-                      </StCategoryButton>
-                    </div>
-                    <div className={"category-tick"}>
-                      <StCategoryButton
-                        value={2}
-                        onClick={(e) => {
-                          changeCategory(e);
-                          requestMyNews();
-                        }}
-                        select={category.number === 2 ? true : false}
-                      >
-                        내 동네소식
-                      </StCategoryButton>
-                    </div>
-                    <div className={"category-tick"}>
-                      <StCategoryButton
-                        value={3}
-                        onClick={(e) => {
-                          changeCategory(e);
-                        }}
-                        select={category.number === 3 ? true : false}
-                      >
-                        판매내역
-                      </StCategoryButton>
-                    </div>
+                  <div className={"category-tick"}>
+                    <StCategoryButton
+                      value={1}
+                      onClick={(e) => {
+                        changeCategory(e);
+                        requestMyTrade();
+                      }}
+                      select={category.number === 1 ? true : false}
+                    >
+                      내 거래글
+                    </StCategoryButton>
                   </div>
-                  <div className={"category-half"}>
-                    <div className={"category-tick"}>
-                      <StCategoryButton
-                        value={4}
-                        onClick={(e) => changeCategory(e)}
-                        select={category.number === 4 ? true : false}
-                      >
-                        구매내역
-                      </StCategoryButton>
-                    </div>
-                    <div className={"category-tick"}>
-                      <StCategoryButton
-                        value={5}
-                        onClick={(e) => {
-                          changeCategory(e);
-                          requestMyLikeTrade();
-                        }}
-                        select={category.number === 5 ? true : false}
-                      >
-                        찜한 판매글
-                      </StCategoryButton>
-                    </div>
-                    <div className={"category-tick"}>
-                      <StCategoryButton
-                        value={6}
-                        onClick={(e) => {
-                          changeCategory(e);
-                          requestMyComment();
-                        }}
-                        select={category.number === 6 ? true : false}
-                      >
-                        관심 소식
-                      </StCategoryButton>
-                    </div>
+                  <div className={"category-tick"}>
+                    <StCategoryButton
+                      value={2}
+                      onClick={(e) => {
+                        changeCategory(e);
+                        requestMyNews();
+                      }}
+                      select={category.number === 2 ? true : false}
+                    >
+                      내 동네소식
+                    </StCategoryButton>
+                  </div>
+                  <div className={"category-tick"}>
+                    <StCategoryButton
+                      value={3}
+                      onClick={(e) => {
+                        changeCategory(e);
+                        requestMySaleTrade();
+                      }}
+                      select={category.number === 3 ? true : false}
+                    >
+                      판매내역
+                    </StCategoryButton>
+                  </div>
+                  <div className={"category-tick"}>
+                    <StCategoryButton
+                      value={5}
+                      onClick={(e) => {
+                        changeCategory(e);
+                        requestMyLikeTrade();
+                      }}
+                      select={category.number === 5 ? true : false}
+                    >
+                      찜한 판매글
+                    </StCategoryButton>
+                  </div>
+                  <div className={"category-tick"}>
+                    <StCategoryButton
+                      value={6}
+                      onClick={(e) => {
+                        changeCategory(e);
+                        requestMyComment();
+                      }}
+                      select={category.number === 6 ? true : false}
+                    >
+                      관심 소식
+                    </StCategoryButton>
                   </div>
                 </div>
               </div>
@@ -1088,6 +1060,19 @@ export default function Mypage({
               ? myNews.map((news, index) => (
                   <News mypage={true} news={news} key={index} />
                   // <MypageNews key={index} news={news} />
+                ))
+              : null}
+
+            {category.number === 3
+              ? mySaleTrade.map((trade, index) => (
+                  <Trade
+                    mypage={true}
+                    trade={trade}
+                    key={index}
+                    num={index}
+                    login={login}
+                    userinfo={userinfo}
+                  />
                 ))
               : null}
 
