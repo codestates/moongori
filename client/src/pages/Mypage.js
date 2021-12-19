@@ -686,6 +686,7 @@ export default function Mypage({
       .get(`${process.env.REACT_APP_API_URL}/mypage/newslist`)
       .then((res) => {
         SetMyNews(res.data.data);
+        console.log(res.data.data);
       })
       .catch();
   };

@@ -25,6 +25,10 @@ const ModalContainer = styled.div`
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
+    @media all and (max-width: 425px) {
+      width: 340px;
+      height: 400px;
+    }
   }
   .password-modal-wrap {
     height: 100%;
@@ -108,8 +112,17 @@ export default function PasswordModal({ modalClose }) {
     checkPassword: "",
   });
   const handleInputValue = (key) => (e) => {
-    setPassword({ ...password, [key]: e.target.value });
+    if (isPassword(e.target.value)) {
+      setPassword({ ...password, [key]: e.target.value });
+    }
   };
+  console.log(password);
+  // 비밀번호 유효성 검사 함수
+  const isPassword = (value) => {
+    let regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}$/;
+    return regExp.test(value);
+  };
+
   const passwordHandler = () => {
     if (password.modifyPassword !== password.checkPassword) {
       Swal.fire({
