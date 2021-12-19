@@ -246,23 +246,21 @@ const StContentDiv = styled.div`
 `;
 
 const SthandleButton = styled.div`
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
-      background: #aae8c5;
-      border: 1px solid #b7b7b7;
-      border-radius: 10px;
-      width: ${(props) => (props.modify ? "80px" : "100%")};
-      height: ${(props) => (props.modify ? "30px" : "40px")};
-      margin-right: ${(props) => (props.modify ? "10px" : "none")};
-      margin-top:${(props) => (props.modify ? "10px" : "none")};
-      cursor: pointer;
-      @media all and (max-width: 768px) {
-        width: 90%;
-        height: 50px;
-      }
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #aae8c5;
+  border: 1px solid #b7b7b7;
+  border-radius: 10px;
+  width: ${(props) => (props.modify ? "80px" : "100%")};
+  height: ${(props) => (props.modify ? "30px" : "40px")};
+  margin-right: ${(props) => (props.modify ? "10px" : "none")};
+  margin-top: ${(props) => (props.modify ? "10px" : "none")};
+  cursor: pointer;
+  @media all and (max-width: 768px) {
+    width: 90%;
+    height: 50px;
+  }
 `;
 
 //옵션 메뉴
