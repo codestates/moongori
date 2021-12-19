@@ -1,11 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
-<<<<<<< HEAD
 const PORT = 80;
-=======
-const PORT = 4000;
->>>>>>> aba012370520541f1567a557f004412bb0403447
 const cookieParser = require("cookie-parser");
 const controllers = require("./controllers");
 const cors = require("cors");
