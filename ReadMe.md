@@ -1,4 +1,3 @@
-# :earth_asia: moongori
 ![](https://cdn.discordapp.com/attachments/904619953775341608/921708484087644200/5f89a50cfc9d1f96.jpg)
 # :teacher: 프로젝트 소개
 `문고리`를 열고 들어오시면...
