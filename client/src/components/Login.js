@@ -88,6 +88,7 @@ export const StWriteDiv = styled.div`
     height: 36px;
     font-size: 0.9em;
     font-weight: 500;
+    border: 1px solid #b7b7b7;
     border-radius: 10px;
     outline-color: #aae8c5;
   }
@@ -101,7 +102,7 @@ export const StWriteDiv = styled.div`
 export const StRequestButton = styled.button`
   height: 50px;
   background: ${(props) => props.background};
-  border: none;
+  border: 1px solid #eeeeee;
   border-radius: 10px;
   margin-top: 20px;
   position: relative;
@@ -124,8 +125,9 @@ export const StRequestButton = styled.button`
   @media all and (max-width: 425px) {
     height: 30px;
     img {
-      width: 30px;
-      height: 30px;
+      margin-left: 5px;
+      width: 20px;
+      height: 20px;
     }
   }
 `;

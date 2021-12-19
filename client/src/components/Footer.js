@@ -63,9 +63,7 @@ const FooterBox = styled.div`
     margin-bottom: 2px;
   }
   .About-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    align-items: start;
     font-size: 5px;
     font-weight: normal;
   }
@@ -236,7 +234,7 @@ export default function Footer() {
                       Moongori Wiki
                     </a>
                   </p>
-                  <p>
+                  <p className={"name"}>
                     <a href="https://github.com/codestates/moongori">
                       Repository
                     </a>

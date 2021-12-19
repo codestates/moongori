@@ -22,7 +22,7 @@ const StBodyDiv = styled.div`
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
-  margin-bottom: 200px;
+  margin-bottom: 400px;
   .category {
     width: 80%;
     display: flex;

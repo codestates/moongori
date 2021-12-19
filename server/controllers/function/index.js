@@ -1,12 +1,12 @@
 module.exports = {
   getDistance: (lat1, lon1, lat2, lon2) => {
-    if (lat1 == lat2 && lon1 == lon2) return 0;
+    if (lat1 === lat2 && lon1 === lon2) return 0;
 
-    var radLat1 = (Math.PI * lat1) / 180;
-    var radLat2 = (Math.PI * lat2) / 180;
-    var theta = lon1 - lon2;
-    var radTheta = (Math.PI * theta) / 180;
-    var dist =
+    let radLat1 = (Math.PI * lat1) / 180;
+    let radLat2 = (Math.PI * lat2) / 180;
+    let theta = lon1 - lon2;
+    let radTheta = (Math.PI * theta) / 180;
+    let dist =
       Math.sin(radLat1) * Math.sin(radLat2) +
       Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
     if (dist > 1) dist = 1;

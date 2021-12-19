@@ -25,6 +25,10 @@ const WithdrawalModalContainer = styled.div`
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
+    @media all and (max-width: 425px) {
+      width: 340px;
+      height: 400px;
+    }
   }
   .Withdrawal-modal-wrap {
     height: 100%;
