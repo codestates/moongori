@@ -1,5 +1,5 @@
 # :earth_asia: moongori
-![](https://cdn.discordapp.com/attachments/904619953775341608/913325577237323776/ee91d67e3bf2fd8b.png)
+![](https://cdn.discordapp.com/attachments/904619953775341608/921708484087644200/5f89a50cfc9d1f96.jpg)
 # :teacher: ABOUT
 * 주변 사람들과 소식을 나눠보세요
 # :technologist: 기술
