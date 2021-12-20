@@ -27,7 +27,7 @@ const Wrap = styled.div`
   height: 100%;
   position: relative;
   width: 100%;
-  font-family: "SDSamliphopangche_Basic";
+  font-family: "S-CoreDream-4Regular";
 `;
 
 export default function App() {

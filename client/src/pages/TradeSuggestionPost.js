@@ -479,6 +479,10 @@ export function endForToday(value) {
   const betweenTime = Math.floor(
     (timeValue.getTime() - today.getTime()) / 1000 / 60
   );
+  if (betweenTime <= 0) {
+    return `마감`;
+  }
+
   if (betweenTime < 60) {
     return `곧 마감`;
   }
@@ -1006,9 +1010,9 @@ export default function TradeSuggestionPost({ login, userinfo }) {
                       )
                     ) : null}
                     {login &&
-                    postInfo.user_Id === userinfo.id &&
-                    userinfo.id !== price.user_Id &&
-                    postInfo.state === 5 ? (
+                      postInfo.user_Id === userinfo.id &&
+                      userinfo.id !== price.user_Id &&
+                      postInfo.state === 5 ? (
                       <button
                         className="contect"
                         onClick={() => {
