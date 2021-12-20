@@ -1,7 +1,6 @@
 const { tradePost, user, like } = require("../../models");
 const { verify } = require("jsonwebtoken");
 const sequelize = require("sequelize");
-const Op = sequelize.Op;
 const { getDistance } = require("./../function");
 
 module.exports = async (req, res) => {

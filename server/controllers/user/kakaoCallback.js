@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
     });
 
     res
-      .status(201)
+      .status(200)
       .cookie("accesstoken", token, {
         maxAge: 24 * 6 * 60 * 10000,
         sameSite: "None",
@@ -59,6 +59,6 @@ module.exports = async (req, res) => {
     res.redirect(`${process.env.ORIGIN}/mypage`);
   } catch (error) {
     console.error(error);
-    return res.status(501).json({ message: "서버에러 입니다." });
+    return res.status(500).json({ message: "서버에러 입니다." });
   }
 };

@@ -68,12 +68,19 @@ const StPostUserDiv = styled.div`
     }
   }
   .info {
-    width: 100%;
+    width: 100px;
     margin: 10px 10px 0 0;
     text-align: left;
     font-size: 0.8em;
     span {
       margin-right: 20px;
+    }
+    .comment-wrap{
+      width:300px;
+      word-break:break-all;
+      @media all and (max-width: 768px) {
+       width:250px;
+      }
     }
   }
 `;
@@ -337,7 +344,7 @@ export default function NewsPost({ login, userinfo }) {
                         ref={inputRevisedCommentRef}
                       />
                     ) : (
-                      <div>{comment.comment}</div>
+                      <div className={"comment-wrap"}>{comment.comment}</div>
                     )}
                     <StContentInfoDiv color={"#c4c4c4"}>
                       <span>{timeForToday(contents.createdAt)}</span>

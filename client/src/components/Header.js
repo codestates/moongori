@@ -40,7 +40,7 @@ const StHeadBoxDiv = styled.div`
     position: fixed;
     overflow: hidden;
   }
-  @media all and (max-width: 813px) {
+  @media all and (max-width: 826px) {
     height: 100%;
     width: auto;
     .wrap {
@@ -59,7 +59,7 @@ const StHeadBoxDiv = styled.div`
       }
     }
   }
-  @media all and (min-width: 813px) {
+  @media all and (min-width: 826px) {
     .nav {
       display: flex;
       justify-content: space-between;
@@ -206,7 +206,10 @@ export default function Header({ login, handleLoginSuccess, handleLogout }) {
 
                 {login ? (
                   <div>
-                    <Link to={"/chat/list"}>채팅</Link>
+                    <Link to={"/chat/list"}>
+                      채팅
+                      <i class="fas fa-arrow-right"></i>
+                    </Link>
                     <Link to={"/mypage"} onClick={showMenubar}>
                       마이페이지
                       <i class="fas fa-arrow-right"></i>

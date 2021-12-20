@@ -151,6 +151,7 @@ export default function NewsList({ userinfo, login }) {
             if (res.status === 204) {
               isLoading(false);
               setNewsList([]);
+              inputSearchRef.current.value = "";
             } else {
               const mergeData = [].concat(...res.data.data);
               setNewsList(mergeData);
@@ -170,6 +171,7 @@ export default function NewsList({ userinfo, login }) {
             if (res.status === 204) {
               isLoading(false);
               setNewsList([]);
+              inputSearchRef.current.value = "";
             } else {
               const mergeData = [].concat(...res.data.data);
               setNewsList(mergeData);

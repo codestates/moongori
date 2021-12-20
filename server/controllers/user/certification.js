@@ -9,8 +9,7 @@ module.exports = async (req, res) => {
         where: { email: email },
       }
     );
-    res.redirect(process.env.ORIGIN);
-    //.status(200).json({ message: "successful email auth" })
+    return res.redirect(process.env.ORIGIN).status(200).json({ message: "successful email auth" })
   } catch (err) {
     return res.status(500).json({ data: err, massage: "error" })
   }
