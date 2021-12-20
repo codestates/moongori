@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import mainImg1 from "./../images/mainImg1.png";
 import mainImg2 from "./../images/mainImg2.png";
-import exampleImg1 from "./../images/example1.png";
-import exampleImg2 from "./../images/example2.png";
+import exampleImg1 from "./../images/example1.gif";
+import exampleImg2 from "./../images/example2.gif";
 import dongne from "./../images/dongne.png";
 import trade from "./../images/trade.png";
 import axios from "axios";
@@ -25,19 +25,23 @@ const StBodyDiv = styled.div`
     flex-direction: column;
     align-items: center;
     .banner {
+      margin-top:50px;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 40px 0 0 0;
+      @media all and (max-width: 826px) {
+        margin-top:0px;
+      }
       .banner-intro {
         height: 180px;
-        @media all and (max-width: 768px) {
+        @media all and (max-width: 826px) {
           margin-bottom: 20px;
         }
         .welcome {
           margin-left: 5px;
           color: gray;
-          @media all and (max-width: 768px) {
+          @media all and (max-width: 826px) {
             margin-left: 6px;
             color: gray;
           }
@@ -66,15 +70,29 @@ const StBodyDiv = styled.div`
     }
     .main-intro {
       margin-top: 20px;
-      @media all and (min-width: 769px) {
+      flex-direction: column;
+      @media all and (min-width: 826px) {
         display: flex;
-        flex-direction: column;
+      }
+    }
+    .main-intro-direction {
+      margin-left:200px;
+      margin-top: 20px;
+      flex-direction: column;
+      @media all and (max-width: 1900px) {
+        margin-left:0px;
+      }
+      @media all and (max-width: 826px) {
+        margin-top: 20px;
+      }
+      @media all and (min-width: 826px) {
+        display: flex;
       }
     }
     .main-intro-title-banner {
-      font-size: 35px;
+      font-size: 50px;
       text-align: center;
-      @media all and (max-width: 831px) {
+      @media all and (max-width: 826px) {
         font-size: 28px;
         text-align: center;
       }
@@ -83,17 +101,16 @@ const StBodyDiv = styled.div`
       font-weight: bold;
       font-size: 25px;
       margin-bottom: 20px;
-      @media all and (max-width: 768px) {
+      @media all and (max-width: 826px) {
         text-align: center;
       }
     }
     .main-intro-contents {
       color: gray;
-      font-size: 16px;
+      font-size: 20px;
       text-align: start;
       margin-top: 5px;
-      @media all and (max-width: 831px) {
-        width: 100%;
+      @media all and (max-width: 826px) {
         font-size: 15px;
         text-align: center;
       }
@@ -129,7 +146,7 @@ const StBodyDiv = styled.div`
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        @media all and (max-width: 768px) {
+        @media all and (max-width: 826px) {
           width: 90%;
         }
       }
@@ -137,8 +154,8 @@ const StBodyDiv = styled.div`
   }
   .button {
     margin-top: 10px;
-    width: 180px;
-    height: 40px;
+    width: 250px;
+    height: 50px;
     background: #ffffff;
     border-radius: 15px;
     display: flex;
@@ -146,7 +163,7 @@ const StBodyDiv = styled.div`
     align-items: center;
     cursor: pointer;
     text-decoration: none;
-    @media all and (max-width: 768px) {
+    @media all and (max-width: 826px) {
       width: 120px;
       height: 40px;
     }
@@ -155,7 +172,7 @@ const StBodyDiv = styled.div`
     font-weight: bold;
     font-size: 15px;
     color: #474747;
-    @media all and (max-width: 768px) {
+    @media all and (max-width: 826px) {
       font-size: 13px;
     }
   }
@@ -165,7 +182,7 @@ const StBodyDiv = styled.div`
     margin-top: 20px;
     justify-content: center;
     align-items: center;
-    @media all and (max-width: 768px) {
+    @media all and (max-width: 826px) {
       flex-direction: column;
       width: 90%;
     }
@@ -174,7 +191,7 @@ const StBodyDiv = styled.div`
       flex-direction: column;
       justify-content: center;
       align-items: start;
-      @media all and (max-width: 768px) {
+      @media all and (max-width:826px) {
         width: 90%;
         align-items: center;
       }
@@ -192,17 +209,21 @@ const StBodyDiv = styled.div`
     display: flex;
     justify-content: center;
     align-items: start;
-    @media all and (max-width: 768px) {
+    @media all and (max-width: 826px) {
       margin-left: 0px;
     }
   }
   //web
-  @media all and (min-width: 769px) {
+  @media all and (min-width: 826px) {
     .main {
-      height: 500px;
+      height: 800px;
       img {
-        width: 420px;
-        height: 380px;
+        width: 500px;
+        height: 500px;
+        @media all and (max-width: 970px) {
+          width: 350px;
+          height: 350px;
+        }
       }
       .banner {
         flex-direction: row-reverse;
@@ -210,32 +231,33 @@ const StBodyDiv = styled.div`
       .example {
         position: relative;
         .example-contents {
-          width: 1000px;
+          width: 80%;
           height: 80%;
-          position: absolute;
+          // position: absolute;
           display: flex;
-          flex-direction: row;
+      flex-direction: row;
           justify-content: center;
           align-items: center;
           top: 50%;
           left: 50%;
-          @media all and (max-width: 900px) {
-            width: 90%;
-          }
           transform: translate(-50%, -50%);
+          @media all and (max-width: 900px) {
+            width: 800px;
+          }
         }
-        .second {
-          flex-direction: row-reverse;
+         .second {
+           flex-direction: row-reverse;
         }
       }
       .main-intro {
+        width: 40%;
       }
+      
       .main-intro-title {
-        font-size: 35px;
+        font-size: 50px;
         text-align: start;
-        @media all and (max-width: 768px) {
-          font-size: 30px;
-          text-align: center;
+        @media all and (max-width: 900px) {
+          font-size: 40px;
         }
       }
     }
@@ -248,18 +270,22 @@ const StLogoTitle = styled.div`
   font-size: 3em;
 `;
 const StExampleImg = styled.div`
-  width: 400px;
+  width: 40%;
   height: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: ${(props) => (props.top ? "50px" : null)};
-  margin-left: ${(props) => (props.top ? null : "50px")};
-  @media all and (max-width: 900px) {
-    margin-right: 0px;
-    margin-left: 0px;
+  margin-right: ${(props) => (props.top ? "100px" : null)};
+  margin-left: ${(props) => (props.top ? null : "100px")};
+  @media all and (max-width: 970px) {
+    margin-right: ${(props) => (props.top ? "50px" : null)};
+    margin-left: ${(props) => (props.top ? null : "50px")};
     width: 300px;
-    font-size: 30px;
+    font-size: 30px; 
+  }
+  @media all and (max-width: 826px) {
+    margin-right:0px;
+    margin-left:0px;
   }
 `;
 const StBackgroundTextDiv = styled.div`
@@ -269,12 +295,12 @@ const StBackgroundTextDiv = styled.div`
   @media all and (min-width: 769px) {
     position: absolute;
     /* z-index: 1; */
-    font-size: 10em;
+    font-size: 15em;
     opacity: 0.1;
     top: 0;
     /* left: 0; */
     /* margin-left: ${(props) => (props.second ? "1000px" : null)}; */
-    right: ${(props) => (props.second ? "-30%" : null)};
+    right: ${(props) => (props.second ? "-80%" : null)};
     left: ${(props) => (props.second ? null : "0")};
   }
 `;
@@ -393,7 +419,6 @@ export default function Main() {
           </StBackgroundTextDiv>
           <div className={"example-contents"}>
             <StExampleImg top>
-              {" "}
               <img src={exampleImg1} alt={"움짤예시1 이미지"} />
             </StExampleImg>
             <div className={"main-intro"}>
@@ -411,7 +436,6 @@ export default function Main() {
         <StQuestionDiv>
           <div className={"question-contents"}>
             <div className={"question-wrap"}>
-              {" "}
               <div className={"main-intro-title"}>
                 {`가격 제시 시스템이\n궁금하신가요?`}
               </div>
@@ -440,7 +464,7 @@ export default function Main() {
               <img src={exampleImg2} alt={"움짤예시1 이미지"} />
             </StExampleImg>
 
-            <div className={"main-intro"}>
+            <div className={"main-intro-direction"}>
               <div className={"main-intro-title"}>
                 {`이웃들과\n동네소식을 나눠봐요`}
               </div>
