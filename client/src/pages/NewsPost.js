@@ -68,7 +68,7 @@ const StPostUserDiv = styled.div`
     }
   }
   .info {
-    width: 100px;
+    width: auto;
     margin: 10px 10px 0 0;
     text-align: left;
     font-size: 0.8em;
