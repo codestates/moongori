@@ -22,7 +22,7 @@
 |:closed_book: Front-end|:blue_book:  Back-end|:closed_book: Front-end|:blue_book:  Back-end|
 
 # :earth_asia: moongori
-배포링크<br/>
+배포링크<br/>(체험 ID: test / PW: 1234)<br/>
 [moongori Link](https://moongori.shop/)<br/>
 위키<br/>
 [moongori wiki](https://github.com/codestates/moongori/wiki)
